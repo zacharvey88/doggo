@@ -1,10 +1,14 @@
 import { StyleSheet } from 'react-native';
 import { Text, View } from '@/src/components/Themed';
+import Button from '@/src/components/Button';
+import { Link } from 'expo-router';
 
 export default function TabHome() {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Home</Text>
+      <Link href ={'/sign-in'}>Sign In</Link>
+
     </View>
   );
 }
