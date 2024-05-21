@@ -1,16 +1,21 @@
 import { StyleSheet, Image, Text, View } from 'react-native';
+import { Json } from '@/src/lib/database.types';
 
 type AccommodationListItemProps = {
-    accom: {
-        title: string;
-        image: string | null;
+    accom:{
+        accommodation_id: number
+        address: string
+        phone: string | null
+        photos: Json
+        title: string
+      }
     }
-}
+
 
 const AccommodationListItem = ({accom}: AccommodationListItemProps) => {
     return (
         <View>
-            <Image source={{uri: accom.image}} style={styles.image} resizeMode='contain'/>
+            {/* <Image source={{uri: accom.photos}} style={styles.image} resizeMode='contain'/> */}
             <Text style={styles.title}>{accom.title}</Text>
         </View>
     )
@@ -20,7 +25,7 @@ export default AccommodationListItem;
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: 'white',
+    backgroundColor: 'black',
     padding: 10,
     borderRadius: 20,
     flex: 1,
@@ -35,7 +40,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: '600',
     marginVertical: 10,
-    color: 'red'
+    color: 'white'
   },
   image: {
     width: '100%',
