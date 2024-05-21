@@ -23,7 +23,7 @@ export default function AuthProvider({ children }: PropsWithChildren) {
   const [session, setSession] = useState<Session | null>(null);
   const [profile, setProfile]= useState(null)
   const [loading, setLoading] = useState(true);
-
+console.log(session)
   useEffect(() => {
     const fetchSession = async () => {
       const { data:{session} } = await supabase.auth.getSession();
