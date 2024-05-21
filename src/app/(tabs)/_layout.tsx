@@ -1,5 +1,6 @@
 import React from "react";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
+import { FontAwesome6 } from '@expo/vector-icons';
 import { Link, Tabs } from "expo-router";
 import { Pressable } from "react-native";
 
@@ -53,21 +54,21 @@ export default function TabLayout() {
         name="search/index"
         options={{
           title: "Search",
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
+          tabBarIcon: ({ color }) => <FontAwesome6 name="magnifying-glass" size={24} color={color} />,
         }}
       />
       <Tabs.Screen
         name="airlines"
         options={{
           title: "Airlines",
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
+          tabBarIcon: ({ color }) => <TabBarIcon name="plane" color={color} />,
         }}
       />
       <Tabs.Screen
         name="trips"
         options={{
           title: "Trips",
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
+          tabBarIcon: ({ color }) => <FontAwesome6 name="route" size={24} color={color} />,
         }}
       />
     </Tabs>

@@ -68,6 +68,7 @@ export type Database = {
       airlines: {
         Row: {
           airline_id: number
+          airline_logo_url: string | null
           airline_name: string
           airline_pet_policy_url: string
           pet_policy_cabin: string | null
@@ -79,6 +80,7 @@ export type Database = {
         }
         Insert: {
           airline_id?: number
+          airline_logo_url?: string | null
           airline_name: string
           airline_pet_policy_url: string
           pet_policy_cabin?: string | null
@@ -90,6 +92,7 @@ export type Database = {
         }
         Update: {
           airline_id?: number
+          airline_logo_url?: string | null
           airline_name?: string
           airline_pet_policy_url?: string
           pet_policy_cabin?: string | null
