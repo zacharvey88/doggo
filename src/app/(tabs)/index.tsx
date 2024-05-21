@@ -5,42 +5,44 @@ import { Link } from 'expo-router';
 export default function TabHome() {
   return (
     <View style={styles.container}>
-      <Image style={styles.image}source={require("../../../assets/images/logo.png")}/>
-
-    <Link href="/search" asChild>
-      <Pressable style={styles.button}>
-        <Text style={styles.buttonText}>
-          Start Planning Your Trip
-        </Text>
+      <Image style={styles.image}source={require("../../../assets/images/logo.png")} resizeMode="contain"/>
+      <Link href="/search" asChild>
+        <Pressable style={styles.button}>
+          <Text style={styles.buttonText}>
+            Start Planning Your Trip
+          </Text>
+        </Pressable>
+      </Link>
+    {/* <Link to sign in page pleaasase dont forget meeeeeeeeeeeeeeeeeeeeeeeeeeeeee> */}
+      <Pressable style={styles.signInButton}>
+        <Text style={styles.signInText}>Sign In</Text>
       </Pressable>
-    </Link>
-    
-    
+    {/* close link */}
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     alignItems: 'center',
-    justifyContent: 'center',
+    maxHeight:"100%",
+    maxWidth:"100%",
+    flex:1
   },
   button: {
-    marginTop:40,
+    position: "absolute",
+    bottom: "8%",
     alignItems: 'center',
     justifyContent: 'center',
     paddingVertical: 12,
     paddingHorizontal: 32,
     borderRadius: 10,
     elevation: 3,
-    backgroundColor: 'rgb(1,130,200)',
+    backgroundColor: 'rgb(1,140,220)',
   },
   buttonText: {
     fontSize: 16,
-    lineHeight: 21,
     fontWeight: 'bold',
-    letterSpacing: 0.25,
     color: 'white',
   },
   separator: {
@@ -49,7 +51,14 @@ const styles = StyleSheet.create({
     width: '80%',
   },
   image: {
-    height:"50%",
-    width:"80%",
+    width:"100%",
+    height:"60%",
+  },
+  signInText: {
+    fontWeight:"bold",
+  },
+  signInButton: {
+    position: "absolute",
+    bottom: "3%",
   }
 });
