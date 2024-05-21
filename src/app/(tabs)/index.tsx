@@ -1,10 +1,14 @@
 import { StyleSheet, Image, Pressable } from 'react-native';
 import { Text, View } from '@/src/components/Themed';
+
+import Button from '@/src/components/Button';
+
 import { Link } from 'expo-router';
 
 export default function TabHome() {
   return (
     <View style={styles.container}>
+
       <Image style={styles.image}source={require("../../../assets/images/logo.png")} resizeMode="contain"/>
       <Link href="/search" asChild>
         <Pressable style={styles.button}>
@@ -18,6 +22,10 @@ export default function TabHome() {
         <Text style={styles.signInText}>Sign In</Text>
       </Pressable>
     {/* close link */}
+
+      <Text style={styles.title}>Home</Text>
+      <Link href ={'/sign-in'}>Sign In</Link>
+
     </View>
   );
 }
