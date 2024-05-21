@@ -17,14 +17,12 @@ export default function TabHome() {
           </Text>
         </Pressable>
       </Link>
-    {/* <Link to sign in page pleaasase dont forget meeeeeeeeeeeeeeeeeeeeeeeeeeeeee> */}
+      <Link href='/sign-in' asChild>
       <Pressable style={styles.signInButton}>
         <Text style={styles.signInText}>Sign In</Text>
       </Pressable>
-    {/* close link */}
+      </Link>
 
-      <Text style={styles.title}>Home</Text>
-      <Link href ={'/sign-in'}>Sign In</Link>
 
     </View>
   );
