@@ -48,7 +48,7 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="search"
+        name="search/index"
         options={{
           title: 'Search',
           tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
