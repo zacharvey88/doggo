@@ -12,38 +12,39 @@ type AccommodationListItemProps = {
     }
 
 
-const AccommodationListItem = ({accom}: AccommodationListItemProps) => {
+const AccommodationListItem = ({ accom }: AccommodationListItemProps) => {
+  
     return (
-        <View>
-            {/* <Image source={{uri: accom.photos}} style={styles.image} resizeMode='contain'/> */}
-            <Text style={styles.title}>{accom.title}</Text>
-        </View>
-    )
+      <View style={styles.container}>
+        <Image
+          source={{
+            uri: "https://www.peninsula.com/-/media/homepage---andy/exterior-2_1920.jpg",
+          }}
+          style={styles.image}
+          resizeMode="contain"
+        />
+        <Text style={styles.title}>{accom.title}</Text>
+      </View>
+    );
 }
 
 export default AccommodationListItem;
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: 'black',
-    padding: 10,
-    borderRadius: 20,
-    flex: 1,
-    maxWidth: '50%'
-  },
-  separator: {
-    marginVertical: 30,
-    height: 1,
-    width: '80%',
+    backgroundColor: "#3a90cd",
+    borderRadius: 10,
+    width: '45%',
+    alignItems: 'center'
   },
   title: {
     fontSize: 18,
-    fontWeight: '600',
+    fontWeight: "600",
     marginVertical: 10,
-    color: 'white'
+    color: "blue",
   },
   image: {
-    width: '100%',
+    width: "50%",
     aspectRatio: 1,
-  }
+  },
 });
