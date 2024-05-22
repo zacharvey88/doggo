@@ -15,6 +15,8 @@ export default function Avatar({ url, size = 150, onUpload }: Props) {
   const [uploading, setUploading] = useState(false)
   const [avatarUrl, setAvatarUrl] = useState<string | null>(url)
   const avatarSize = { height: size, width: size }
+  const defaultImage =
+  "https://i.sstatic.net/l60Hf.png";
 
 //   useEffect(() => {
 //     if (url) downloadImage(url)
@@ -99,16 +101,10 @@ export default function Avatar({ url, size = 150, onUpload }: Props) {
 
   return (
     <View>
-      {avatarUrl ? (
-        // <Image
-        //   source={{ uri: avatarUrl }}
-        //   accessibilityLabel="Avatar"
-        //   style={[avatarSize, styles.avatar, styles.image]}
-        // />
-        <Image source={{ uri: `https://orcurstjttnhckjuhyqb.supabase.co/storage/v1/object/public/avatars/${avatarUrl}` }} style={styles.image} />
-      ) : (
-        <View style={[avatarSize, styles.avatar, styles.noImage]} />
-      )}
+   
+        <Image source={{ uri: avatarUrl? `https://orcurstjttnhckjuhyqb.supabase.co/storage/v1/object/public/avatars/${avatarUrl}`: defaultImage }} style={styles.image} />
+   
+ 
       <View>
         <Button
           title={uploading ? 'Uploading ...' : 'Upload'}

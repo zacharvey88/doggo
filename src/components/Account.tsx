@@ -5,7 +5,6 @@ import { Session } from "@supabase/supabase-js";
 import { Link, useNavigation } from "expo-router";
 import Colors from "../constants/Colors";
 import Button from "./Button";
-import Avatar from "./Avatar";
 
 export default function Account({ session }: { session: Session }) {
   const [loading, setLoading] = useState(true);
@@ -14,6 +13,10 @@ export default function Account({ session }: { session: Session }) {
   const [fullname, setFullname] = useState("");
   const [email, setEmail] = useState("");
   const navigation = useNavigation();
+  const defaultImage =
+  "https://i.sstatic.net/l60Hf.png";
+
+
 
   const fetchProfile = async () => {
     try {
@@ -65,8 +68,7 @@ export default function Account({ session }: { session: Session }) {
       <View style={styles.badge}>
 
 
-
-        <Image source={{ uri: `https://orcurstjttnhckjuhyqb.supabase.co/storage/v1/object/public/avatars/${avatarUrl}` || null }} style={styles.image} />
+        <Image source={{ uri:  avatarUrl? `https://orcurstjttnhckjuhyqb.supabase.co/storage/v1/object/public/avatars/${avatarUrl}` : defaultImage }} style={styles.image} />
         <Text style={styles.fullname}>{fullname}</Text>
         <Text style={styles.username}>{username}</Text>
       </View>
