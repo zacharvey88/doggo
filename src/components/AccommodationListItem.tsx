@@ -2,10 +2,12 @@ import React from 'react';
 import { StyleSheet, Image, Text, View } from 'react-native';
 import { Button } from 'react-native-elements';
 import { Json } from '@/src/lib/database.types';
+import { Link, Stack } from 'expo-router';
 
 type AccommodationListItemProps = {
   accom: {
     accommodation_id: number;
+    description: string,
     address: string;
     phone: string | null;
     photos: Json | undefined;
@@ -34,11 +36,21 @@ const AccommodationListItem = ({ accom }: AccommodationListItemProps) => {
       <View style={styles.textContainer}>
         <Text style={styles.title}>{accom.title}</Text>
         <Text>{accom.description}</Text>
+        <Link href={{
+          pathname: `/search/${accom.accommodation_id}`,
+          params: {
+            title: accom.title,
+            description: accom.description,
+            address: accom.address,
+            phone: accom.phone,
+            photos: photoUri
+          }
+        }} asChild>
         <Button
-          // onPress={onPressLearnMore}
           style={styles.button}
           title="See More"
         />
+        </Link>
       </View>
     </View>
   );

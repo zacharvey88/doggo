@@ -7,6 +7,7 @@ import AccommodationListItem from '@/src/components/AccommodationListItem';
 import { supabase } from '@/src/lib/supabase';
 import { Json } from '@/src/lib/database.types';
 import { FontAwesome6 } from '@expo/vector-icons';
+import { Link, Stack } from 'expo-router';
 
 export default function TabSearch() {
   const [search, setSearch] = useState('');
@@ -17,6 +18,7 @@ export default function TabSearch() {
 
   const [accom, setAccom] = useState<{
     accommodation_id: number
+    description: string
     address: string
     phone: string | null
     photos: Json | null
@@ -30,6 +32,7 @@ export default function TabSearch() {
     setAccom(
       data as {
         accommodation_id: number;
+        description: string;
         address: string;
         phone: string | null;
         photos: Json | null;
