@@ -1,16 +1,24 @@
-import { View, Text, TextInput, StyleSheet, Alert, Pressable, AppState } from "react-native";
+import {
+  View,
+  Text,
+  TextInput,
+  StyleSheet,
+  Alert,
+  Pressable,
+  AppState,
+} from "react-native";
 import React, { useState } from "react";
 import Colors from "@/src/constants/Colors";
 import { Link, Stack } from "expo-router";
 import { supabase } from "@/src/lib/supabase";
 import Button from "./Button";
-AppState.addEventListener('change', (state) => {
-  if (state === 'active') {
-    supabase.auth.startAutoRefresh()
+AppState.addEventListener("change", (state) => {
+  if (state === "active") {
+    supabase.auth.startAutoRefresh();
   } else {
-    supabase.auth.stopAutoRefresh()
+    supabase.auth.stopAutoRefresh();
   }
-})
+});
 
 const SignInScreen = () => {
   const [email, setEmail] = useState("");
@@ -51,9 +59,13 @@ const SignInScreen = () => {
         disabled={loading}
         text={loading ? "Signing in..." : "Sign in"}
       />
+      <View style={styles.signupContainer}>
+        <Text style={styles.text}>Don't have an account?</Text>
       <Link href="/sign-up" style={styles.textButton}>
-        Create an account
+        Sign up
       </Link>
+      </View>
+      
     </View>
   );
 };
@@ -77,10 +89,27 @@ const styles = StyleSheet.create({
     borderRadius: 5,
   },
   textButton: {
-    alignSelf: "center",
-    fontWeight: "bold",
     color: Colors.light.tint,
     marginVertical: 10,
+    marginLeft: 5,
+    textDecorationLine: 'underline',
+    fontSize: 16,
+
+  },
+  text:{
+    alignSelf: "center",
+    marginVertical: 10,
+    color: 'gray',
+    fontSize: 16,
+
+
+  },
+  signupContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 20,
+    
   },
 });
 
