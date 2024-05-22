@@ -77,13 +77,7 @@ export default function UpdateAccount() {
 
   return (
     <View style={styles.container}>
-      <View style={styles.verticallySpaced}>
-        <Input
-          label="Email"
-          value={email}
-          disabled
-        />
-      </View>
+  
       <View style={styles.verticallySpaced}>
         <Input
           label="Username"
