@@ -1,101 +1,71 @@
-import { useState, useEffect } from 'react'
-import { supabase } from '../lib/supabase'
-import { StyleSheet, View, Alert } from 'react-native'
-import { Button, Input } from '@rneui/themed'
-import { Session } from '@supabase/supabase-js'
+import { useState, useEffect } from 'react';
+import { supabase } from '@/src/lib/supabase';
+import { StyleSheet, View, Alert, Text, Image } from 'react-native';
+import { Session } from '@supabase/supabase-js';
+import { Link } from 'expo-router';
+import Colors from '../constants/Colors';
+import Button from './Button';
 
 export default function Account({ session }: { session: Session }) {
-  const [loading, setLoading] = useState(true)
-  const [username, setUsername] = useState('')
-  const [website, setWebsite] = useState('')
-  const [avatarUrl, setAvatarUrl] = useState('')
+  const [loading, setLoading] = useState(true);
+  const [username, setUsername] = useState('');
+  const [avatarUrl, setAvatarUrl] = useState('');
+  const [fullname, setFullname] = useState('');
+  const [email, setEmail] = useState('');
+  const [data, setData] = useState('');
 
   useEffect(() => {
-    if (session) getProfile()
-  }, [session])
+    if (session) getProfile();
+  }, [session]);
 
   async function getProfile() {
     try {
-      setLoading(true)
-      if (!session?.user) throw new Error('No user on the session!')
+      setLoading(true);
+      if (!session?.user) throw new Error('No user on the session!');
 
       const { data, error, status } = await supabase
         .from('profiles')
-        .select(`username, avatar_url`)
+        .select('username, avatar_url, full_name, email')
         .eq('id', session?.user.id)
-        .single()
+        .single();
       if (error && status !== 406) {
-        throw error
+        throw error;
       }
 
       if (data) {
-        setUsername(data.username)
-        setAvatarUrl(data.avatar_url)
+        setData(data);
+        setUsername(data.username);
+        setAvatarUrl(data.avatar_url);
+        setFullname(data.full_name);
+        setEmail(data.email);
       }
     } catch (error) {
       if (error instanceof Error) {
-        Alert.alert(error.message)
+        Alert.alert(error.message);
       }
     } finally {
-      setLoading(false)
-    }
-  }
-
-  async function updateProfile({
-    username,
-    avatar_url,
-  }: {
-    username: string
-    avatar_url: string
-  }) {
-    try {
-      setLoading(true)
-      if (!session?.user) throw new Error('No user on the session!')
-
-      const updates = {
-        id: session?.user.id,
-        username,
-        avatar_url,
-        updated_at: new Date(),
-      }
-
-      const { error } = await supabase.from('profiles').upsert(updates)
-
-      if (error) {
-        throw error
-      }
-    } catch (error) {
-      if (error instanceof Error) {
-        Alert.alert(error.message)
-      }
-    } finally {
-      setLoading(false)
+      setLoading(false);
     }
   }
 
   return (
     <View style={styles.container}>
-      <View style={[styles.verticallySpaced, styles.mt20]}>
-        <Input label="Email" value={session?.user?.email} disabled />
-      </View>
-      <View style={styles.verticallySpaced}>
-        <Input label="Username" value={username || ''} onChangeText={(text) => setUsername(text)} />
-      </View>
-
-
-      <View style={[styles.verticallySpaced, styles.mt20]}>
-        <Button
-          title={loading ? 'Loading ...' : 'Update'}
-          onPress={() => updateProfile({ username, avatar_url: avatarUrl })}
-          disabled={loading}
-        />
-      </View>
-
-      <View style={styles.verticallySpaced}>
-        <Button title="Sign Out" onPress={() => supabase.auth.signOut()} />
-      </View>
+      <Image source={{ uri: avatarUrl }} style={styles.image} />
+      <Text>{fullname}</Text>
+      <Text>{username}</Text>
+      <Text>{email}</Text>
+      <Link
+        style={styles.update}
+        href={{
+          pathname: '/(profile)/update',
+          params: { username, avatarUrl, fullname, email },
+        }}
+      >
+        Update
+      </Link>
+      <Button onPress={() => supabase.auth.signOut()} text="Sign Out"></Button>
     </View>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
@@ -111,4 +81,13 @@ const styles = StyleSheet.create({
   mt20: {
     marginTop: 20,
   },
-})
+  image: {
+    width: '50%',
+    aspectRatio: 1,
+  },
+  update: {
+    color: Colors.light.tint,
+    textDecorationLine: 'underline',
+    alignSelf: 'center',
+  },
+});
