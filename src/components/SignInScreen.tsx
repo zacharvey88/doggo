@@ -1,27 +1,34 @@
-import { View, Text, TextInput, StyleSheet, Alert } from "react-native";
+import { View, Text, TextInput, StyleSheet, Alert, Pressable, AppState } from "react-native";
 import React, { useState } from "react";
-import Button from "../../components/Button";
-import Colors from "../../constants/Colors";
+import Colors from "@/src/constants/Colors";
 import { Link, Stack } from "expo-router";
-import {supabase} from "@/src/lib/supabase";
+import { supabase } from "@/src/lib/supabase";
+import Button from "./Button";
+AppState.addEventListener('change', (state) => {
+  if (state === 'active') {
+    supabase.auth.startAutoRefresh()
+  } else {
+    supabase.auth.stopAutoRefresh()
+  }
+})
 
-const SignUpScreen = () => {
+const SignInScreen = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const[loading, setLoading]= useState(false)
+  const [loading, setLoading] = useState(false);
 
-  async function signUpWithEmail() {
-    setLoading(true)
-    const { error } = await supabase.auth.signUp({ email, password });
+  async function signInWithEmail() {
+    setLoading(true);
+    const { error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
     if (error) Alert.alert(error.message);
-    setLoading(false)
+    setLoading(false);
   }
-  
 
   return (
     <View style={styles.container}>
-      <Stack.Screen options={{ title: "Sign up" }} />
-
       <Text style={styles.label}>Email</Text>
       <TextInput
         value={email}
@@ -39,9 +46,13 @@ const SignUpScreen = () => {
         secureTextEntry
       />
 
-      <Button onPress={signUpWithEmail} disabled={loading} text={loading? "Creating account":"Create account" }/>
-      <Link href="/sign-in" style={styles.textButton}>
-        Sign in
+      <Button
+        onPress={signInWithEmail}
+        disabled={loading}
+        text={loading ? "Signing in..." : "Sign in"}
+      />
+      <Link href="/sign-up" style={styles.textButton}>
+        Create an account
       </Link>
     </View>
   );
@@ -73,4 +84,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default SignUpScreen;
+export default SignInScreen;
