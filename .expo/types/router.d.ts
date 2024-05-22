@@ -2,11 +2,10 @@
 import type { ReactNode } from 'react';
 import type { TextProps, GestureResponderEvent } from 'react-native';
 
-  type StaticRoutes = `/` | `/(profile)` | `/(tabs)` | `/_sitemap` | `/airlines` | `/modal` | `/search` | `/sign-in` | `/sign-up` | `/trips` | `/update`;
-
+export namespace ExpoRouter {
+  type StaticRoutes = `/` | `/(tabs)` | `/_sitemap` | `/airlines` | `/modal` | `/profile` | `/search` | `/sign-in` | `/sign-up` | `/trips` | `/update`;
   type DynamicRoutes<T extends string> = `/${SingleRoutePart<T>}`;
   type DynamicRouteTemplate = `/[id]`;
-
 
   export type RelativePathString = `./${string}` | `../${string}` | '..';
   export type AbsoluteRoute = DynamicRouteTemplate | StaticRoutes;

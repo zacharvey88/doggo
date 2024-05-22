@@ -1,18 +1,18 @@
-import { useState, useEffect } from 'react';
-import { supabase } from '@/src/lib/supabase';
-import { StyleSheet, View, Alert, Text, Image } from 'react-native';
-import { Session } from '@supabase/supabase-js';
-import { Link } from 'expo-router';
-import Colors from '../constants/Colors';
-import Button from './Button';
+import { useState, useEffect } from "react";
+import { supabase } from "@/src/lib/supabase";
+import { StyleSheet, View, Alert, Text, Image } from "react-native";
+import { Session } from "@supabase/supabase-js";
+import { Link } from "expo-router";
+import Colors from "../constants/Colors";
+import Button from "./Button";
 
 export default function Account({ session }: { session: Session }) {
   const [loading, setLoading] = useState(true);
-  const [username, setUsername] = useState('');
-  const [avatarUrl, setAvatarUrl] = useState('');
-  const [fullname, setFullname] = useState('');
-  const [email, setEmail] = useState('');
-  const [data, setData] = useState('');
+  const [username, setUsername] = useState("");
+  const [avatarUrl, setAvatarUrl] = useState("");
+  const [fullname, setFullname] = useState("");
+  const [email, setEmail] = useState("");
+  const [data, setData] = useState("");
 
   useEffect(() => {
     if (session) getProfile();
@@ -21,12 +21,12 @@ export default function Account({ session }: { session: Session }) {
   async function getProfile() {
     try {
       setLoading(true);
-      if (!session?.user) throw new Error('No user on the session!');
+      if (!session?.user) throw new Error("No user on the session!");
 
       const { data, error, status } = await supabase
-        .from('profiles')
-        .select('username, avatar_url, full_name, email')
-        .eq('id', session?.user.id)
+        .from("profiles")
+        .select("username, avatar_url, full_name, email")
+        .eq("id", session?.user.id)
         .single();
       if (error && status !== 406) {
         throw error;
@@ -50,44 +50,67 @@ export default function Account({ session }: { session: Session }) {
 
   return (
     <View style={styles.container}>
-      <Image source={{ uri: avatarUrl }} style={styles.image} />
-      <Text>{fullname}</Text>
-      <Text>{username}</Text>
-      <Text>{email}</Text>
+      <View style={styles.badge}>
+        <Image source={{ uri: avatarUrl }} style={styles.image} />
+        <Text style={styles.fullname}>{fullname}</Text>
+        <Text style={styles.username}>{username}</Text>
+      </View>
+
       <Link
-        style={styles.update}
+        style={styles.textButton}
         href={{
-          pathname: '/(profile)/update',
+          pathname: "/(tabs)/profile/update",
           params: { username, avatarUrl, fullname, email },
         }}
       >
-        Update
+        Edit Profile
       </Link>
-      <Button onPress={() => supabase.auth.signOut()} text="Sign Out"></Button>
+      <Button onPress={() => supabase.auth.signOut()} text="Sign Out" ></Button>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: 40,
     padding: 12,
+    marginTop: 10,
+    flex: 1,
+    justifyContent: "space-between",
+  },
+  badge: {
+    display: "flex",
+    flexDirection: "column",
+    gap: 6
   },
   verticallySpaced: {
     paddingTop: 4,
     paddingBottom: 4,
-    alignSelf: 'stretch',
+    alignSelf: "stretch",
   },
   mt20: {
     marginTop: 20,
   },
   image: {
-    width: '50%',
+    width: "40%",
     aspectRatio: 1,
+    resizeMode: "cover",
+    alignSelf: "center",
   },
-  update: {
+  textButton: {
     color: Colors.light.tint,
-    textDecorationLine: 'underline',
-    alignSelf: 'center',
+    textDecorationLine: "underline",
+    alignSelf: "center",
+    fontSize: 16,
+  },
+  fullname: {
+    marginTop:16,
+    alignSelf: "center",
+    fontWeight: "bold",
+    fontSize: 22,
+  },
+  username: {
+    alignSelf: "center",
+    color: "gray",
+    fontSize: 18,
   },
 });
