@@ -19,7 +19,7 @@ export default function TabSearch() {
     accommodation_id: number
     address: string
     phone: string | null
-    photos: Json
+    photos: Json | null
     title: string
   }[]>([]);
   useEffect(() => {
@@ -27,13 +27,15 @@ export default function TabSearch() {
   }, []);
   async function getAccom() {
     const { data } = await supabase.from("accommodation").select('*')
-    setAccom(data as {
-      accommodation_id: number
-      address: string
-      phone: string | null
-      photos: Json
-      title: string
-    }[]);
+    setAccom(
+      data as {
+        accommodation_id: number;
+        address: string;
+        phone: string | null;
+        photos: Json | null;
+        title: string;
+      }[]
+    );1
   }
 
 
@@ -85,13 +87,14 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: "center",
-    justifyContent: "flex-start", // Changed to flex-start for better layout
-    padding: 10
+    justifyContent: "center",
+    padding: 20
   },
   container_filter: {
     flexDirection: "row",
     justifyContent: "space-around",
     marginBottom: 16,
+    marginTop:10,
   },
   iconContainer: {
     alignItems: "center",
