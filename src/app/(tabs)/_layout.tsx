@@ -51,7 +51,7 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="search/index"
+        name="search"
         options={{
           title: "Search",
           tabBarIcon: ({ color }) => <FontAwesome6 name="magnifying-glass" size={24} color={color} />,
