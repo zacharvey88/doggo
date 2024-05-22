@@ -74,9 +74,9 @@ export default function TabSearch() {
       <FlatList
         data={accom}
         renderItem={({ item }) => <AccommodationListItem accom={item} />}
-        numColumns={2}
+        numColumns={1}
         contentContainerStyle={{ gap: 10, padding: 10 }}
-        columnWrapperStyle={{ gap: 10 }}
+        
       />
       </View>
     </View>
@@ -86,9 +86,9 @@ export default function TabSearch() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-    padding: 20
+    backgroundColor: '#ADD8E6',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   container_filter: {
     flexDirection: "row",
@@ -111,7 +111,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 20,
     fontWeight: "bold",
-    marginBottom: 10, // Added marginBottom for spacing
+    marginBottom: 10, 
   },
   searchContainer: {
     width: "100%",
