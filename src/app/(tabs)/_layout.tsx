@@ -61,6 +61,7 @@ export default function TabLayout() {
         name="airlines"
         options={{
           title: "Airlines",
+          headerShown: false,
           tabBarIcon: ({ color }) => <TabBarIcon name="plane" color={color} />,
         }}
       />
