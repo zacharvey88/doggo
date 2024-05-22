@@ -69,12 +69,25 @@ export default function TabAirlines() {
             showsVerticalScrollIndicator={false}
             showsHorizontalScrollIndicator={false}
             renderItem={({ item }) => 
-              <Link href={`/airlines/${item.airline_id}`} asChild>
+              <Link href={{
+                pathname: `/airlines/${item.airline_id}`,
+                params: {
+                  airline_name: item.airline_name,
+                  airline_logo_url: item.airline_logo_url,
+                  policy_url: item.airline_pet_policy_url,
+                  policy_reservations: item.pet_policy_reservations,
+                  policy_cabin: item.pet_policy_cabin,
+                  policy_cargo: item.pet_policy_cargo,
+                  policy_checked_baggage: item.pet_policy_checked_baggage,
+                  policy_guidelines: item.pet_policy_guidelines,
+                  policy_restrictions: item.pet_policy_restrictions
+                }
+              }} asChild>
                 <Pressable>
-                <Image 
-                  source={{ uri: item.airline_logo_url }} 
-                  style={styles.image} 
-                  resizeMode='contain' />
+                  <Image 
+                    source={{ uri: item.airline_logo_url }} 
+                    style={styles.image} 
+                    resizeMode='contain' />
                 </Pressable>
               </Link>
             }
