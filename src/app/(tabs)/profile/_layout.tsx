@@ -6,7 +6,8 @@ const AccountStack = () => {
    
   return (
     <Stack>
-      <Stack.Screen name="(profile)" options={{ headerShown:false }} />
+      <Stack.Screen name="index"  options={{title: "" }}  />
+      <Stack.Screen name="update"  options={{title:"Edit Profile"}}  />
     </Stack>
   )
 }
