@@ -1,10 +1,11 @@
 import { useState, useEffect } from "react";
 import { supabase } from "@/src/lib/supabase";
-import { StyleSheet, View, Alert } from "react-native";
+import { StyleSheet, View, Alert, Image, Text } from "react-native";
 import { Input } from "@rneui/themed";
 import Button from "@components/Button";
 import { useRouter, useLocalSearchParams } from "expo-router";
 import { Session } from "@supabase/supabase-js";
+import Avatar from "@/src/components/Avatar";
 
 export default function UpdateAccount() {
   const {
@@ -37,7 +38,6 @@ export default function UpdateAccount() {
       }
     );
 
-    // Correctly cleanup the auth listener
     return () => {
       authListener.subscription.unsubscribe();
     };
@@ -64,18 +64,21 @@ export default function UpdateAccount() {
         updated_at: new Date(),
       };
 
-      console.log("Updating profile with:", updates); // Debug output
-
       const { error } = await supabase.from("profiles").upsert(updates);
 
       if (error) {
         throw error;
       }
 
+      // Update the local state to reflect the new profile data
+      setUsername(username);
+      setAvatarUrl(avatar_url);
+      setFullname(fullname);
+
       Alert.alert("Account updated successfully");
       router.back();
     } catch (error) {
-      console.error("Error updating profile:", error); // Log error to console
+      console.error("Error updating profile:", error);
       if (error instanceof Error) {
         Alert.alert("Error", error.message);
       }
@@ -87,20 +90,23 @@ export default function UpdateAccount() {
   return (
     <View style={styles.container}>
       <View style={styles.verticallySpaced}>
-        <Input label="Email" value={email || ""} disabled />
+        <Input label="Email" style={{ textDecorationLine: "none" }} value={email} disabled />
 
-        <View style={styles.verticallySpaced}>
-          <Input
-            label="Avatar Url"
-            value={avatarUrl}
-            onChangeText={setAvatarUrl}
+        <View>
+          <Avatar
+            size={200}
+            url={avatarUrl}
+            onUpload={(url: string) => {
+              setAvatarUrl(url);
+              updateProfile({ username, fullname, avatar_url: url });
+            }}
           />
         </View>
       </View>
       <View style={styles.verticallySpaced}>
         <Input
-          label="Username"
-          value={username || ""}
+          label="User name"
+          value={username}
           onChangeText={setUsername}
         />
       </View>
@@ -133,5 +139,13 @@ const styles = StyleSheet.create({
   },
   mt20: {
     marginTop: 20,
+  },
+  image: {
+    width: "40%",
+    aspectRatio: 1,
+    resizeMode: "cover",
+    alignSelf: "center",
+    borderRadius: 100,
+    borderWidth: 1,
   },
 });
