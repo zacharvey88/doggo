@@ -9,7 +9,6 @@ export default function Accommodation() {
     const [rating, setRating] = useState(4);
     const [loading, setLoading] = useState(false);
     const router = useRouter();
-    const [imageHeight, setImageHeight] = useState(200);
 
     const {
         id,
@@ -23,14 +22,11 @@ export default function Accommodation() {
         city,
         country
     } = useLocalSearchParams();
-
-    console.log('3.', photos);
     
-
     return (
         <View style={styles.container}>
             <ScrollView contentContainerStyle={styles.scrollContainer}>
-                <Stack.Screen options={{ title: "" }}/>
+                <Stack.Screen options={{ title: '' }}/>
                 <Text style={styles.title}>{title}</Text>
                 {photos ? (
                 <Image
@@ -55,7 +51,7 @@ export default function Accommodation() {
                     title="See Reviews" 
                     titleStyle={{ fontSize: 14 }}
                     style={styles.button}
-                    onPress={() => router.push(`/accommodation/${id}/reviews`)}
+                    onPress={() => router.push(`/search/${id}/reviews`)}
                     />
                     <Button 
                     title="Add to trip" 
