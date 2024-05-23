@@ -32,9 +32,9 @@ export default function TabSearch() {
   async function getAccommodation() {
     setLoading(true);
     const { data, error } = await supabase
-      .from('accommodation')
-      .select('*')
-      .order('accommodation_id', { ascending: true });
+      .from("accommodation")
+      .select("*")
+      .order("accommodation_id", { ascending: true });
     if (data) {
       setAccommodation(data);
       setFilteredAccommodations(data); 
