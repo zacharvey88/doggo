@@ -142,7 +142,7 @@ export type Database = {
           },
         ]
       }
-      reviews: {
+      reviews_accommodation: {
         Row: {
           accommodation_id: number
           created_at: string
@@ -177,36 +177,120 @@ export type Database = {
           },
         ]
       }
+      reviews_airlines: {
+        Row: {
+          airline_id: number
+          created_at: string
+          rating: number
+          review_id: number
+          review_text: string
+          user_id: string
+        }
+        Insert: {
+          airline_id: number
+          created_at?: string
+          rating: number
+          review_id?: number
+          review_text: string
+          user_id: string
+        }
+        Update: {
+          airline_id?: number
+          created_at?: string
+          rating?: number
+          review_id?: number
+          review_text?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "reviews_airlines_airline_id_fkey"
+            columns: ["airline_id"]
+            isOneToOne: false
+            referencedRelation: "airlines"
+            referencedColumns: ["airline_id"]
+          },
+          {
+            foreignKeyName: "reviews_airlines_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       trips: {
         Row: {
-          accommodation: Json | null
+          accommodation_id: number | null
           airline_id: number | null
           created_at: string
           end_date: string | null
           start_date: string | null
           title: string
           trip_id: number
-          user_id: number
+          user_id: string
         }
         Insert: {
-          accommodation?: Json | null
+          accommodation_id?: number | null
           airline_id?: number | null
           created_at?: string
           end_date?: string | null
           start_date?: string | null
           title: string
           trip_id?: number
-          user_id: number
+          user_id: string
         }
         Update: {
-          accommodation?: Json | null
+          accommodation_id?: number | null
           airline_id?: number | null
           created_at?: string
           end_date?: string | null
           start_date?: string | null
           title?: string
           trip_id?: number
-          user_id?: number
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "trips_accommodation_id_fkey"
+            columns: ["accommodation_id"]
+            isOneToOne: false
+            referencedRelation: "accommodation"
+            referencedColumns: ["accommodation_id"]
+          },
+          {
+            foreignKeyName: "trips_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      vets: {
+        Row: {
+          address: string | null
+          created_at: string
+          id: number
+          photos: Json | null
+          rating: number | null
+          title: string | null
+        }
+        Insert: {
+          address?: string | null
+          created_at?: string
+          id?: number
+          photos?: Json | null
+          rating?: number | null
+          title?: string | null
+        }
+        Update: {
+          address?: string | null
+          created_at?: string
+          id?: number
+          photos?: Json | null
+          rating?: number | null
+          title?: string | null
         }
         Relationships: []
       }
