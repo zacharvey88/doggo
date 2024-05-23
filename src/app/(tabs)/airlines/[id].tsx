@@ -1,13 +1,13 @@
-import { Stack, useLocalSearchParams } from "expo-router";
+import { Link, Stack, useLocalSearchParams, useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import { View, Text, StyleSheet, Image, Linking, ScrollView } from "react-native";
-import { Button, Header } from "react-native-elements";
+import { Button } from "react-native-elements";
 import {StarRatingDisplay} from "react-native-star-rating-widget";
-
 export default function Airline() {
 
   const [rating, setRating] = useState(4);
   const [loading, setLoading] = useState(false);
+  const router = useRouter();
 
   const { 
     id, 
@@ -25,7 +25,7 @@ export default function Airline() {
   return (
     <View style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollContainer}>
-        <Stack.Screen options={{ title: "" }} />
+        <Stack.Screen options={{ title: airline_name }} />
         {/* <Image 
           source={{ uri: airline_logo_url }} 
           style={styles.image} 
@@ -40,12 +40,11 @@ export default function Airline() {
             style={styles.button}
             onPress={() => {Linking.openURL(policy_url)}}
           />
-
           <Button 
             title="See Reviews" 
             titleStyle={{ fontSize: 14 }}
             style={styles.button}
-            onPress={() => {}}
+            onPress={() => router.push(`/airlines/${id}/reviews`)}
           />
           <Button 
             title="Add to trip" 

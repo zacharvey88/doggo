@@ -142,7 +142,7 @@ export type Database = {
           },
         ]
       }
-      reviews: {
+      reviews_accommodation: {
         Row: {
           accommodation_id: number
           created_at: string
@@ -210,6 +210,14 @@ export type Database = {
             referencedRelation: "airlines"
             referencedColumns: ["airline_id"]
           },
+
+          {
+            foreignKeyName: "reviews_airlines_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
         ]
       }
       trips: {
@@ -242,6 +250,49 @@ export type Database = {
           title?: string
           trip_id?: number
           user_id?: string
+
+        }
+        Relationships: [
+          {
+            foreignKeyName: "trips_accommodation_id_fkey"
+            columns: ["accommodation_id"]
+            isOneToOne: false
+            referencedRelation: "accommodation"
+            referencedColumns: ["accommodation_id"]
+          },
+          {
+            foreignKeyName: "trips_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      vets: {
+        Row: {
+          address: string | null
+          created_at: string
+          id: number
+          photos: Json | null
+          rating: number | null
+          title: string | null
+        }
+        Insert: {
+          address?: string | null
+          created_at?: string
+          id?: number
+          photos?: Json | null
+          rating?: number | null
+          title?: string | null
+        }
+        Update: {
+          address?: string | null
+          created_at?: string
+          id?: number
+          photos?: Json | null
+          rating?: number | null
+          title?: string | null
         }
         Relationships: [
           {
