@@ -41,7 +41,6 @@ const PlacesComponent = (props) => {
             <Text style={styles.placeName}>{item.displayName.text}</Text>
             <Text style={styles.placeAddress}>{item.formattedAddress}</Text>
             <Text style={styles.placeGoogleMapsUri}>{item.googleMapsUri}</Text>
-            <Text style={styles.placeType}>{item.primaryTypeDisplayName.text}</Text>
             <Text style={styles.placeLocation}>
               Location: {item.location.latitude}, {item.location.longitude}
             </Text>

@@ -8,15 +8,17 @@ const newsearch = () => {
     const[search, setSearch]= useState("")
     console.log("search term: ", search)
     useEffect(()=>{
-        
+
     },[search])
   return (
     <View style={{ zIndex: 1, flex: 1 }}>
       <GooglePlacesAutocomplete
+      fetchDetails={true}
         placeholder="Search"
         onPress={(data, details = null) => {
           // 'details' is provided when fetchDetails = true
-          console.log(data);
+        //   console.log(JSON.stringify(data));
+        console.log(data)
           setSearch(data.description)
         }}
         query={{
