@@ -17,11 +17,10 @@ export default function ReviewsList({ id, table }: { id: number; table: keyof Da
     const { data, error } = await supabase
       .from(table)
       .select('*')
-      .eq(table === 'reviews' ? 'accommodation_id' : 'airline_id', id)
+      .eq(table === 'reviews_accommodation' ? 'accommodation_id' : 'airline_id', id)
       .order('created_at', { ascending: false });
     if (data) {
       setReviews(data);
-      console.log(data);
       
     }
     setLoading(false);
