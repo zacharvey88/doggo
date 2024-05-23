@@ -56,7 +56,8 @@ const Vets = () => {
             </View>
           )}
         />
-      </View>
+        </View>
+        
     );
 }
 

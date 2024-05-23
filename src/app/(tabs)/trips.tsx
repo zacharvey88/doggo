@@ -38,7 +38,6 @@ export default function TabTrips() {
       console.log(trips)
       return (
         <>
-        {console.log("helloeleoeloe")}
           {session && session.user ? (
             loading ? (
               <View style={styles.container}>
