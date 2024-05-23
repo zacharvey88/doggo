@@ -54,6 +54,7 @@ export default function TabLayout() {
         name="search"
         options={{
           title: "Search",
+          headerShown: false,
           tabBarIcon: ({ color }) => <FontAwesome6 name="magnifying-glass" size={24} color={color} />,
         }}
       />
@@ -69,6 +70,7 @@ export default function TabLayout() {
         name="trips"
         options={{
           title: "Trips",
+          headerShown: false,
           tabBarIcon: ({ color }) => <FontAwesome6 name="route" size={24} color={color} />,
         }}
       />
