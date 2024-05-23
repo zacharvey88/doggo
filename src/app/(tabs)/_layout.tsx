@@ -70,6 +70,7 @@ export default function TabLayout() {
         name="trips"
         options={{
           title: "Trips",
+          headerShown: false,
           tabBarIcon: ({ color }) => <FontAwesome6 name="route" size={24} color={color} />,
         }}
       />
