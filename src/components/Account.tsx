@@ -1,114 +1,134 @@
-import { useState, useEffect } from 'react'
-import { supabase } from '../lib/supabase'
-import { StyleSheet, View, Alert } from 'react-native'
-import { Button, Input } from '@rneui/themed'
-import { Session } from '@supabase/supabase-js'
+import { useState, useEffect } from "react";
+import { supabase } from "@/src/lib/supabase";
+import { StyleSheet, View, Alert, Text, Image } from "react-native";
+import { Session } from "@supabase/supabase-js";
+import { Link, useNavigation } from "expo-router";
+import Colors from "../constants/Colors";
+import Button from "./Button";
 
 export default function Account({ session }: { session: Session }) {
-  const [loading, setLoading] = useState(true)
-  const [username, setUsername] = useState('')
-  const [website, setWebsite] = useState('')
-  const [avatarUrl, setAvatarUrl] = useState('')
+  const [loading, setLoading] = useState(true);
+  const [username, setUsername] = useState("");
+  const [avatarUrl, setAvatarUrl] = useState("");
+  const [fullname, setFullname] = useState("");
+  const [email, setEmail] = useState("");
+  const navigation = useNavigation();
+  const defaultImage =
+  "https://i.sstatic.net/l60Hf.png";
 
-  useEffect(() => {
-    if (session) getProfile()
-  }, [session])
 
-  async function getProfile() {
+
+  const fetchProfile = async () => {
     try {
-      setLoading(true)
-      if (!session?.user) throw new Error('No user on the session!')
+      setLoading(true);
+      if (!session?.user) throw new Error("No user on the session!");
 
       const { data, error, status } = await supabase
-        .from('profiles')
-        .select(`username, avatar_url`)
-        .eq('id', session?.user.id)
-        .single()
+        .from("profiles")
+        .select("username, avatar_url, full_name, email")
+        .eq("id", session?.user.id)
+        .single();
       if (error && status !== 406) {
-        throw error
+        throw error;
       }
 
       if (data) {
-        setUsername(data.username)
-        setAvatarUrl(data.avatar_url)
+        setUsername(data.username);
+        setFullname(data.full_name);
+        setAvatarUrl(data.avatar_url);
+        setEmail(data.email);
       }
     } catch (error) {
       if (error instanceof Error) {
-        Alert.alert(error.message)
+        Alert.alert(error.message);
       }
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
-  async function updateProfile({
-    username,
-    avatar_url,
-  }: {
-    username: string
-    avatar_url: string
-  }) {
-    try {
-      setLoading(true)
-      if (!session?.user) throw new Error('No user on the session!')
-
-      const updates = {
-        id: session?.user.id,
-        username,
-        avatar_url,
-        updated_at: new Date(),
-      }
-
-      const { error } = await supabase.from('profiles').upsert(updates)
-
-      if (error) {
-        throw error
-      }
-    } catch (error) {
-      if (error instanceof Error) {
-        Alert.alert(error.message)
-      }
-    } finally {
-      setLoading(false)
+  useEffect(() => {
+    if (session) {
+      fetchProfile();
     }
-  }
+  }, [session]);
+
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      if (session) {
+        fetchProfile();
+      }
+    });
+
+    return unsubscribe;
+  }, [navigation, session]);
 
   return (
     <View style={styles.container}>
-      <View style={[styles.verticallySpaced, styles.mt20]}>
-        <Input label="Email" value={session?.user?.email} disabled />
-      </View>
-      <View style={styles.verticallySpaced}>
-        <Input label="Username" value={username || ''} onChangeText={(text) => setUsername(text)} />
-      </View>
+      <View style={styles.badge}>
 
 
-      <View style={[styles.verticallySpaced, styles.mt20]}>
-        <Button
-          title={loading ? 'Loading ...' : 'Update'}
-          onPress={() => updateProfile({ username, avatar_url: avatarUrl })}
-          disabled={loading}
-        />
+        <Image source={{ uri:  avatarUrl? `https://orcurstjttnhckjuhyqb.supabase.co/storage/v1/object/public/avatars/${avatarUrl}` : defaultImage }} style={styles.image} />
+        <Text style={styles.fullname}>{fullname}</Text>
+        <Text style={styles.username}>{username}</Text>
       </View>
 
-      <View style={styles.verticallySpaced}>
-        <Button title="Sign Out" onPress={() => supabase.auth.signOut()} />
-      </View>
+      <Link
+        style={styles.textButton}
+        href={{
+          pathname: "/profile/update",
+          params: { username, avatarUrl, fullname, email },
+        }}
+      >
+        Edit Profile
+      </Link>
+      <Button onPress={() => supabase.auth.signOut()} text="Sign Out"></Button>
     </View>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: 40,
     padding: 12,
+    marginTop: 10,
+    flex: 1,
+    justifyContent: "space-between",
+  },
+  badge: {
+    display: "flex",
+    flexDirection: "column",
+    gap: 6,
   },
   verticallySpaced: {
     paddingTop: 4,
     paddingBottom: 4,
-    alignSelf: 'stretch',
+    alignSelf: "stretch",
   },
   mt20: {
     marginTop: 20,
   },
-})
+  image: {
+    width: "40%",
+    aspectRatio: 1,
+    resizeMode: "cover",
+    alignSelf: "center",
+    borderRadius: 100,
+  },
+  textButton: {
+    color: Colors.light.tint,
+    textDecorationLine: "underline",
+    alignSelf: "center",
+    fontSize: 16,
+  },
+  fullname: {
+    marginTop: 16,
+    alignSelf: "center",
+    fontWeight: "bold",
+    fontSize: 22,
+  },
+  username: {
+    alignSelf: "center",
+    color: "gray",
+    fontSize: 18,
+  },
+});

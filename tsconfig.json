@@ -4,7 +4,7 @@
     "strict": true,
     "paths": {
       "@/*": ["./*"],
-      "@components": ["./src/app/components/*"]
+      "@components/*": ["src/components/*"]
     },
     "jsx": "react-native"
   },

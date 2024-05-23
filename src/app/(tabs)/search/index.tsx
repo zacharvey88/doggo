@@ -7,6 +7,7 @@ import AccommodationListItem from '@/src/components/AccommodationListItem';
 import { supabase } from '@/src/lib/supabase';
 import { Json } from '@/src/lib/database.types';
 import { FontAwesome6 } from '@expo/vector-icons';
+import { Link, Stack } from 'expo-router';
 
 export default function TabSearch() {
   const [search, setSearch] = useState('');
@@ -17,9 +18,10 @@ export default function TabSearch() {
 
   const [accom, setAccom] = useState<{
     accommodation_id: number
+    description: string
     address: string
     phone: string | null
-    photos: Json
+    photos: Json | null
     title: string
   }[]>([]);
   useEffect(() => {
@@ -27,13 +29,16 @@ export default function TabSearch() {
   }, []);
   async function getAccom() {
     const { data } = await supabase.from("accommodation").select('*')
-    setAccom(data as {
-      accommodation_id: number
-      address: string
-      phone: string | null
-      photos: Json
-      title: string
-    }[]);
+    setAccom(
+      data as {
+        accommodation_id: number;
+        description: string;
+        address: string;
+        phone: string | null;
+        photos: Json | null;
+        title: string;
+      }[]
+    );1
   }
 
 
@@ -72,9 +77,9 @@ export default function TabSearch() {
       <FlatList
         data={accom}
         renderItem={({ item }) => <AccommodationListItem accom={item} />}
-        numColumns={2}
+        numColumns={1}
         contentContainerStyle={{ gap: 10, padding: 10 }}
-        columnWrapperStyle={{ gap: 10 }}
+        
       />
       </View>
     </View>
@@ -84,14 +89,15 @@ export default function TabSearch() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: "center",
-    justifyContent: "flex-start", // Changed to flex-start for better layout
-    padding: 10
+    backgroundColor: '#ADD8E6',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   container_filter: {
     flexDirection: "row",
     justifyContent: "space-around",
     marginBottom: 16,
+    marginTop:10,
   },
   iconContainer: {
     alignItems: "center",
@@ -108,7 +114,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 20,
     fontWeight: "bold",
-    marginBottom: 10, // Added marginBottom for spacing
+    marginBottom: 10, 
   },
   searchContainer: {
     width: "100%",

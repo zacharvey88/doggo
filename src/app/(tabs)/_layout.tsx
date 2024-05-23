@@ -7,7 +7,7 @@ import { Pressable } from "react-native";
 import Colors from "@/src/constants/Colors";
 import { useColorScheme } from "@/src/components/useColorScheme";
 import { useClientOnlyValue } from "@/src/components/useClientOnlyValue";
-
+import { AntDesign } from '@expo/vector-icons';
 // You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
 function TabBarIcon(props: {
   name: React.ComponentProps<typeof FontAwesome>["name"];
@@ -51,7 +51,7 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="search/index"
+        name="search"
         options={{
           title: "Search",
           tabBarIcon: ({ color }) => <FontAwesome6 name="magnifying-glass" size={24} color={color} />,
@@ -76,7 +76,8 @@ export default function TabLayout() {
         name="profile"
         options={{
           title: "Profile",
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
+          headerShown:false,
+          tabBarIcon: ({ color }) => <AntDesign name="profile" size={24} color={color} />
         }}
       />
     </Tabs>
