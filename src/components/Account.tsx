@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { supabase } from "@/src/lib/supabase";
 import { StyleSheet, View, Alert, Text, Image } from "react-native";
 import { Session } from "@supabase/supabase-js";
-import { Link } from "expo-router";
+import { Link, useNavigation } from "expo-router";
 import Colors from "../constants/Colors";
 import Button from "./Button";
 
@@ -12,13 +12,13 @@ export default function Account({ session }: { session: Session }) {
   const [avatarUrl, setAvatarUrl] = useState("");
   const [fullname, setFullname] = useState("");
   const [email, setEmail] = useState("");
-  const [data, setData] = useState("");
+  const navigation = useNavigation();
+  const defaultImage =
+  "https://i.sstatic.net/l60Hf.png";
 
-  useEffect(() => {
-    if (session) getProfile();
-  }, [session]);
 
-  async function getProfile() {
+
+  const fetchProfile = async () => {
     try {
       setLoading(true);
       if (!session?.user) throw new Error("No user on the session!");
@@ -33,10 +33,9 @@ export default function Account({ session }: { session: Session }) {
       }
 
       if (data) {
-        setData(data);
         setUsername(data.username);
-        setAvatarUrl(data.avatar_url);
         setFullname(data.full_name);
+        setAvatarUrl(data.avatar_url);
         setEmail(data.email);
       }
     } catch (error) {
@@ -46,12 +45,30 @@ export default function Account({ session }: { session: Session }) {
     } finally {
       setLoading(false);
     }
-  }
+  };
+
+  useEffect(() => {
+    if (session) {
+      fetchProfile();
+    }
+  }, [session]);
+
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      if (session) {
+        fetchProfile();
+      }
+    });
+
+    return unsubscribe;
+  }, [navigation, session]);
 
   return (
     <View style={styles.container}>
       <View style={styles.badge}>
-        <Image source={{ uri: avatarUrl }} style={styles.image} />
+
+
+        <Image source={{ uri:  avatarUrl? `https://orcurstjttnhckjuhyqb.supabase.co/storage/v1/object/public/avatars/${avatarUrl}` : defaultImage }} style={styles.image} />
         <Text style={styles.fullname}>{fullname}</Text>
         <Text style={styles.username}>{username}</Text>
       </View>
@@ -59,13 +76,13 @@ export default function Account({ session }: { session: Session }) {
       <Link
         style={styles.textButton}
         href={{
-          pathname: "/(tabs)/profile/update",
+          pathname: "/profile/update",
           params: { username, avatarUrl, fullname, email },
         }}
       >
         Edit Profile
       </Link>
-      <Button onPress={() => supabase.auth.signOut()} text="Sign Out" ></Button>
+      <Button onPress={() => supabase.auth.signOut()} text="Sign Out"></Button>
     </View>
   );
 }
@@ -80,7 +97,7 @@ const styles = StyleSheet.create({
   badge: {
     display: "flex",
     flexDirection: "column",
-    gap: 6
+    gap: 6,
   },
   verticallySpaced: {
     paddingTop: 4,
@@ -95,6 +112,7 @@ const styles = StyleSheet.create({
     aspectRatio: 1,
     resizeMode: "cover",
     alignSelf: "center",
+    borderRadius: 100,
   },
   textButton: {
     color: Colors.light.tint,
@@ -103,7 +121,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   fullname: {
-    marginTop:16,
+    marginTop: 16,
     alignSelf: "center",
     fontWeight: "bold",
     fontSize: 22,
