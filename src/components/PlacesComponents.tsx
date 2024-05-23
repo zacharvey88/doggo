@@ -3,15 +3,15 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, FlatList, ActivityIndicator } from 'react-native';
 import { fetchPlaces } from '../api/googlePlacesApi';
 
-const PlacesComponent = () => {
+const PlacesComponent = (props) => {
+  const{location}= props
+  console.log("location: ", location)
   const [places, setPlaces] = useState([]);
   const [loading, setLoading] = useState(true);
-  const apiKey = 'AIzaSyCyMYr9dWB1swRYOJdug6BeCU0ETlBIl84';
-
   useEffect(() => {
     const fetchPlacesData = async () => {
       try {
-        const data = await fetchPlaces(apiKey, 'Pet friendly restaurants in Manchester');
+        const data = await fetchPlaces( `Pet-friendly restaurants in ${location}`);
         setPlaces(data.places || []);
       } catch (error) {
         console.error('Error fetching places data:', error);
@@ -21,7 +21,7 @@ const PlacesComponent = () => {
     };
 
     fetchPlacesData();
-  }, []);
+  }, [location]);
 
   if (loading) {
     return (

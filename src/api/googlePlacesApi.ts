@@ -1,12 +1,15 @@
 // src/api/googlePlacesApi.ts
-export async function fetchPlaces(apiKey: string, query: string) {
-  const url = "https://places.googleapis.com/v1/places:searchText";
+import { GOOGLE_MAPS_API_KEY }  from "../constants/ApiKey";
+
+export async function fetchPlaces( query: string) {
+    const url = "https://places.googleapis.com/v1/places:searchText";
   const headers = {
     "Content-Type": "application/json",
-    "X-Goog-Api-Key": apiKey,
+    "X-Goog-Api-Key": GOOGLE_MAPS_API_KEY,
     "X-Goog-FieldMask":
       "places.displayName,places.formattedAddress,places.googleMapsUri,places.id,places.primaryTypeDisplayName,places.location,places.name",
   };
+
 
   const body = JSON.stringify({
     textQuery: query,
