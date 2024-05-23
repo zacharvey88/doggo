@@ -210,6 +210,7 @@ export type Database = {
             referencedRelation: "airlines"
             referencedColumns: ["airline_id"]
           },
+
           {
             foreignKeyName: "reviews_airlines_user_id_fkey"
             columns: ["user_id"]
@@ -249,6 +250,7 @@ export type Database = {
           title?: string
           trip_id?: number
           user_id?: string
+
         }
         Relationships: [
           {
@@ -292,7 +294,22 @@ export type Database = {
           rating?: number | null
           title?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "trips_accommodation_id_fkey"
+            columns: ["accommodation_id"]
+            isOneToOne: false
+            referencedRelation: "accommodation"
+            referencedColumns: ["accommodation_id"]
+          },
+          {
+            foreignKeyName: "trips_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
       }
     }
     Views: {

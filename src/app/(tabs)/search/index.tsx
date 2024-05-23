@@ -7,6 +7,7 @@ import AccommodationListItem from '@/src/components/AccommodationListItem';
 import { supabase } from '@/src/lib/supabase';
 import { Json } from '@/src/lib/database.types';
 import { FontAwesome6 } from '@expo/vector-icons';
+import { Link, Stack } from 'expo-router';
 
 export default function TabSearch() {
   const [search, setSearch] = useState('');
@@ -17,6 +18,7 @@ export default function TabSearch() {
 
   const [accom, setAccom] = useState<{
     accommodation_id: number
+    description: string
     address: string
     phone: string | null
     photos: Json | null
@@ -30,6 +32,7 @@ export default function TabSearch() {
     setAccom(
       data as {
         accommodation_id: number;
+        description: string;
         address: string;
         phone: string | null;
         photos: Json | null;
@@ -74,9 +77,9 @@ export default function TabSearch() {
       <FlatList
         data={accom}
         renderItem={({ item }) => <AccommodationListItem accom={item} />}
-        numColumns={2}
+        numColumns={1}
         contentContainerStyle={{ gap: 10, padding: 10 }}
-        columnWrapperStyle={{ gap: 10 }}
+        
       />
       </View>
     </View>
@@ -86,9 +89,9 @@ export default function TabSearch() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-    padding: 20
+    backgroundColor: '#ADD8E6',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   container_filter: {
     flexDirection: "row",
@@ -111,7 +114,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 20,
     fontWeight: "bold",
-    marginBottom: 10, // Added marginBottom for spacing
+    marginBottom: 10, 
   },
   searchContainer: {
     width: "100%",
