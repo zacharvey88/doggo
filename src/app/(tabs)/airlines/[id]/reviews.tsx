@@ -4,7 +4,7 @@ import ReviewsList from "@/src/components/ReviewsList";
 export default function Reviews() {
 
   const { id } = useLocalSearchParams();
-
+  
   return (
     <View style={styles.container}>
       <ReviewsList id={id} table='reviews_airlines'/>

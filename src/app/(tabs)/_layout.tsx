@@ -31,7 +31,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Home',
+          title: "Home",
           tabBarIcon: ({ color }) => <TabBarIcon name="home" color={color} />,
 
           headerRight: () => (
@@ -54,7 +54,10 @@ export default function TabLayout() {
         name="search"
         options={{
           title: "Search",
-          tabBarIcon: ({ color }) => <FontAwesome6 name="magnifying-glass" size={24} color={color} />,
+          headerShown: false,
+          tabBarIcon: ({ color }) => (
+            <FontAwesome6 name="magnifying-glass" size={24} color={color} />
+          ),
         }}
       />
       <Tabs.Screen
@@ -69,15 +72,29 @@ export default function TabLayout() {
         name="trips"
         options={{
           title: "Trips",
+          headerShown: false,
           tabBarIcon: ({ color }) => <FontAwesome6 name="route" size={24} color={color} />,
+
         }}
       />
-        <Tabs.Screen
+      <Tabs.Screen
         name="profile"
         options={{
           title: "Profile",
-          headerShown:false,
-          tabBarIcon: ({ color }) => <AntDesign name="profile" size={24} color={color} />
+          headerShown: false,
+          tabBarIcon: ({ color }) => (
+            <AntDesign name="profile" size={24} color={color} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="trip"
+        options={{
+          title: "Trip",
+          headerShown: false,
+          tabBarIcon: ({ color }) => (
+            <AntDesign name="profile" size={24} color={color} />
+          ),
         }}
       />
     </Tabs>

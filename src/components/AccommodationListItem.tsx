@@ -5,19 +5,23 @@ import { Json } from '@/src/lib/database.types';
 import { Link, Stack } from 'expo-router';
 
 type AccommodationListItemProps = {
-  accom: {
+  accommodation: {
     accommodation_id: number;
-    description: string,
+    description: string;
     address: string;
     phone: string | null;
-    photos: Json | undefined;
+    photos: Json | null;
     title: string;
+    postcode: number | string;
+    booking_url: string;
+    city: string;
+    country: string;
   };
 };
 
-const AccommodationListItem = ({ accom }: AccommodationListItemProps) => {
-  const photoUri = Array.isArray(accom.photos) && accom.photos.length > 0 ? (accom.photos[0] as string) : undefined;
-
+const AccommodationListItem = ({ accommodation }: AccommodationListItemProps) => {
+  const photoUri = Array.isArray(accommodation.photos) && accommodation.photos.length > 0 ? (accommodation.photos[0] as string) : undefined;
+  
   return (
     <View style={styles.container}>
       <View style={styles.imageContainer}>
@@ -34,16 +38,20 @@ const AccommodationListItem = ({ accom }: AccommodationListItemProps) => {
         )}
       </View>
       <View style={styles.textContainer}>
-        <Text style={styles.title}>{accom.title}</Text>
-        <Text>{accom.description}</Text>
+        <Text style={styles.title}>{accommodation.title}</Text>
+        <Text>{accommodation.description}</Text>
         <Link href={{
-          pathname: `/search/${accom.accommodation_id}`,
+          pathname: `/search/${accommodation.accommodation_id}`,
           params: {
-            title: accom.title,
-            description: accom.description,
-            address: accom.address,
-            phone: accom.phone,
-            photos: photoUri
+            title: accommodation.title,
+            description: accommodation.description,
+            address: accommodation.address,
+            phone: accommodation.phone,
+            photos: photoUri,
+            postcode: accommodation.postcode,
+            booking_url: accommodation.booking_url,
+            city: accommodation.city,
+            country: accommodation.country
           }
         }} asChild>
         <Button
