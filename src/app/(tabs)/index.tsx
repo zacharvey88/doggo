@@ -1,8 +1,5 @@
 import { StyleSheet, Image, Pressable } from 'react-native';
 import { Text, View } from '@/src/components/Themed';
-
-import Button from '@/src/components/Button';
-
 import { Link } from 'expo-router';
 
 export default function TabHome() {
