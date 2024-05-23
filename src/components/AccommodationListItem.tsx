@@ -19,13 +19,9 @@ type AccommodationListItemProps = {
   };
 };
 
-
-
 const AccommodationListItem = ({ accommodation }: AccommodationListItemProps) => {
   const photoUri = Array.isArray(accommodation.photos) && accommodation.photos.length > 0 ? (accommodation.photos[0] as string) : undefined;
   
-  console.log('2.', photoUri);
-
   return (
     <View style={styles.container}>
       <View style={styles.imageContainer}>

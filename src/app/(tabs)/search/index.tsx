@@ -1,101 +1,106 @@
 import React, { useState, useEffect } from "react";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, View, Pressable, ActivityIndicator, FlatList } from "react-native";
 import { Text } from "@/src/components/Themed";
-import { SearchBar, Icon } from "react-native-elements";
-import { FlatList } from "react-native";
+import { SearchBar } from "react-native-elements";
 import AccommodationListItem from "@/src/components/AccommodationListItem";
 import { supabase } from "@/src/lib/supabase";
-import { Json } from "@/src/lib/database.types";
+import { Database } from "@/src/lib/database.types";
 import { FontAwesome6 } from "@expo/vector-icons";
 import { Link, Stack } from "expo-router";
-import { Pressable } from "react-native";
 
 export default function TabSearch() {
-  const [search, setSearch] = useState("");
+  const [accommodation, setAccommodation] = useState<Database['public']['Tables']['accommodation']['Row'][]>([]);
+  const [filteredAccommodations, setFilteredAccommodations] = useState<Database['public']['Tables']['accommodation']['Row'][]>([]);
+  const [loading, setLoading] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
 
-  const updateSearch = (search) => {
-    setSearch(search);
-  };
-
-  const [accom, setAccom] = useState<
-    {
-      accommodation_id: number;
-      description: string;
-      address: string;
-      phone: string | null;
-      photos: Json | null;
-      title: string;
-    }[]
-  >([]);
   useEffect(() => {
-    getAccom();
+    getAccommodation();
   }, []);
-  async function getAccom() {
-    const { data } = await supabase.from("accommodation").select("*");
-    setAccom(
-      data as {
-        accommodation_id: number;
-        description: string;
-        address: string;
-        phone: string | null;
-        photos: Json | null;
-        title: string;
-      }[]
-    );
+
+  useEffect(() => {
+    if (searchTerm === '') {
+      setFilteredAccommodations(accommodation);
+    } else {
+      const filtered = accommodation.filter((acc) =>
+        acc.city.toLowerCase().startsWith(searchTerm.toLowerCase())
+      );
+      setFilteredAccommodations(filtered);
+    }
+  }, [searchTerm, accommodation]);
+
+  async function getAccommodation() {
+    setLoading(true);
+    const { data, error } = await supabase
+      .from('accommodation')
+      .select('*')
+      .order('accommodation_id', { ascending: true });
+    if (data) {
+      setAccommodation(data);
+      setFilteredAccommodations(data); 
+    } 
+    setLoading(false);
   }
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Pet Friendly Places</Text>
-      <SearchBar
-        placeholder="Enter a city!"
-        // onChangeText={updateSearch}
-        value={search}
-        lightTheme
-        round
-        containerStyle={styles.searchContainer}
-        inputContainerStyle={styles.searchInput}
-      />
-      <View style={styles.container_filter}>
-        <Link href={"../../icons/Vets"} asChild>
-          <Pressable style={styles.iconContainer}>
-            <FontAwesome6 name="shield-dog" style={styles.icon} />
-            <Text style={styles.filterText}>Vets</Text>
-          </Pressable>
-        </Link>
+      {loading ? (
+        <>
+          <Stack.Screen options={{ title: "Airlines"}} />
+          <ActivityIndicator style={styles.loading} />
+          <Text>Loading</Text>
+        </>
+      ) : (
+        <>
+          <Text style={styles.title}>Pet Friendly Places</Text>
+          <SearchBar
+            placeholder="Enter a city!"
+            onChangeText={(value) => setSearchTerm(value)}
+            value={searchTerm}
+            lightTheme
+            round
+            containerStyle={styles.searchContainer}
+            inputContainerStyle={styles.searchInput}
+          />
+          <View style={styles.container_filter}>
+            <Link href={"../../icons/Vets"} asChild>
+              <Pressable style={styles.iconContainer}>
+                <FontAwesome6 name="shield-dog" style={styles.icon} />
+                <Text style={styles.filterText}>Vets</Text>
+              </Pressable>
+            </Link>
 
-        <Link href={"../../icons/Shops"} asChild>
-          <Pressable style={styles.iconContainer}>
-            <FontAwesome6 name="shop" style={styles.icon} />
-            <Text style={styles.filterText}>Shops</Text>
-          </Pressable>
-        </Link>
+            <Link href={"../../icons/Shops"} asChild>
+              <Pressable style={styles.iconContainer}>
+                <FontAwesome6 name="shop" style={styles.icon} />
+                <Text style={styles.filterText}>Shops</Text>
+              </Pressable>
+            </Link>
 
-        <Link href={"../../icons/Parks"} asChild>
-          <Pressable style={styles.iconContainer}>
-            <FontAwesome6 name="tree" style={styles.icon} />
-            <Text style={styles.filterText}>Parks</Text>
-          </Pressable>
-        </Link>
+            <Link href={"../../icons/Parks"} asChild>
+              <Pressable style={styles.iconContainer}>
+                <FontAwesome6 name="tree" style={styles.icon} />
+                <Text style={styles.filterText}>Parks</Text>
+              </Pressable>
+            </Link>
 
-        <Link href={"../../icons/Beaches"} asChild>
-          <Pressable style={styles.iconContainer}>
-            <FontAwesome6 name="umbrella-beach" style={styles.icon} />
-            <Text style={styles.filterText}>Beaches</Text>
-          </Pressable>
-        </Link>
-      </View>
-
-      <View style={styles.list}>
-        <FlatList
-          data={accom}
-          renderItem={({ item }) => <AccommodationListItem accom={item} />}
-          numColumns={2}
-          contentContainerStyle={{ gap: 10, padding: 10 }}
-          columnWrapperStyle={{ gap: 10 }}
-          showsVerticalScrollIndicator={false}
-        />
-      </View>
+            <Link href={"../../icons/Beaches"} asChild>
+              <Pressable style={styles.iconContainer}>
+                <FontAwesome6 name="umbrella-beach" style={styles.icon} />
+                <Text style={styles.filterText}>Beaches</Text>
+              </Pressable>
+            </Link>
+          </View>
+          <View style={styles.list}>
+            <FlatList
+              data={filteredAccommodations}
+              renderItem={({ item }) => <AccommodationListItem accommodation={item} />}
+              contentContainerStyle={{ gap: 10, padding: 10 }}
+              showsVerticalScrollIndicator={false}
+            />
+          </View>
+        </>
+      )}
     </View>
   );
 }
@@ -143,3 +148,4 @@ const styles = StyleSheet.create({
     flex: 1,
   },
 });
+
