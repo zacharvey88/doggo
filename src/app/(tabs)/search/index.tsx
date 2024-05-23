@@ -100,7 +100,11 @@ export default function TabSearch() {
             {categories.map((category) => (
               <Pressable
                 key={category.name}
-                style={styles.iconContainer}
+                style={[
+                  styles.iconContainer,
+                  selectedCategory === category.name && styles.selectedIconContainer,
+
+                ]}
                 onPress={() => setSelectedCategory(category.name)}
               >
                 <FontAwesome6
@@ -143,10 +147,10 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#ADD8E6",
     alignItems: "center",
-    justifyContent: "flex-start",
     paddingTop: 20,
     paddingHorizontal: 10,
   },
+  loading: {  },
   searchContainer: {
     width: "100%",
     zIndex: 2,
@@ -177,36 +181,52 @@ const styles = StyleSheet.create({
     borderRadius: 5,
   },
   scrollView: {
-    maxHeight: 110,
+    padding:10,
+    maxHeight: 100,
   },
   scrollViewContent: {
-    flexDirection: "row",
-    paddingVertical: 10,
-    marginTop: 20,
-    height: 80,
+    gap:10,
   },
   iconContainer: {
+    flexDirection:"row",
+    gap:12,
     marginTop: 40,
     alignItems: "center",
-    marginHorizontal: 20,
+    borderRadius:8, 
+    paddingHorizontal:10,
+    paddingVertical:10,
+    backgroundColor: "#fff",
+    shadowColor: "#000", 
+    shadowOffset: { width: 0, height: 2 }, 
+    shadowOpacity: 0.25, 
+    shadowRadius: 3.84,
+    
   },
   icon: {
-    fontSize: 24,
-    marginBottom: 4,
+    fontSize: 20,
   },
   filterText: {
     fontSize: 16,
   },
+  selectedIconContainer: {
+    backgroundColor: "#FF6347", // Background color for selected tab
+    shadowColor: "#FF6347", // Shadow color for selected tab
+    borderWidth: 2, // Border width for selected tab
+    borderColor: "#FF6347", // Border color for selected tab
+  },
   selectedIcon: {
-    color: "#FF6347", // Customize the selected icon color
+    color: "#FFFFFF", // Customize the selected icon color (white for contrast)
+
   },
   selectedText: {
-    color: "#FF6347", // Customize the selected text color
+    color: "#FFFFFF", // Customize the selected text color (white for contrast)
+
   },
   list: {
     flex: 1,
     width: "100%",
-    marginTop: 10,
+    alignItems: "center",
+
   },
 });
 
