@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { StyleSheet, Text, View, StatusBar, SafeAreaView, TextInput } from "react-native";
+import { Button } from "react-native-elements";
 
 export default function TripForm() {
     const [accommodation, setAccomodation] = useState("")
@@ -14,7 +15,36 @@ export default function TripForm() {
         let errors = {}
 
         if (!accommodation) errors.accommodation = "Accommodation is required";
+          if (!airline)
+              errors.airline = "Airline is required";
+          if (!beaches)
+              errors.beaches = "Beaches is required";
+          if (!vets)
+            errors.vets = "Vets is required";
+          if (!parks)
+              errors.parks = "Parks is required";
+          if (!shops)
+              errors.shops = "Shops is required";
+        
+        setErrors(errors)
 
+        return Object.keys(errors).length === 0;
+    }
+
+    const handleSubmit = () => {
+        console.log('hi');
+        
+
+        if (validateForm()) {
+            console.log("Submitted", accommodation, airline, beaches, vets, parks, shops);
+            setAccomodation("")
+            setAirline("")
+            setBeaches("")
+            setVets("")
+            setParks("")
+            setShops("")
+            setErrors({})
+        }
     }
 
 
@@ -30,49 +60,65 @@ export default function TripForm() {
           autoCorrect={false}
           autoCapitalize="none"
         />
+        {errors.accommodation ? (
+          <Text style={styles.errorstext}>{errors.accommodation}</Text>
+        ) : null}
         <TextInput
           style={styles.input}
-          placeholder="Enter Accommodation Name"
+          placeholder="Enter Airline Name"
           value={airline}
           onChangeText={setAirline}
           autoCorrect={false}
           autoCapitalize="none"
         />
+        {errors.airline ? (
+          <Text style={styles.errorstext}>{errors.airline}</Text>
+        ) : null}
         <TextInput
           style={styles.input}
-          placeholder="Enter  Name"
+          placeholder="Enter Beaches Name"
           value={beaches}
           onChangeText={setBeaches}
           autoCorrect={false}
           autoCapitalize="none"
         />
+        {errors.beaches ? (
+          <Text style={styles.errorstext}>{errors.beaches}</Text>
+        ) : null}
         <TextInput
           style={styles.input}
-          placeholder="Enter  Name"
+          placeholder="Enter Vets Name"
           value={vets}
           onChangeText={setVets}
           autoCorrect={false}
           autoCapitalize="none"
         />
+        {errors.vets ? (
+          <Text style={styles.errorstext}>{errors.vets}</Text>
+        ) : null}
         <TextInput
           style={styles.input}
-          placeholder="Enter  Name"
+          placeholder="Enter Parks Name"
           value={parks}
           onChangeText={setParks}
           autoCorrect={false}
           autoCapitalize="none"
         />
+        {errors.parks ? (
+          <Text style={styles.errorstext}>{errors.parks}</Text>
+        ) : null}
         <TextInput
           style={styles.input}
-          placeholder="Enter  Name"
+          placeholder="Enter Shops Name"
           value={shops}
           onChangeText={setShops}
           autoCorrect={false}
           autoCapitalize="none"
         />
-        <Text style={styles.text}>
-          Your selected accommodation is {accommodation}
-        </Text>
+        {errors.shops ? (
+          <Text style={styles.errorstext}>{errors.shops}</Text>
+            ) : null}
+            <Button title="Login" onPress={() => {handleSubmit()}} />
       </SafeAreaView>
     );
 }
@@ -92,5 +138,9 @@ const styles = StyleSheet.create({
     text: {
         fontSize: 30,
         padding: 10
+    },
+    errorstext: {
+        color: 'red',
+        marginBottom: 10
     }
 })
