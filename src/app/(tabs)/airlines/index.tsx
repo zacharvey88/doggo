@@ -45,7 +45,7 @@ export default function TabAirlines() {
     <View style={styles.container}>
       {loading ? (
         <>
-          <Stack.Screen options={{ title: "Airlines"}} />
+          <Stack.Screen options={{ title: "Airline Pet Policies"}} />
           <ActivityIndicator style={styles.loading} />
           <Text>Loading</Text>
         </>

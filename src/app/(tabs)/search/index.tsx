@@ -38,7 +38,7 @@ export default function TabSearch() {
         photos: Json | null;
         title: string;
       }[]
-    );1
+    );
   }
 
 

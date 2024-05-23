@@ -1,13 +1,15 @@
-import { Link, Stack, useLocalSearchParams, useRouter } from "expo-router";
-import { useEffect, useState } from "react";
-import { View, Text, StyleSheet, Image, Linking, ScrollView } from "react-native";
+import { Stack, useLocalSearchParams, useRouter } from "expo-router";
+import { useState } from "react";
+import { View, Text, StyleSheet, Linking, ScrollView} from "react-native";
 import { Button } from "react-native-elements";
 import {StarRatingDisplay} from "react-native-star-rating-widget";
+import Modal from "react-native-modal"
+import AddReviewForm from "@/src/components/AddReviewForm";
 export default function Airline() {
 
   const [rating, setRating] = useState(4);
-  const [loading, setLoading] = useState(false);
   const router = useRouter();
+  const [isModalVisible, setModalVisible] = useState(false);
 
   const { 
     id, 
@@ -22,15 +24,26 @@ export default function Airline() {
     policy_restrictions
   } = useLocalSearchParams();
 
+  const toggleModal = () => {
+    setModalVisible(!isModalVisible);
+  };
+
   return (
+    <>
+      <Modal style={styles.modal}
+        isVisible={isModalVisible}
+        animationIn="slideInUp"
+        onBackdropPress={toggleModal}
+        backdropOpacity={0.8}
+        backdropColor="black"
+        >
+        <View style={styles.modal}>
+          <AddReviewForm />
+        </View>
+      </Modal>
     <View style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollContainer}>
-        <Stack.Screen options={{ title: airline_name }} />
-        {/* <Image 
-          source={{ uri: airline_logo_url }} 
-          style={styles.image} 
-          resizeMode='contain' 
-        /> */}
+        <Stack.Screen options={{ title: "" }} />
         <Text style={styles.title}>{airline_name}</Text>
         <StarRatingDisplay rating={rating} /> 
         <View style={styles.buttonContainer}>
@@ -47,14 +60,19 @@ export default function Airline() {
             onPress={() => router.push(`/airlines/${id}/reviews`)}
           />
           <Button 
+            title="Add Review" 
+            titleStyle={{ fontSize: 14 }}
+            style={styles.button}
+            onPress={toggleModal}
+            
+          />
+          <Button 
             title="Add to trip" 
             titleStyle={{ fontSize: 14 }}
             style={styles.button}
             onPress={() => {}}
           />
         </View>
-        {/* <Text style={styles.reviewText}>Delta Air Lines is a major American airline based out of Atlanta. Pets can travel in the cabin and as cargo on select flights with Delta Air Lines.
-        </Text> */}
         {policy_reservations && 
         <View style={styles.textContainer}>
           <Text style={styles.header}>Reservations Policy</Text>
@@ -93,6 +111,7 @@ export default function Airline() {
         }
       </ScrollView>
     </View>
+    </>
   );
 }
 
@@ -115,7 +134,7 @@ const styles = StyleSheet.create({
     marginBottom: 15,
   },
   button: {
-    margin: 10,
+    margin: 3,
     height: 35,  
   },
   textContainer: {
@@ -146,5 +165,13 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     textAlign: 'center',
     color: '#3A90CD',
+  },
+  modal: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    color: '#000',
+    margin: 0,
+    borderRadius: 40,
   },
 });
