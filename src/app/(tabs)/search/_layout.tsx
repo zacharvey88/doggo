@@ -2,6 +2,7 @@ import { Stack } from 'expo-router'
 import Vets from '../../icons/Vets'
 
 export default function SearchStack() {
+  
   return (
     <Stack>
       <Stack.Screen name="index" options={{ title: "Search" }} />

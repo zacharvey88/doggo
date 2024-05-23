@@ -23,6 +23,7 @@ export default function TabSearch() {
     getAccommodation();
   }, []);
 
+
   async function getAccommodation() {
     setLoading(true);
     const { data, error } = await supabase
