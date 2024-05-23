@@ -16,7 +16,7 @@ export default function TabHome() {
       </Link>
       <Link href='/sign-in' asChild>
       <Pressable style={styles.signInButton}>
-        <Text style={styles.signInText}>Sign In</Text>
+        <Text style={styles.buttonText}>Sign In / Register</Text>
       </Pressable>
       </Link>
 
@@ -34,7 +34,7 @@ const styles = StyleSheet.create({
   },
   button: {
     position: "absolute",
-    bottom: "8%",
+    bottom: "20%",
     alignItems: 'center',
     justifyContent: 'center',
     paddingVertical: 12,
@@ -62,6 +62,13 @@ const styles = StyleSheet.create({
   },
   signInButton: {
     position: "absolute",
-    bottom: "3%",
+    bottom: "13%",
+    justifyContent: 'center',
+    paddingVertical: 12,
+    paddingHorizontal: 57,
+    borderRadius: 10,
+    elevation: 3,
+    backgroundColor: 'rgb(1,140,220)',
+    
   }
 });

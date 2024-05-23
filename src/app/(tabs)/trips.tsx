@@ -8,6 +8,8 @@ import { Database, Json } from '@/src/lib/database.types';
 import TripAccomodation from '@/src/components/TripAccommodation';
 import TripAirline from '@/src/components/TripAirline';
 import TripAccomodationPhoto from '@/src/components/TripAccommodationPhoto';
+import { AntDesign } from '@expo/vector-icons';
+import { Ionicons } from '@expo/vector-icons';
 
 export default function TabTrips() {
   const [loading, setLoading] = useState(false)
@@ -58,9 +60,24 @@ export default function TabTrips() {
                     <View style={styles.placeItem}>
                       <TripAccomodationPhoto accom={item.accommodation_id}/>
                       <Text style={styles.title}>{item.title}</Text> 
-                      <Text style={styles.tripText}><TripAccomodation accom={item.accommodation_id}/> </Text>
-                      <Text style={styles.tripText}><TripAirline airline={item.airline_id}/> </Text>
+                      <Text style={styles.tripText}>
+                        <TripAccomodation accom={item.accommodation_id}/> 
+                      </Text>
+                      <Text style={styles.tripText}>
+                        <TripAirline airline={item.airline_id}/>
+                      </Text>
                       <Text style={styles.tripText}>{item.start_date}   -   {item.end_date}</Text>
+                      <View style={styles.iconContainer}>
+
+                        <Pressable>
+                          <AntDesign name="edit" size={24} color="black" />
+                        </Pressable>
+
+                        <Pressable>
+                          <Ionicons name="trash-bin" size={24} color="black" />
+                        </Pressable>
+                        
+                      </View>
                     </View>
                     )
                   }}
@@ -138,6 +155,12 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.3,
     shadowRadius: 1,
     marginBottom:10,
-    float:"right",
   },
+  iconContainer: {
+    backgroundColor: '#F9F9F9',
+    flex:1,
+    flexDirection:"row",
+    paddingRight:10
+  },
+
 });
