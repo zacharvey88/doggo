@@ -16,14 +16,13 @@ export default function ReviewsList({ id, table }: { id: number; table: keyof Da
     setLoading(true);
     const { data, error } = await supabase
       .from(table)
-      .select('*')
+      .select('*, profiles(username, avatar_url)')
       .eq(table === 'reviews_accommodation' ? 'accommodation_id' : 'airline_id', id)
       .order('created_at', { ascending: false });
     if (data) {
-      setReviews(data);
-      
+      setReviews(data);      
     }
-    setLoading(false);
+    setLoading(false);    
   }
   
   return (
@@ -34,9 +33,16 @@ export default function ReviewsList({ id, table }: { id: number; table: keyof Da
           <Text>Loading</Text>
         </>
       ) : (
-        <>
-        <FlatList data={reviews} renderItem={({ item }) => <ReviewCard review={item} />} />
-        </>
+        reviews.length > 0 ? (
+        <FlatList 
+          data={reviews} 
+          renderItem={({ item }) => <ReviewCard review={item} />} 
+          contentContainerStyle={{ padding: 10 }}
+          showsVerticalScrollIndicator={false}
+        />
+        ) : (
+          <Text style={styles.title}>No reviews yet</Text>
+        )
       )}
     </View>
   )
@@ -48,10 +54,15 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
+    width: '100%'
   },
   title: {
     fontSize: 20,
-    fontWeight: 'bold',
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   loading: {
     marginBottom: 30,
