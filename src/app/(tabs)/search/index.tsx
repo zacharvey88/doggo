@@ -8,6 +8,7 @@ import { supabase } from '@/src/lib/supabase';
 import { Json } from '@/src/lib/database.types';
 import { FontAwesome6 } from '@expo/vector-icons';
 import { Link, Stack } from 'expo-router';
+import { Pressable } from 'react-native';
 
 export default function TabSearch() {
   const [search, setSearch] = useState('');
@@ -38,52 +39,64 @@ export default function TabSearch() {
         photos: Json | null;
         title: string;
       }[]
-    );1
+    );
   }
 
 
-  return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Pet Friendly Places</Text>
-      <SearchBar
-        placeholder="Enter a city!"
-        onChangeText={updateSearch}
-        value={search}
-        lightTheme
-        round
-        containerStyle={styles.searchContainer}
-        inputContainerStyle={styles.searchInput}
-      />
-      <View style={styles.container_filter}>
-        <View style={styles.iconContainer}>
-          <FontAwesome6 name="shield-dog" style={styles.icon} />
-          <Text style={styles.filterText}>Vets</Text>
-        </View>
-        <View style={styles.iconContainer}>
-          <FontAwesome6 name="shop" style={styles.icon} />
-          <Text style={styles.filterText}>Shops</Text>
-        </View>
-        <View style={styles.iconContainer}>
-          <FontAwesome6 name="tree" style={styles.icon} />
-          <Text style={styles.filterText}>Parks</Text>
-        </View>
-        <View style={styles.iconContainer}>
-          <FontAwesome6 name="umbrella-beach" style={styles.icon} />
-          <Text style={styles.filterText}>Beaches</Text>
-        </View>
-      </View>
-      <View style={styles.list}>
-        
-      <FlatList
-        data={accom}
-        renderItem={({ item }) => <AccommodationListItem accom={item} />}
-        numColumns={1}
-        contentContainerStyle={{ gap: 10, padding: 10 }}
-        
-      />
-      </View>
-    </View>
-  );
+   return (
+     <View style={styles.container}>
+       <Text style={styles.title}>Pet Friendly Places</Text>
+       <SearchBar
+         placeholder="Enter a city!"
+         // onChangeText={updateSearch}
+         value={search}
+         lightTheme
+         round
+         containerStyle={styles.searchContainer}
+         inputContainerStyle={styles.searchInput}
+       />
+       <View style={styles.container_filter}>
+         <Link href={"../../icons/Vets"} asChild>
+           <Pressable style={styles.iconContainer}>
+             <FontAwesome6 name="shield-dog" style={styles.icon} />
+             <Text style={styles.filterText}>Vets</Text>
+           </Pressable>
+         </Link>
+
+         <Link href={"../../icons/Shops"} asChild>
+           <Pressable style={styles.iconContainer}>
+             <FontAwesome6 name="shop" style={styles.icon} />
+             <Text style={styles.filterText}>Shops</Text>
+           </Pressable>
+         </Link>
+
+         <Link href={"../../icons/Parks"} asChild>
+           <Pressable style={styles.iconContainer}>
+             <FontAwesome6 name="tree" style={styles.icon} />
+             <Text style={styles.filterText}>Parks</Text>
+           </Pressable>
+         </Link>
+
+         <Link href={"../../icons/Beaches"} asChild>
+           <Pressable style={styles.iconContainer}>
+             <FontAwesome6 name="umbrella-beach" style={styles.icon} />
+             <Text style={styles.filterText}>Beaches</Text>
+           </Pressable>
+         </Link>
+       </View>
+
+       <View style={styles.list}>
+         <FlatList
+           data={accom}
+           renderItem={({ item }) => <AccommodationListItem accom={item} />}
+           numColumns={2}
+           contentContainerStyle={{ gap: 10, padding: 10 }}
+           columnWrapperStyle={{ gap: 10 }}
+           showsVerticalScrollIndicator={false}
+         />
+       </View>
+     </View>
+   );
 }
 
 const styles = StyleSheet.create({
