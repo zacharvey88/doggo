@@ -11,36 +11,34 @@ import {
 import { fetchPlaces } from "../api/googlePlacesApi";
 import { Link } from "expo-router";
 
-const PlacesComponent = (props) => {
-  const { location, category } = props;
+const PlacesComponent = ({ location, category }) => {
   const [places, setPlaces] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  let searchString = '';
-  switch (category) {
-    case 'Restaurants': 
-      searchString = `Pet-friendly restaurants in ${location}`;
-      break;
-    case 'Vets': 
-      searchString = `vets in ${location}`;
-      break;
-    case 'Parks': 
-      searchString = `Dog-friendly parks in ${location}`;
-      break;
-    case 'Beaches': 
-      searchString = `Dog-friendly beaches in ${location}`;
-      break;
-    case 'Shops':
-      searchString = `Pet shops in ${location}`
-      break;
-  }
-  
   useEffect(() => {
     const fetchPlacesData = async () => {
+      setLoading(true);
+      let searchString = "";
+      switch (category) {
+        case "Restaurants":
+          searchString = `Pet-friendly restaurants in ${location}`;
+          break;
+        case "Vets":
+          searchString = `vets in ${location}`;
+          break;
+        case "Parks":
+          searchString = `Dog-friendly parks in ${location}`;
+          break;
+        case "Beaches":
+          searchString = `Dog-friendly beaches in ${location}`;
+          break;
+        case "Shops":
+          searchString = `Pet shops in ${location}`;
+          break;
+      }
+
       try {
-        const data = await fetchPlaces(
-          searchString
-        );
+        const data = await fetchPlaces(searchString);
         setPlaces(data.places || []);
       } catch (error) {
         console.error("Error fetching places data:", error);
@@ -48,8 +46,9 @@ const PlacesComponent = (props) => {
         setLoading(false);
       }
     };
+
     fetchPlacesData();
-  }, [location]);
+  }, [location, category]);
 
   if (loading) {
     return (
@@ -68,11 +67,11 @@ const PlacesComponent = (props) => {
           <Link
             href={{
               pathname: `/newsearch/${item.id}`,
-              params: { id: item.id ,
+              params: {
+                id: item.id,
                 displayName: item.displayName.text,
                 formattedAddress: item.formattedAddress,
                 googleMapsUri: item.googleMapsUri,
-               
               },
             }}
             asChild
@@ -96,9 +95,9 @@ const PlacesComponent = (props) => {
 
 const styles = StyleSheet.create({
   container: {
-    padding: 16,
-    backgroundColor: "#fff",
-    maxHeight: 550
+    flex: 1,
+    width: "100%",
+    alignItems: "center",
   },
   loadingContainer: {
     flex: 1,
@@ -123,10 +122,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   placeGoogleMapsUri: {
-    fontSize: 14,
-    color: "#666",
-  },
-  placeType: {
     fontSize: 14,
     color: "#666",
   },

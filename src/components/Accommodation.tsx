@@ -7,7 +7,7 @@ import {
 import AccommodationListItem from "@/src/components/AccommodationListItem";
 import { supabase } from "@/src/lib/supabase";
 import { Database } from "@/src/lib/database.types";
-
+import { ActivityIndicator } from "react-native";
 
 export default function AccommodationTab({searchTerm}) {
 
@@ -18,22 +18,8 @@ export default function AccommodationTab({searchTerm}) {
         Database["public"]["Tables"]["accommodation"]["Row"][]
         >([]);
         const [loading, setLoading] = useState(false);
-    
-        useEffect(() => {
-            getAccommodation();
-        }, []);
 
         useEffect(() => {
-            if (searchTerm === "") {
-              setFilteredAccommodations(accommodation);
-            } else {
-              const filtered = accommodation.filter((acc) =>
-                searchTerm.toLowerCase().includes(acc.city.toLowerCase())
-              );      
-              setFilteredAccommodations(filtered);
-            }
-          }, [searchTerm]);
-
           async function getAccommodation() {
             setLoading(true);
             const { data, error } = await supabase
@@ -46,7 +32,28 @@ export default function AccommodationTab({searchTerm}) {
             }
             setLoading(false);
           }
+          getAccommodation();
+          
+        }, []);
 
+        useEffect(() => {
+            if (searchTerm === "") {
+              setFilteredAccommodations(accommodation);
+            } else {
+              const filtered = accommodation.filter((acc) =>
+                searchTerm.toLowerCase().includes(acc.city.toLowerCase())
+              );      
+              setFilteredAccommodations(filtered);
+            }
+          }, [searchTerm, accommodation]);
+        
+  if (loading) {
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color="#0000ff" />
+      </View>
+    );
+  }
           return(
             <View style={styles.list}>
             <FlatList
@@ -68,7 +75,11 @@ export default function AccommodationTab({searchTerm}) {
               paddingTop: 20,
               paddingHorizontal: 10,
             },
-            loading: {  },
+            loadingContainer: {
+              flex: 1,
+              justifyContent: "center",
+              alignItems: "center",
+            },
             searchContainer: {
               width: "100%",
               zIndex: 2,
@@ -78,7 +89,7 @@ export default function AccommodationTab({searchTerm}) {
             },
             listView: {
               position: "absolute",
-              top: 40, 
+              top: 40,
               backgroundColor: "white",
               borderRadius: 5,
               elevation: 5,
@@ -99,26 +110,25 @@ export default function AccommodationTab({searchTerm}) {
               borderRadius: 5,
             },
             scrollView: {
-              padding:10,
+              padding: 10,
               maxHeight: 100,
             },
             scrollViewContent: {
-              gap:10,
+              gap: 10,
             },
             iconContainer: {
-              flexDirection:"row",
-              gap:12,
+              flexDirection: "row",
+              gap: 12,
               marginTop: 40,
               alignItems: "center",
-              borderRadius:8, 
-              paddingHorizontal:10,
-              paddingVertical:10,
+              borderRadius: 8,
+              paddingHorizontal: 10,
+              paddingVertical: 10,
               backgroundColor: "#fff",
-              shadowColor: "#000", 
-              shadowOffset: { width: 0, height: 2 }, 
-              shadowOpacity: 0.25, 
+              shadowColor: "#000",
+              shadowOffset: { width: 0, height: 2 },
+              shadowOpacity: 0.25,
               shadowRadius: 3.84,
-              
             },
             icon: {
               fontSize: 20,
@@ -127,22 +137,20 @@ export default function AccommodationTab({searchTerm}) {
               fontSize: 16,
             },
             selectedIconContainer: {
-              backgroundColor: "#FF6347", 
-              shadowColor: "#FF6347", 
-              borderWidth: 2, 
-              borderColor: "#FF6347", 
+              backgroundColor: "#FF6347",
+              shadowColor: "#FF6347",
+              borderWidth: 2,
+              borderColor: "#FF6347",
             },
             selectedIcon: {
-              color: "#FFFFFF", 
+              color: "#FFFFFF",
             },
             selectedText: {
-              color: "#FFFFFF", 
-          
+              color: "#FFFFFF",
             },
             list: {
               flex: 1,
               width: "100%",
               alignItems: "center",
-          
-            }
-        });
+            },
+          });
