@@ -29,6 +29,8 @@ export default function TabTrips() {
   const [trips, setTrips] = useState<Database['public']['Tables']['trips']['Row'][]>([]);
   const [isModalVisible, setModalVisible] = useState(false);
   const [tripId, setTripId] = useState(0)
+  const [deletePressed, setDeletePressed] = useState(false)
+
     useEffect(()=>{
       if(session){
       getTripInfo()
@@ -43,6 +45,31 @@ export default function TabTrips() {
           setLoading(false)
       }
 
+  const deletedTrips = trips
+  if(tripId && deletePressed){
+    if(deletedTrips.length>0){
+      for(let i = 0; i < deletedTrips.length; i++){
+        if(deletedTrips[i].trip_id === tripId){
+          deletedTrips.splice(i, 1)
+          setDeletePressed(false)
+        }
+      }
+    }
+  }
+    if(session){
+      if(trips.length===0){
+        return (
+        <View style={styles.container}>
+          <Text style={styles.noTripsText}>
+            You don't have any trips. To add a new trip press the button in the bottom right.
+          </Text>
+          <Link href="/Trip" asChild>
+            <Pressable style={styles.addTripButton}><AntDesign name="pluscircle" size={60} color="rgb(1,140,220)" /></Pressable>
+          </Link>
+        </View>
+      )
+    }
+      }
       return (
         <>
           {session && session.user ? (
@@ -52,9 +79,9 @@ export default function TabTrips() {
               <Text>loading</Text>
               </View>
             ) : (
-              <View style={styles.container}>
+                <View style={styles.container}>
                 <Link href="/Trip" asChild>
-                <Pressable style={styles.addTripButton}><AntDesign name="pluscircle" size={60} color="lightblue" /></Pressable>
+                <Pressable style={styles.addTripButton}><AntDesign name="pluscircle" size={60} color="rgb(1,140,220)" /></Pressable>
                 </Link>
                 <FlatList
                   data={trips}
@@ -64,7 +91,7 @@ export default function TabTrips() {
                       setTripId(item.trip_id)
                     };
                     return (
-                    <>
+                      <>
                       <Modal style={styles.modal}
                         isVisible={isModalVisible}
                         animationIn="slideInUp"
@@ -72,7 +99,7 @@ export default function TabTrips() {
                         backdropOpacity={0.4}
                         backdropColor="black">
                         <View style={styles.modal}>
-                          <DeleteTrip trip_id={tripId} setModalVisible={setModalVisible}/>
+                          <DeleteTrip trip_id={tripId} setModalVisible={setModalVisible} setDeletePressed={setDeletePressed}/>
                         </View>
                       </Modal>
                       <View style={styles.placeItem}>
@@ -100,7 +127,7 @@ export default function TabTrips() {
                       </>
                     )
                   }}
-                />
+                  />
               </View>
             )
           ) : (
@@ -177,12 +204,12 @@ const styles = StyleSheet.create({
     justifyContent:"flex-end",
   },  
   modal: {
-    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     color: '#000',
     margin: 0,
     borderRadius: 40,
+    padding: 40
   },
   signInText: {
     fontWeight:"bold",
@@ -198,5 +225,13 @@ const styles = StyleSheet.create({
     marginTop:5,
     fontWeight: 'bold',
     fontSize: 16,
+  },
+  noTripsText: {
+    fontSize: 20,
+    fontWeight: "bold",
+    position: "absolute",
+    top: "40%",
+    flex:1,
+    justifyContent:"center"
   }
 });
