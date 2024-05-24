@@ -10,6 +10,8 @@ import TripAirline from '@/src/components/TripAirline';
 import TripAccomodationPhoto from '@/src/components/TripAccommodationPhoto';
 import { AntDesign } from '@expo/vector-icons';
 import { Ionicons } from '@expo/vector-icons';
+import Modal from 'react-native-modal';
+import DeleteTrip from '@/src/components/DeleteTrip';
 
 export default function TabTrips() {
   const [loading, setLoading] = useState(false)
@@ -25,7 +27,8 @@ export default function TabTrips() {
     }, [])
     
   const [trips, setTrips] = useState<Database['public']['Tables']['trips']['Row'][]>([]);
-        
+  const [isModalVisible, setModalVisible] = useState(false);
+  const [tripId, setTripId] = useState(0)
     useEffect(()=>{
       if(session){
       getTripInfo()
@@ -39,6 +42,7 @@ export default function TabTrips() {
           }
           setLoading(false)
       }
+
       return (
         <>
           {session && session.user ? (
@@ -49,48 +53,64 @@ export default function TabTrips() {
               </View>
             ) : (
               <View style={styles.container}>
-                  <Text style={styles.title}>Add a new trip:</Text>
-                <Link href="/" asChild>
-                  <Pressable style={styles.addTripButton}></Pressable>
+                <Link href="/Trip" asChild>
+                <Pressable style={styles.addTripButton}><AntDesign name="pluscircle" size={60} color="lightblue" /></Pressable>
                 </Link>
                 <FlatList
                   data={trips}
                   renderItem={({ item }) => {
+                    const toggleModal = () => {
+                      setModalVisible(!isModalVisible);
+                      setTripId(item.trip_id)
+                    };
                     return (
-                    <View style={styles.placeItem}>
-                      <TripAccomodationPhoto accom={item.accommodation_id}/>
-                      <Text style={styles.title}>{item.title}</Text> 
-                      <Text style={styles.tripText}>
-                        <TripAccomodation accom={item.accommodation_id}/> 
-                      </Text>
-                      <Text style={styles.tripText}>
-                        <TripAirline airline={item.airline_id}/>
-                      </Text>
-                      <Text style={styles.tripText}>{item.start_date}   -   {item.end_date}</Text>
-                      <View style={styles.iconContainer}>
+                    <>
+                      <Modal style={styles.modal}
+                        isVisible={isModalVisible}
+                        animationIn="slideInUp"
+                        onBackdropPress={toggleModal}
+                        backdropOpacity={0.4}
+                        backdropColor="black">
+                        <View style={styles.modal}>
+                          <DeleteTrip trip_id={tripId} setModalVisible={setModalVisible}/>
+                        </View>
+                      </Modal>
+                      <View style={styles.placeItem}>
+                        <TripAccomodationPhoto accom={item.accommodation_id}/>
+                        <Text style={styles.title}>{item.title}</Text> 
+                        <Text style={styles.tripText}>
+                          <TripAccomodation accom={item.accommodation_id}/> 
+                        </Text>
+                        <Text style={styles.tripText}>
+                          <TripAirline airline={item.airline_id}/>
+                        </Text>
+                        <Text style={styles.tripText}>{item.start_date}   -   {item.end_date}</Text>
+                        <View style={styles.iconContainer}>
 
                         <Pressable>
                           <AntDesign name="edit" size={24} color="black" />
                         </Pressable>
 
-                        <Pressable>
+                        <Pressable onPress={toggleModal}>
                           <Ionicons name="trash-bin" size={24} color="black" />
                         </Pressable>
                         
                       </View>
                     </View>
+                      </>
                     )
                   }}
                 />
               </View>
             )
           ) : (
-            <View>
-              <Text>You are not currently signed in</Text>
-              <Link href='/sign-in' asChild>
-                <Pressable>
-                  <Text>
-                    To view your trips you must be signed in
+            <View style={styles.container}>
+              <Text style={styles.signInTitle}>You are not currently signed in</Text>
+                    <Text style={styles.signInTitle2}>To view your trips you must be signed in</Text>
+              <Link href='/profile' asChild>
+                <Pressable style={styles.button}>
+                  <Text style={styles.signInText}>
+                    Sign in
                   </Text>
                 </Pressable>
               </Link>
@@ -126,8 +146,9 @@ const styles = StyleSheet.create({
     width: '80%',
   },
   button: {
+    alignSelf:"center",
     position: "absolute",
-    bottom: "8%",
+    top: "50%",
     alignItems: 'center',
     justifyContent: 'center',
     paddingVertical: 12,
@@ -144,23 +165,38 @@ const styles = StyleSheet.create({
     color: "black",
   },
   addTripButton: {
-    padding:25,
-    backgroundColor:"lightblue",
-    borderRadius:"50%",
-    alignItems: "center",
-    height:50,
-    width:50,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 3 },
-    shadowOpacity: 0.3,
-    shadowRadius: 1,
-    marginBottom:10,
+   position:"absolute",
+   bottom:10,
+   right:10,
+   zIndex:1,
   },
   iconContainer: {
     backgroundColor: '#F9F9F9',
     flex:1,
     flexDirection:"row",
-    paddingRight:10
+    justifyContent:"flex-end",
+  },  
+  modal: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    color: '#000',
+    margin: 0,
+    borderRadius: 40,
   },
-
+  signInText: {
+    fontWeight:"bold",
+    fontSize:30,
+    color:"white"
+  },
+  signInTitle: {
+    marginTop:40,
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  signInTitle2: {
+    marginTop:5,
+    fontWeight: 'bold',
+    fontSize: 16,
+  }
 });
