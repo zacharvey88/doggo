@@ -5,7 +5,6 @@ import { Link } from 'expo-router';
 export default function TabHome() {
   return (
     <View style={styles.container}>
-
       <Image style={styles.image}source={require("../../../assets/images/logo.png")} resizeMode="contain"/>
       <Link href="/search" asChild>
         <Pressable style={styles.button}>
@@ -19,8 +18,6 @@ export default function TabHome() {
         <Text style={styles.buttonText}>Sign In / Register</Text>
       </Pressable>
       </Link>
-
-
     </View>
   );
 }
@@ -30,7 +27,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     maxHeight:"100%",
     maxWidth:"100%",
-    flex:1
+    flex:1,
+    paddingTop: 100,
   },
   button: {
     position: "absolute",

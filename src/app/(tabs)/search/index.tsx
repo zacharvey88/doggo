@@ -65,6 +65,7 @@ export default function TabSearch() {
     <View style={styles.container}>
       {loading ? (
         <>
+          <Stack.Screen options={{ title: "Search Pet Friendly Places"}} />
           <ActivityIndicator style={styles.loading} />
           <Text>Loading</Text>
         </>
@@ -103,7 +104,6 @@ export default function TabSearch() {
                 style={[
                   styles.iconContainer,
                   selectedCategory === category.name && styles.selectedIconContainer,
-
                 ]}
                 onPress={() => setSelectedCategory(category.name)}
               >
@@ -145,7 +145,7 @@ export default function TabSearch() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#ADD8E6",
+    backgroundColor: "white",
     alignItems: "center",
     paddingTop: 20,
     paddingHorizontal: 10,
@@ -216,7 +216,6 @@ const styles = StyleSheet.create({
   },
   selectedIcon: {
     color: "#FFFFFF", // Customize the selected icon color (white for contrast)
-
   },
   selectedText: {
     color: "#FFFFFF", // Customize the selected text color (white for contrast)

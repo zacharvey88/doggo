@@ -54,7 +54,6 @@ function RootLayoutNav() {
       <AuthProvider>
       <Stack>
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-
       </Stack>
       </AuthProvider>
     </ThemeProvider>

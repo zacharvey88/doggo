@@ -1,30 +1,53 @@
-import { View, Text, StyleSheet, TextInput } from 'react-native'
-import { useState } from 'react'
+import { View, Text, StyleSheet, TextInput, Alert } from 'react-native'
+import { useState, useEffect } from 'react'
 import StarRating from 'react-native-star-rating-widget'
 import { Button } from 'react-native-elements'
 import { supabase } from '../lib/supabase'
+import { Session } from '@supabase/supabase-js'
 
-export default function addReviewForm() {
+export default function addReviewForm({id, setModalVisible}) {
   const [rating, setRating] = useState(0)
   const [reviewText, setReviewText] = useState('')
+  const [session, setSession] = useState<Session | null>(null);
+
+  useEffect(() => {
+    const fetchSession = async () => {
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+      setSession(session);
+    };
+
+    fetchSession();
+
+    const { data: authListener } = supabase.auth.onAuthStateChange(
+      (_event, session) => {
+        setSession(session);
+      }
+    );
+
+    return () => {
+      authListener.subscription.unsubscribe();
+    };
+  }, []);
 
   const handleAddReview = async () => {
+    
     const { data, error } = await supabase
       .from('reviews_airlines')
-      .insert([
+      .insert(
         {
-          rating,
+          user_id: session?.user.id,
+          airline_id: id,
+          rating: rating,
           review_text: reviewText
         }
-      ])
-      .select()
-      if (error) {
-        console.log(error)
-        if (error.code === '42501') {
-          console.log('No user on the session')
+      )
+      if (error && error.code === '42501') {
+          Alert.alert('Error', 'You must be logged in to submit a review')
       } else {
-        console.log(data)
-      }
+        setModalVisible(false)
+        Alert.alert('Success!', 'Review submitted.')
       }
   }
 
