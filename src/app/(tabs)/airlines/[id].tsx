@@ -1,15 +1,38 @@
 import { Stack, useLocalSearchParams, useRouter } from "expo-router";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { View, Text, StyleSheet, Linking, ScrollView} from "react-native";
 import { Button } from "react-native-elements";
 import {StarRatingDisplay} from "react-native-star-rating-widget";
 import Modal from "react-native-modal"
-import AddReviewForm from "@/src/components/AddReviewForm";
+import ReviewForm from "@/src/components/ReviewForm";
+import { Session } from "@supabase/supabase-js";
+import { supabase } from "@/src/lib/supabase";
 export default function Airline() {
-
+  const [session, setSession] = useState<Session | null>(null);
   const [rating, setRating] = useState(4);
   const router = useRouter();
   const [isModalVisible, setModalVisible] = useState(false);
+
+  useEffect(() => {
+    const fetchSession = async () => {
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+      setSession(session);
+    };
+
+    fetchSession();
+
+    const { data: authListener } = supabase.auth.onAuthStateChange(
+      (_event, session) => {
+        setSession(session);
+      }
+    );
+
+    return () => {
+      authListener.subscription.unsubscribe();
+    };
+  }, []);
 
   const { 
     id, 
@@ -28,6 +51,15 @@ export default function Airline() {
     setModalVisible(!isModalVisible);
   };
 
+  const goToReviews = () => {
+    router.push({
+      pathname: `/airlines/${id}/reviews`,
+      params: {
+        session: session,
+      }
+    });
+  };
+
   return (
     <>
       <Modal style={styles.modal}
@@ -38,7 +70,12 @@ export default function Airline() {
         backdropColor="black"
         >
         <View style={styles.modal}>
-          <AddReviewForm id={id} setModalVisible={setModalVisible}/>
+          <ReviewForm 
+            id={id} 
+            edit={false}
+            setModalVisible={setModalVisible}
+            session={session}
+          />
         </View>
       </Modal>
     <View style={styles.container}>
@@ -57,7 +94,7 @@ export default function Airline() {
             title="See Reviews" 
             titleStyle={{ fontSize: 14 }}
             style={styles.button}
-            onPress={() => router.push(`/airlines/${id}/reviews`)}
+            onPress={goToReviews}
           />
           <Button 
             title="Add Review" 
