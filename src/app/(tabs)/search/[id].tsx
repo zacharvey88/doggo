@@ -22,7 +22,7 @@ export default function Accommodation() {
         city,
         country
     } = useLocalSearchParams();
-    
+    console.log(id)
     return (
         <View style={styles.container}>
             <ScrollView contentContainerStyle={styles.scrollContainer}>
