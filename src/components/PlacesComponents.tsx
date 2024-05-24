@@ -30,6 +30,9 @@ const PlacesComponent = (props) => {
     case 'Beaches': 
       searchString = `Dog-friendly beaches in ${location}`;
       break;
+    case 'Shops':
+      searchString = `Pet shops in ${location}`
+      break;
   }
   
   useEffect(() => {

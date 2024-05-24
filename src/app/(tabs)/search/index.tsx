@@ -22,9 +22,9 @@ export default function TabSearch() {
     { name: "Vets", icon: "shield-dog" },
     { name: "Parks", icon: "tree" },
     { name: "Beaches", icon: "umbrella-beach" },
+    { name: "Shops", icon: "shopping-bag" },
   ];
   const [selectedCategory, setSelectedCategory] = useState("Accommodations");
-  console.log("1.", selectedCategory)
 
   return (
     <View style={styles.container}>
@@ -94,6 +94,7 @@ export default function TabSearch() {
           {selectedCategory==='Vets' && <PlacesComponent location={searchTerm} category={selectedCategory}/>}
           {selectedCategory==='Parks' && <PlacesComponent location={searchTerm} category={selectedCategory}/>}
           {selectedCategory==='Beaches' && <PlacesComponent location={searchTerm} category={selectedCategory}/>}
+          {selectedCategory==='Shops' && <PlacesComponent location={searchTerm} category={selectedCategory}/>}
           </>
       )}
     </View>
