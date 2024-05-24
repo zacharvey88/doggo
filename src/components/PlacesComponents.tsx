@@ -15,12 +15,28 @@ const PlacesComponent = (props) => {
   const { location, category } = props;
   const [places, setPlaces] = useState([]);
   const [loading, setLoading] = useState(true);
-  console.log("2.", category)
+
+  let searchString = '';
+  switch (category) {
+    case 'Restaurants': 
+      searchString = `Pet-friendly restaurants in ${location}`;
+      break;
+    case 'Vets': 
+      searchString = `vets in ${location}`;
+      break;
+    case 'Parks': 
+      searchString = `Dog-friendly parks in ${location}`;
+      break;
+    case 'Beaches': 
+      searchString = `Dog-friendly beaches in ${location}`;
+      break;
+  }
+  
   useEffect(() => {
     const fetchPlacesData = async () => {
       try {
         const data = await fetchPlaces(
-          `Pet-friendly restaurants in ${location}`
+          searchString
         );
         setPlaces(data.places || []);
       } catch (error) {
@@ -29,7 +45,6 @@ const PlacesComponent = (props) => {
         setLoading(false);
       }
     };
-
     fetchPlacesData();
   }, [location]);
 

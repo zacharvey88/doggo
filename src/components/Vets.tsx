@@ -6,7 +6,6 @@ import {
   Text,
 } from "react-native";
 
-import { GOOGLE_MAPS_API_KEY } from "@/src/constants/ApiKey";
 import PlacesComponent from "@/src/components/PlacesComponents";
 
 
