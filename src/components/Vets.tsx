@@ -6,10 +6,11 @@ import {
   Text,
 } from "react-native";
 
+import { GOOGLE_MAPS_API_KEY } from "@/src/constants/ApiKey";
 import PlacesComponent from "@/src/components/PlacesComponents";
 
 
-export default function RestaurantsTab({searchTerm, category}) {
+export default function VetsTab({searchTerm, category}) {
 
     const [loading, setLoading] = useState(false);
 
