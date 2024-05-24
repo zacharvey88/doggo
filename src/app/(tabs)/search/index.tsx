@@ -46,13 +46,13 @@ export default function TabSearch() {
     <View style={styles.container}>
       {loading ? (
         <>
-          <Stack.Screen options={{ title: "Airlines"}} />
+          <Stack.Screen options={{ title: "Search Pet Friendly Places"}} />
           <ActivityIndicator style={styles.loading} />
           <Text>Loading</Text>
         </>
       ) : (
         <>
-          <Text style={styles.title}>Pet Friendly Places</Text>
+
           <SearchBar
             placeholder="Enter a city!"
             onChangeText={(value) => setSearchTerm(value)}
@@ -108,13 +108,14 @@ export default function TabSearch() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#ADD8E6",
+    backgroundColor: "white",
     alignItems: "center",
     justifyContent: "center",
+    paddingTop: 10,
   },
   container_filter: {
     flexDirection: "row",
-    justifyContent: "space-around",
+    justifyContent: "space-between",
     marginBottom: 16,
     marginTop: 10,
   },
@@ -126,6 +127,7 @@ const styles = StyleSheet.create({
   icon: {
     fontSize: 24,
     marginBottom: 4,
+    color: "#3A90CD",
   },
   filterText: {
     fontSize: 16,
@@ -136,7 +138,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   searchContainer: {
-    width: "100%",
+    width: "90%",
     backgroundColor: "transparent",
     borderBottomColor: "transparent",
     borderTopColor: "transparent",

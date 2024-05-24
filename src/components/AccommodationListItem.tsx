@@ -68,9 +68,6 @@ const styles = StyleSheet.create({
   container: {
     width: 320,
     height: 415,
-    borderWidth: 2,
-    borderColor: 'black',
-    borderRadius: 10,
     overflow: 'hidden',
     marginBottom: 10,
   },
@@ -82,9 +79,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginLeft: 3,
     marginTop: 3,
-    borderWidth: 2,
     borderRadius: 10,
-    borderColor: 'black',
+    marginBottom: 5,
   },
   image: {
     width: '100%',
@@ -98,7 +94,6 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: '600',
     marginBottom: 10,
-    color: 'blue',
   },
   button: {
     alignSelf: 'stretch',

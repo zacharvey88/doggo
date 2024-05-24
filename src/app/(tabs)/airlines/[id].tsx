@@ -38,7 +38,7 @@ export default function Airline() {
         backdropColor="black"
         >
         <View style={styles.modal}>
-          <AddReviewForm />
+          <AddReviewForm id={id} setModalVisible={setModalVisible}/>
         </View>
       </Modal>
     <View style={styles.container}>
