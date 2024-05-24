@@ -15,6 +15,7 @@ const PlacesComponent = (props) => {
   const { location, category } = props;
   const [places, setPlaces] = useState([]);
   const [loading, setLoading] = useState(true);
+  console.log("2.", category)
   useEffect(() => {
     const fetchPlacesData = async () => {
       try {
@@ -39,7 +40,6 @@ const PlacesComponent = (props) => {
       </View>
     );
   }
-  console.log(places);
 
   return (
     <View style={styles.container}>
@@ -80,7 +80,7 @@ const styles = StyleSheet.create({
   container: {
     padding: 16,
     backgroundColor: "#fff",
-    maxHeight: 605
+    maxHeight: 550
   },
   loadingContainer: {
     flex: 1,

@@ -17,6 +17,7 @@ import { Stack } from "expo-router";
 import AccommodationTab from "@/src/components/Accommodation";
 import Accommodation from "./[id]";
 import RestaurantsTab from "@/src/components/Restaurants";
+import VetsTab from "@/src/components/Vets";
 
 export default function TabSearch() {
   const [loading, setLoading] = useState(false);
@@ -29,7 +30,7 @@ export default function TabSearch() {
     { name: "Beaches", icon: "umbrella-beach" },
   ];
   const [selectedCategory, setSelectedCategory] = useState("Accommodations");
-  
+  console.log("1.", selectedCategory)
 
   return (
     <View style={styles.container}>
@@ -94,11 +95,11 @@ export default function TabSearch() {
               </Pressable>
             ))}
           </ScrollView>
-          <>{selectedCategory==='Accommodations' && <AccommodationTab searchTerm={searchTerm}/>}</>
-          <>{selectedCategory==='Restaurants' && <RestaurantsTab searchTerm={searchTerm}/>}</>
-          {/* {selectedCategory==='Vets' && < searchTerm={searchTerm}/>} */}
-          {/* {selectedCategory==='Parks' && < searchTerm={searchTerm}/>} */}
-          {/* {selectedCategory==='Beaches' && < searchTerm={searchTerm}/>} */}
+          <>{selectedCategory==='Accommodations' && <AccommodationTab searchTerm={searchTerm} />}</>
+          <>{selectedCategory==='Restaurants' && <RestaurantsTab searchTerm={searchTerm} category={selectedCategory}/>}</>
+          {selectedCategory==='Vets' && < VetsTab searchTerm={searchTerm} category={selectedCategory}/>}
+          {/* {selectedCategory==='Parks' && < searchTerm={searchTerm}/>}
+          {selectedCategory==='Beaches' && < searchTerm={searchTerm}/>} */}
           </>
       )}
     </View>

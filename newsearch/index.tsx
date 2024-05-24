@@ -6,7 +6,6 @@ import { GOOGLE_MAPS_API_KEY } from "@/src/constants/ApiKey";
 import PlacesComponent from "@/src/components/PlacesComponents";
 const newsearch = () => {
     const[search, setSearch]= useState("")
-    console.log("search term: ", search)
     useEffect(()=>{
 
     },[search])
@@ -18,7 +17,6 @@ const newsearch = () => {
         onPress={(data, details = null) => {
           // 'details' is provided when fetchDetails = true
         //   console.log(JSON.stringify(data));
-        console.log(data)
           setSearch(data.description)
         }}
         query={{
