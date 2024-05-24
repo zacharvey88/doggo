@@ -12,7 +12,7 @@ import { fetchPlaces } from "../api/googlePlacesApi";
 import { Link } from "expo-router";
 
 const PlacesComponent = (props) => {
-  const { location } = props;
+  const { location, category } = props;
   const [places, setPlaces] = useState([]);
   const [loading, setLoading] = useState(true);
   useEffect(() => {
@@ -78,9 +78,9 @@ const PlacesComponent = (props) => {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     padding: 16,
     backgroundColor: "#fff",
+    maxHeight: 605
   },
   loadingContainer: {
     flex: 1,
