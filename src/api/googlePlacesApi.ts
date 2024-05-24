@@ -1,11 +1,10 @@
-// src/api/googlePlacesApi.ts
-import { GOOGLE_MAPS_API_KEY }  from "../constants/ApiKey";
+
 
 export async function fetchPlaces( query: string) {
     const url = "https://places.googleapis.com/v1/places:searchText";
   const headers = {
     "Content-Type": "application/json",
-    "X-Goog-Api-Key": GOOGLE_MAPS_API_KEY,
+    "X-Goog-Api-Key": process.env.EXPO_PUBLIC_API_KEY,
     "X-Goog-FieldMask":
       "places.displayName,places.formattedAddress,places.googleMapsUri,places.id,places.primaryTypeDisplayName,places.location,places.name",
   };

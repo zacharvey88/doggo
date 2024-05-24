@@ -12,7 +12,6 @@ import AccommodationListItem from "@/src/components/AccommodationListItem";
 import { supabase } from "@/src/lib/supabase";
 import { Database } from "@/src/lib/database.types";
 import { FontAwesome6, FontAwesome } from "@expo/vector-icons";
-import { GOOGLE_MAPS_API_KEY } from "@/src/constants/ApiKey";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 import { Stack } from "expo-router";
 import AccommodationTab from "@/src/components/Accommodation";
@@ -50,7 +49,7 @@ export default function TabSearch() {
                 setSearchTerm(data.description);
               }}
               query={{
-                key: GOOGLE_MAPS_API_KEY,
+                key: process.env.EXPO_PUBLIC_API_KEY,
                 language: "en",
               }}
               onFail={(error) => console.log(error)}
