@@ -1,14 +1,11 @@
-
-
-export async function fetchPlaces( query: string) {
-    const url = "https://places.googleapis.com/v1/places:searchText";
+export async function fetchPlaces(query: string) {
+  const url = "https://places.googleapis.com/v1/places:searchText";
   const headers = {
     "Content-Type": "application/json",
     "X-Goog-Api-Key": process.env.EXPO_PUBLIC_API_KEY,
     "X-Goog-FieldMask":
       "places.displayName,places.formattedAddress,places.googleMapsUri,places.id,places.primaryTypeDisplayName,places.location,places.name",
   };
-
 
   const body = JSON.stringify({
     textQuery: query,
@@ -17,14 +14,13 @@ export async function fetchPlaces( query: string) {
   try {
     const response = await fetch(url, {
       method: "POST",
-      headers: headers,
-      body: body,
+      headers,
+      body,
     });
 
     if (!response.ok) {
       throw new Error("Network response was not ok: " + response.statusText);
     }
-
     const data = await response.json();
     return data;
   } catch (error) {

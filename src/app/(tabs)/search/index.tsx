@@ -19,18 +19,17 @@ export default function TabSearch() {
   const categories = [
     { name: "Accommodations", icon: "bed" },
     { name: "Restaurants", icon: "utensils" },
-    { name: "Vets", icon: "shield-dog" },
+    { name: "Vets", icon: "hospital" },
     { name: "Parks", icon: "tree" },
     { name: "Beaches", icon: "umbrella-beach" },
-    { name: "Shops", icon: "shopping-bag" },
+    { name: "Shops", icon: "shop" },
   ];
   const [selectedCategory, setSelectedCategory] = useState("Accommodations");
-
   return (
     <View style={styles.container}>
       {loading ? (
         <>
-          <Stack.Screen options={{ title: "Search Pet Friendly Places"}} />
+          <Stack.Screen options={{ title: "Search Pet Friendly Places" }} />
           <ActivityIndicator style={styles.loading} />
           <Text>Loading</Text>
         </>
@@ -67,7 +66,8 @@ export default function TabSearch() {
                 key={category.name}
                 style={[
                   styles.iconContainer,
-                  selectedCategory === category.name && styles.selectedIconContainer,
+                  selectedCategory === category.name &&
+                    styles.selectedIconContainer,
                 ]}
                 onPress={() => setSelectedCategory(category.name)}
               >
@@ -89,13 +89,17 @@ export default function TabSearch() {
               </Pressable>
             ))}
           </ScrollView>
-          {selectedCategory==='Accommodations' && <AccommodationTab searchTerm={searchTerm} />}
-          {selectedCategory==='Restaurants' && <PlacesComponent location={searchTerm} category={selectedCategory}/>}
-          {selectedCategory==='Vets' && <PlacesComponent location={searchTerm} category={selectedCategory}/>}
-          {selectedCategory==='Parks' && <PlacesComponent location={searchTerm} category={selectedCategory}/>}
-          {selectedCategory==='Beaches' && <PlacesComponent location={searchTerm} category={selectedCategory}/>}
-          {selectedCategory==='Shops' && <PlacesComponent location={searchTerm} category={selectedCategory}/>}
-          </>
+          {selectedCategory === "Accommodations" ? (
+            <AccommodationTab
+              searchTerm={searchTerm}
+            />
+          ) : (
+            <PlacesComponent
+              location={searchTerm}
+              category={selectedCategory}
+            />
+          )}
+        </>
       )}
     </View>
   );
@@ -109,7 +113,7 @@ const styles = StyleSheet.create({
     paddingTop: 20,
     paddingHorizontal: 10,
   },
-  loading: {  },
+  loading: {},
   searchContainer: {
     width: "100%",
     zIndex: 2,
@@ -119,7 +123,7 @@ const styles = StyleSheet.create({
   },
   listView: {
     position: "absolute",
-    top: 40, 
+    top: 40,
     backgroundColor: "white",
     borderRadius: 5,
     elevation: 5,
@@ -140,26 +144,25 @@ const styles = StyleSheet.create({
     borderRadius: 5,
   },
   scrollView: {
-    padding:10,
+    padding: 10,
     maxHeight: 100,
   },
   scrollViewContent: {
-    gap:10,
+    gap: 10,
   },
   iconContainer: {
-    flexDirection:"row",
-    gap:12,
+    flexDirection: "row",
+    gap: 12,
     marginTop: 40,
     alignItems: "center",
-    borderRadius:8, 
-    paddingHorizontal:10,
-    paddingVertical:10,
+    borderRadius: 8,
+    paddingHorizontal: 10,
+    paddingVertical: 10,
     backgroundColor: "#fff",
-    shadowColor: "#000", 
-    shadowOffset: { width: 0, height: 2 }, 
-    shadowOpacity: 0.25, 
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
     shadowRadius: 3.84,
-    
   },
   icon: {
     fontSize: 20,
@@ -168,24 +171,20 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   selectedIconContainer: {
-    backgroundColor: "#FF6347", 
-    shadowColor: "#FF6347", 
-    borderWidth: 2, 
-    borderColor: "#FF6347", 
+    backgroundColor: "#FF6347",
+    shadowColor: "#FF6347",
+    borderWidth: 2,
+    borderColor: "#FF6347",
   },
   selectedIcon: {
-    color: "#FFFFFF", 
+    color: "#FFFFFF",
   },
   selectedText: {
-    color: "#FFFFFF", 
-
+    color: "#FFFFFF",
   },
   list: {
     flex: 1,
     width: "100%",
     alignItems: "center",
-
   },
 });
-
-export default TabSearch;
