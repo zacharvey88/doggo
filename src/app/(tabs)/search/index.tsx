@@ -14,6 +14,7 @@ import { Database } from "@/src/lib/database.types";
 import { FontAwesome6, FontAwesome } from "@expo/vector-icons";
 import { GOOGLE_MAPS_API_KEY } from "@/src/constants/ApiKey";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
+import { Stack } from "expo-router";
 
 export default function TabSearch() {
   const [accommodation, setAccommodation] = useState<
