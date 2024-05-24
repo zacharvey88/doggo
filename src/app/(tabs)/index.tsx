@@ -1,8 +1,23 @@
 import { StyleSheet, Image, Pressable } from 'react-native';
 import { Text, View } from '@/src/components/Themed';
 import { Link } from 'expo-router';
+import { useEffect, useState } from 'react';
+import { supabase } from '@/src/lib/supabase';
+import { Session } from '@supabase/supabase-js';
 
 export default function TabHome() {
+  const [session, setSession] = useState<Session | null>(null);
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+    });
+    supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session);
+    });
+  }, [])
+
+
+
   return (
     <View style={styles.container}>
       <Image style={styles.image}source={require("../../../assets/images/logo.png")} resizeMode="contain"/>
@@ -13,11 +28,21 @@ export default function TabHome() {
           </Text>
         </Pressable>
       </Link>
-      <Link href='/sign-in' asChild>
+      {session && session.user ? (
+        <Link href="/profile" asChild>
+          <Pressable style={styles.signOutButton}>
+            <Text style={styles.buttonText}>
+            Sign Out
+            </Text>
+          </Pressable>
+        </Link>
+      ):(
+        <Link href='/profile' asChild>
       <Pressable style={styles.signInButton}>
         <Text style={styles.buttonText}>Sign In / Register</Text>
       </Pressable>
       </Link>
+      )}
     </View>
   );
 }
@@ -68,5 +93,15 @@ const styles = StyleSheet.create({
     elevation: 3,
     backgroundColor: 'rgb(1,140,220)',
     
+  },
+  signOutButton: {
+    position: "absolute",
+    bottom: "13%",
+    justifyContent: 'center',
+    paddingVertical: 12,
+    paddingHorizontal: 89,
+    borderRadius: 10,
+    elevation: 3,
+    backgroundColor: 'rgb(1,140,220)',
   }
 });
