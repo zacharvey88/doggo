@@ -15,14 +15,11 @@ import { FontAwesome6, FontAwesome } from "@expo/vector-icons";
 import { GOOGLE_MAPS_API_KEY } from "@/src/constants/ApiKey";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 import { Stack } from "expo-router";
+import AccommodationTab from "@/src/components/Accommodation";
+import Accommodation from "./[id]";
+import RestaurantsTab from "@/src/components/Restaurants";
 
 export default function TabSearch() {
-  const [accommodation, setAccommodation] = useState<
-    Database["public"]["Tables"]["accommodation"]["Row"][]
-  >([]);
-  const [filteredAccommodations, setFilteredAccommodations] = useState<
-    Database["public"]["Tables"]["accommodation"]["Row"][]
-  >([]);
   const [loading, setLoading] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const categories = [
@@ -33,34 +30,7 @@ export default function TabSearch() {
     { name: "Beaches", icon: "umbrella-beach" },
   ];
   const [selectedCategory, setSelectedCategory] = useState("Accommodations");
-
-  useEffect(() => {
-    getAccommodation();
-  }, []);
-
-  useEffect(() => {
-    if (searchTerm === "") {
-      setFilteredAccommodations(accommodation);
-    } else {
-      const filtered = accommodation.filter((acc) =>
-        acc.city.toLowerCase().startsWith(searchTerm.toLowerCase())
-      );
-      setFilteredAccommodations(filtered);
-    }
-  }, [searchTerm, accommodation]);
-
-  async function getAccommodation() {
-    setLoading(true);
-    const { data, error } = await supabase
-      .from("accommodation")
-      .select("*")
-      .order("accommodation_id", { ascending: true });
-    if (data) {
-      setAccommodation(data);
-      setFilteredAccommodations(data);
-    }
-    setLoading(false);
-  }
+  
 
   return (
     <View style={styles.container}>
@@ -77,7 +47,6 @@ export default function TabSearch() {
               fetchDetails={true}
               placeholder="Search"
               onPress={(data, details = null) => {
-                console.log(data);
                 setSearchTerm(data.description);
               }}
               query={{
@@ -126,18 +95,12 @@ export default function TabSearch() {
               </Pressable>
             ))}
           </ScrollView>
-
-          <View style={styles.list}>
-            <FlatList
-              data={filteredAccommodations}
-              renderItem={({ item }) => (
-                <AccommodationListItem accommodation={item} />
-              )}
-              contentContainerStyle={{ gap: 10, padding: 10 }}
-              showsVerticalScrollIndicator={false}
-            />
-          </View>
-        </>
+          <>{selectedCategory==='Accommodations' && <AccommodationTab searchTerm={searchTerm}/>}</>
+          <>{selectedCategory==='Restaurants' && <RestaurantsTab searchTerm={searchTerm}/>}</>
+          {/* {selectedCategory==='Vets' && < searchTerm={searchTerm}/>} */}
+          {/* {selectedCategory==='Parks' && < searchTerm={searchTerm}/>} */}
+          {/* {selectedCategory==='Beaches' && < searchTerm={searchTerm}/>} */}
+          </>
       )}
     </View>
   );
@@ -161,7 +124,7 @@ const styles = StyleSheet.create({
   },
   listView: {
     position: "absolute",
-    top: 40, // Adjust this value if needed
+    top: 40, 
     backgroundColor: "white",
     borderRadius: 5,
     elevation: 5,
@@ -210,16 +173,16 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   selectedIconContainer: {
-    backgroundColor: "#FF6347", // Background color for selected tab
-    shadowColor: "#FF6347", // Shadow color for selected tab
-    borderWidth: 2, // Border width for selected tab
-    borderColor: "#FF6347", // Border color for selected tab
+    backgroundColor: "#FF6347", 
+    shadowColor: "#FF6347", 
+    borderWidth: 2, 
+    borderColor: "#FF6347", 
   },
   selectedIcon: {
-    color: "#FFFFFF", // Customize the selected icon color (white for contrast)
+    color: "#FFFFFF", 
   },
   selectedText: {
-    color: "#FFFFFF", // Customize the selected text color (white for contrast)
+    color: "#FFFFFF", 
 
   },
   list: {
