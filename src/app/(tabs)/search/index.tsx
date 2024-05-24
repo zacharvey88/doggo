@@ -4,20 +4,14 @@ import {
   View,
   Pressable,
   ActivityIndicator,
-  FlatList,
   ScrollView,
 } from "react-native";
 import { Text } from "@/src/components/Themed";
-import AccommodationListItem from "@/src/components/AccommodationListItem";
-import { supabase } from "@/src/lib/supabase";
-import { Database } from "@/src/lib/database.types";
 import { FontAwesome6, FontAwesome } from "@expo/vector-icons";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 import { Stack } from "expo-router";
 import AccommodationTab from "@/src/components/Accommodation";
-import Accommodation from "./[id]";
-import RestaurantsTab from "@/src/components/Restaurants";
-import VetsTab from "@/src/components/Vets";
+import PlacesComponent from "@/src/components/PlacesComponents";
 
 export default function TabSearch() {
   const [loading, setLoading] = useState(false);
@@ -95,11 +89,11 @@ export default function TabSearch() {
               </Pressable>
             ))}
           </ScrollView>
-          <>{selectedCategory==='Accommodations' && <AccommodationTab searchTerm={searchTerm} />}</>
-          <>{selectedCategory==='Restaurants' && <RestaurantsTab searchTerm={searchTerm} category={selectedCategory}/>}</>
-          {selectedCategory==='Vets' && < VetsTab searchTerm={searchTerm} category={selectedCategory}/>}
-          {/* {selectedCategory==='Parks' && < searchTerm={searchTerm}/>}
-          {selectedCategory==='Beaches' && < searchTerm={searchTerm}/>} */}
+          {selectedCategory==='Accommodations' && <AccommodationTab searchTerm={searchTerm} />}
+          {selectedCategory==='Restaurants' && <PlacesComponent location={searchTerm} category={selectedCategory}/>}
+          {selectedCategory==='Vets' && <PlacesComponent location={searchTerm} category={selectedCategory}/>}
+          {selectedCategory==='Parks' && <PlacesComponent location={searchTerm} category={selectedCategory}/>}
+          {selectedCategory==='Beaches' && <PlacesComponent location={searchTerm} category={selectedCategory}/>}
           </>
       )}
     </View>
