@@ -1,12 +1,19 @@
-import { Stack } from 'expo-router'
+import { Stack } from "expo-router";
 
 export default function SearchStack() {
-  
   return (
     <Stack>
-      <Stack.Screen name="index" options={{ title: "Search" }} />
+      <Stack.Screen name="index" options={{ headerShown: false }} />
       <Stack.Screen name="[id]" options={{ title: "Accommodation" }} />
       <Stack.Screen name="[id]/reviews" options={{ title: "Reviews" }} />
+      <Stack.Screen
+        name="place-details"
+        options={{
+          headerTitle: "",
+           headerBackTitleVisible: false,
+          headerBackTitle: "Back",
+        }}
+      />
     </Stack>
   );
 }

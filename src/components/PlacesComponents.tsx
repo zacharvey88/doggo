@@ -8,6 +8,7 @@ import {
   Pressable,
   Image,
   ScrollView,
+  Animated
 } from "react-native";
 import { useRouter } from "expo-router";
 import beaches from "@/data/beaches.json";
