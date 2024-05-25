@@ -66,23 +66,30 @@ export default function Account({ session }: { session: Session }) {
   return (
     <View style={styles.container}>
       <View style={styles.badge}>
-
-
         <Image source={{ uri:  avatarUrl? `https://orcurstjttnhckjuhyqb.supabase.co/storage/v1/object/public/avatars/${avatarUrl}` : defaultImage }} style={styles.image} />
         <Text style={styles.fullname}>{fullname}</Text>
         <Text style={styles.username}>{username}</Text>
+        <View style={styles.links}>
+          <Link
+            style={styles.textButton}
+            href={{
+              pathname: "/profile/update",
+              params: { username, avatarUrl, fullname, email },
+            }}
+          >Edit Profile</Link>
+          <Link
+            style={styles.textButton}
+            onPress={() => supabase.auth.signOut()}
+            href={{
+              pathname: "/profile",
+              params: { username, avatarUrl, fullname, email },
+            }}
+          >Sign Out</Link>
+        </View>
       </View>
-
-      <Link
-        style={styles.textButton}
-        href={{
-          pathname: "/profile/update",
-          params: { username, avatarUrl, fullname, email },
-        }}
-      >
-        Edit Profile
-      </Link>
-      <Button onPress={() => supabase.auth.signOut()} text="Sign Out"></Button>
+      {/* <View>
+        <Button style={styles.signOutButton} onPress={() => supabase.auth.signOut()} text="Sign Out"></Button>
+      </View> */}
     </View>
   );
 }
@@ -119,6 +126,7 @@ const styles = StyleSheet.create({
     textDecorationLine: "underline",
     alignSelf: "center",
     fontSize: 16,
+    marginTop: 20,
   },
   fullname: {
     marginTop: 16,
@@ -130,5 +138,14 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     color: "gray",
     fontSize: 18,
+  },
+  signOutButton: {
+    backgroundColor: '#F9F9F9',
+  },
+  links: {
+    display: "flex",
+    flexDirection: "row",
+    gap: 15,
+    justifyContent: "center",
   },
 });

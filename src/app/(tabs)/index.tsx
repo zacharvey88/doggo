@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import { supabase } from '@/src/lib/supabase';
 import { Session } from '@supabase/supabase-js';
 
+
 export default function TabHome() {
   const [session, setSession] = useState<Session | null>(null);
   useEffect(() => {
@@ -21,28 +22,23 @@ export default function TabHome() {
   return (
     <View style={styles.container}>
       <Image style={styles.image}source={require("../../../assets/images/logo.png")} resizeMode="contain"/>
-      <Link href="/search" asChild>
-        <Pressable style={styles.button}>
-          <Text style={styles.buttonText}>
-            Start Planning Your Trip
-          </Text>
-        </Pressable>
-      </Link>
-      {session && session.user ? (
-        <Link href="/profile" asChild>
-          <Pressable style={styles.signOutButton}>
+      <View style={styles.btnContainer}>     
+        <Text style={styles.signInText}>DON'T LEAVE DOGGO AT HOME!</Text>
+        <Link href="/search" asChild>
+          <Pressable style={styles.button}>
             <Text style={styles.buttonText}>
-            Sign Out
+              Start Planning Your Trip 
             </Text>
           </Pressable>
         </Link>
-      ):(
-        <Link href='/profile' asChild>
-      <Pressable style={styles.signInButton}>
-        <Text style={styles.buttonText}>Sign In / Register</Text>
-      </Pressable>
-      </Link>
-      )}
+        {!session?.user && (
+          <Link href='/profile' asChild>
+            <Pressable style={styles.signInButton}>
+              <Text style={styles.buttonText}>Sign In / Register</Text>
+            </Pressable>
+          </Link>
+        )}
+      </View>
     </View>
   );
 }
@@ -55,26 +51,31 @@ const styles = StyleSheet.create({
     flex:1,
     paddingTop: 100,
   },
-  button: {
-    position: "absolute",
-    bottom: "20%",
+  btnContainer: {
+    flex: 1,
     alignItems: 'center',
-    justifyContent: 'center',
+    paddingTop: 100,
+  },
+  button: {
     paddingVertical: 12,
     paddingHorizontal: 32,
     borderRadius: 10,
-    elevation: 3,
-    backgroundColor: 'rgb(1,140,220)',
+    backgroundColor: '#3990CD',
+    marginBottom: 8,
+    width: 250,
+
+  },
+  signInButton: {
+    paddingVertical: 12,
+    paddingHorizontal: 57,
+    borderRadius: 10,
+    backgroundColor: '#3990CD',
+    width: 250,
   },
   buttonText: {
     fontSize: 16,
     fontWeight: 'bold',
     color: 'white',
-  },
-  separator: {
-    marginVertical: 30,
-    height: 1,
-    width: '80%',
   },
   image: {
     width:"100%",
@@ -82,26 +83,9 @@ const styles = StyleSheet.create({
   },
   signInText: {
     fontWeight:"bold",
-  },
-  signInButton: {
-    position: "absolute",
-    bottom: "13%",
-    justifyContent: 'center',
-    paddingVertical: 12,
-    paddingHorizontal: 57,
-    borderRadius: 10,
-    elevation: 3,
-    backgroundColor: 'rgb(1,140,220)',
-    
-  },
-  signOutButton: {
-    position: "absolute",
-    bottom: "13%",
-    justifyContent: 'center',
-    paddingVertical: 12,
-    paddingHorizontal: 89,
-    borderRadius: 10,
-    elevation: 3,
-    backgroundColor: 'rgb(1,140,220)',
+    marginBottom: 20,
+    fontSize: 18,
+    color: '#3990CD',
+    fontFamily: 'Futura-CondensedMedium',
   }
 });

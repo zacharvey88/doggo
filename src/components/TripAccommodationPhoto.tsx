@@ -1,55 +1,45 @@
-import { useEffect, useState } from "react"
-import { supabase } from "../lib/supabase"
-import { Text, View } from "./Themed"
-import { Image, StyleSheet } from 'react-native';
+import { useEffect, useState } from "react";
+import { supabase } from "../lib/supabase";
+import { Image, View } from "react-native";
 
+const TripAccomodationPhoto = ({ accommodation_id }: { accommodation_id: number }) => {
 
+  const [accommodationPhotoUrl, setAccommodationPhotoUrl] = useState("");
+  const [loading, setLoading] = useState(true);
 
-type accomodationProps = {
-    accom: {
-        accommodation_id : number
+  useEffect(() => {
+    getAccommodationPhoto();
+  }, [accommodation_id]);
+
+  async function getAccommodationPhoto() {
+    const { data } = await supabase
+      .from("accommodation")
+      .select("*")
+      .eq("accommodation_id", accommodation_id);
+    if (data) {
+      setAccommodationPhotoUrl(data[0].photos[0]);
+      console.log(accommodationPhotoUrl); 
     }
-}
-
-const TripAccomodationPhoto = ({accom} : accomodationProps) => {
-    const [accomPhotoDb , setAccomPhotoDb] = useState("")
-
-    
-    useEffect(() => {
-        getAccom();
-      }, [accom]);
-
-      async function getAccom() {
-        const { data } = await supabase.from("accommodation").select('*').eq("accommodation_id", accom)
-        if(data){
-            setAccomPhotoDb(data[0].photos[0]);
-        }
-      }
-      return (
-        <View>
-            {accomPhotoDb.length>0 ? (
-                    <Image
-                    source={{uri: accomPhotoDb}}
-                    resizeMode="cover"
-                    style={styles.image}
-                    />
-            ):(  
-                <Text>No Image Available</Text>
-            )}
-        
+  }
+  if (loading) {
+    return (
+      <View>
+        <Image 
+          source={{ uri: "https://i.sstatic.net/l60Hf.png" }}
+        />
       </View>
-      )
+    );
+  }
+
+  if (accommodationPhotoUrl) {
+    return (
+      <View>
+        <Image 
+          source={{ uri: accommodationPhotoUrl }}
+        />
+      </View>
+    );
+  }
 }
 
-export default TripAccomodationPhoto
-
-const styles=StyleSheet.create({
-    image: {
-        width: "100%",
-        height: 200
-    }
-
-})
-
-
-
+export default TripAccomodationPhoto;
