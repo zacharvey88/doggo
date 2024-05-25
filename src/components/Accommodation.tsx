@@ -80,74 +80,7 @@ export default function AccommodationTab({searchTerm}) {
               justifyContent: "center",
               alignItems: "center",
             },
-            searchContainer: {
-              width: "100%",
-              zIndex: 2,
-            },
-            autocompleteContainer: {
-              width: "100%",
-            },
-            listView: {
-              position: "absolute",
-              top: 40,
-              backgroundColor: "white",
-              borderRadius: 5,
-              elevation: 5,
-              zIndex: 3,
-            },
-            textInputContainer: {
-              borderTopWidth: 0,
-              borderBottomWidth: 0,
-              backgroundColor: "transparent",
-            },
-            textInput: {
-              marginLeft: 0,
-              marginRight: 0,
-              height: 38,
-              color: "#5d5d5d",
-              fontSize: 16,
-              backgroundColor: "#FFFFFF",
-              borderRadius: 5,
-            },
-            scrollView: {
-              padding: 10,
-              maxHeight: 100,
-            },
-            scrollViewContent: {
-              gap: 10,
-            },
-            iconContainer: {
-              flexDirection: "row",
-              gap: 12,
-              marginTop: 40,
-              alignItems: "center",
-              borderRadius: 8,
-              paddingHorizontal: 10,
-              paddingVertical: 10,
-              backgroundColor: "#fff",
-              shadowColor: "#000",
-              shadowOffset: { width: 0, height: 2 },
-              shadowOpacity: 0.25,
-              shadowRadius: 3.84,
-            },
-            icon: {
-              fontSize: 20,
-            },
-            filterText: {
-              fontSize: 16,
-            },
-            selectedIconContainer: {
-              backgroundColor: "#FF6347",
-              shadowColor: "#FF6347",
-              borderWidth: 2,
-              borderColor: "#FF6347",
-            },
-            selectedIcon: {
-              color: "#FFFFFF",
-            },
-            selectedText: {
-              color: "#FFFFFF",
-            },
+          
             list: {
               flex: 1,
               width: "100%",

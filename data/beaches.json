@@ -1,0 +1,192 @@
+{
+  "places": [
+    {
+      "id": "ChIJ8eF2kYlNekgRmnxw-rYG19Y",
+      "formattedAddress": "Wilmslow SK9 4AJ, UK",
+      "location": {
+        "latitude": 53.332682399999996,
+        "longitude": -2.2397703
+      },
+      "viewport": {
+        "low": {
+          "latitude": 53.3313334197085,
+          "longitude": -2.2411192802915019
+        },
+        "high": {
+          "latitude": 53.3340313802915,
+          "longitude": -2.2384213197084981
+        }
+      },
+      "googleMapsUri": "https://maps.google.com/?cid=15480849627064859802",
+      "displayName": {
+        "text": "Styal Park Beach",
+        "languageCode": "en"
+      },
+      "primaryTypeDisplayName": {
+        "text": "Park",
+        "languageCode": "en-US"
+      },
+      "currentOpeningHours": {
+        "openNow": true,
+        "periods": [
+          {
+            "open": {
+              "day": 6,
+              "hour": 0,
+              "minute": 0,
+              "truncated": true,
+              "date": {
+                "year": 2024,
+                "month": 5,
+                "day": 25
+              }
+            },
+            "close": {
+              "day": 5,
+              "hour": 23,
+              "minute": 59,
+              "truncated": true,
+              "date": {
+                "year": 2024,
+                "month": 5,
+                "day": 31
+              }
+            }
+          }
+        ],
+        "weekdayDescriptions": [
+          "Monday: Open 24 hours",
+          "Tuesday: Open 24 hours",
+          "Wednesday: Open 24 hours",
+          "Thursday: Open 24 hours",
+          "Friday: Open 24 hours",
+          "Saturday: Open 24 hours",
+          "Sunday: Open 24 hours"
+        ]
+      },
+      "shortFormattedAddress": "Wilmslow",
+      "photos": [
+        {
+          "name": "places/ChIJ8eF2kYlNekgRmnxw-rYG19Y/photos/AUGGfZlEic-rOs8S-HZCkRtMrhs01YZahf1Zbo5eOQk5yYSC0TwXk3az2AecsQ1QhNyqIHRw66vqi7BNiqTka8FEW-QP7rPOKpzxHJ6LxWJa7jB5FCyA0j9vrP4QavVio76Zd_TVzlzL60sdAWKOe8umT18kebUgl7lgyaNg",
+          "widthPx": 4032,
+          "heightPx": 2268,
+          "authorAttributions": [
+            {
+              "displayName": "Nick Beardshall",
+              "uri": "//maps.google.com/maps/contrib/109345906529665877990",
+              "photoUri": "//lh3.googleusercontent.com/a-/ALV-UjVD3u3xLw3nsgVcxddJluSUmGy_h17RT-zSLOeX-N62bWWf7vjj=s100-p-k-no-mo"
+            }
+          ]
+        },
+        {
+          "name": "places/ChIJ8eF2kYlNekgRmnxw-rYG19Y/photos/AUGGfZlmi-vY2dM0FFvSYKUc7AUf-oDMAIlgRyYPTrtKeM3zJVYMPplKLSFgK6O2SFt7B-Ka_P3ho6qF0VVCHVG1N0JsctprTwgDj_TxlMFYy8bqI3ZWiqO1SO9mncHM3hDNeELMTH1JlQCcFgqJiz_Kwh_otNsXGvrVumOo",
+          "widthPx": 2624,
+          "heightPx": 2448,
+          "authorAttributions": [
+            {
+              "displayName": "Vic Johnson",
+              "uri": "//maps.google.com/maps/contrib/105683071681024963460",
+              "photoUri": "//lh3.googleusercontent.com/a/ACg8ocKnFAEqc978OvMxP7ZaC21r7OSdqxtl-JaRQl8SrcMHd157Og=s100-p-k-no-mo"
+            }
+          ]
+        },
+        {
+          "name": "places/ChIJ8eF2kYlNekgRmnxw-rYG19Y/photos/AUGGfZknlLX6cb30ZkZsXBaB2JfhkCDlBhY0ifjhKpOZXkNUQLr_vnkSfDbnEGFpY_dIEfNFYmYCriv_sXFpJJfJxMKZ4R9JoJrbNeAZu5yaE5jIVDlYcf4ABWWhWT5QXQ9QScLwm660Zlqej0C41hxvqYLMAXP9zra4eBNc",
+          "widthPx": 4000,
+          "heightPx": 3000,
+          "authorAttributions": [
+            {
+              "displayName": "Kwin",
+              "uri": "//maps.google.com/maps/contrib/112477667107110248051",
+              "photoUri": "//lh3.googleusercontent.com/a-/ALV-UjUkYjH7gVk80aYwLCvdU3QOi7bm3ZNLQ9ppdieiJ390ktpsoEkP4Q=s100-p-k-no-mo"
+            }
+          ]
+        },
+        {
+          "name": "places/ChIJ8eF2kYlNekgRmnxw-rYG19Y/photos/AUGGfZkU5vSUD31A3cX7jLpszmfak9B6HTKrD6rT8j9yNVp2t8vNFcB2CskWHL2R5wXGR9Dd8a5vroxipPqptOxRNmxOQvhnmdi-TqrETVdyW1N_jdAUkoY_vKk0ZtAk7swgUnK4cTjx1pE21fan-2XYHkeGCtiSGCRaay-f",
+          "widthPx": 2448,
+          "heightPx": 3264,
+          "authorAttributions": [
+            {
+              "displayName": "Vic Johnson",
+              "uri": "//maps.google.com/maps/contrib/105683071681024963460",
+              "photoUri": "//lh3.googleusercontent.com/a/ACg8ocKnFAEqc978OvMxP7ZaC21r7OSdqxtl-JaRQl8SrcMHd157Og=s100-p-k-no-mo"
+            }
+          ]
+        },
+        {
+          "name": "places/ChIJ8eF2kYlNekgRmnxw-rYG19Y/photos/AUGGfZkoXn_Do3lV4jzb0J_sT_p5DHkcNpnPtmByUrAzzr5p_eWXtpoE9Ww_X_YNXaXKy5nnhztverC2AnpSYB-Y46NI7noO_YqLUFkggDTEpHPmSdx5sX1dDpzyi0ix4hK8-YBKUppkrp0Iq_DpLViSzPI9cdZ3gqDhW8zT",
+          "widthPx": 3472,
+          "heightPx": 4640,
+          "authorAttributions": [
+            {
+              "displayName": "Анна Стогний",
+              "uri": "//maps.google.com/maps/contrib/110913276447504466363",
+              "photoUri": "//lh3.googleusercontent.com/a-/ALV-UjXdialyKaZTm3UtGdqKb7HC5oegeTkRFFSPQOVvduGbezzf-xw=s100-p-k-no-mo"
+            }
+          ]
+        },
+        {
+          "name": "places/ChIJ8eF2kYlNekgRmnxw-rYG19Y/photos/AUGGfZmJAQKHkFZLRz1EByENWRz-ZWw7Xld8jPzYwI5xP0pyKyCv3IHgkOdz0UCbiUzPq9wrZabKYnNlGCg_sAqFs0pAo1JKjEvxaA9lF1M0powuuRxfvOQ9evFOn_yVWXHXgFd9kjSVjPFq6NZXGKnyJWvcbN40TAvDHh3j",
+          "widthPx": 2448,
+          "heightPx": 3264,
+          "authorAttributions": [
+            {
+              "displayName": "Vic Johnson",
+              "uri": "//maps.google.com/maps/contrib/105683071681024963460",
+              "photoUri": "//lh3.googleusercontent.com/a/ACg8ocKnFAEqc978OvMxP7ZaC21r7OSdqxtl-JaRQl8SrcMHd157Og=s100-p-k-no-mo"
+            }
+          ]
+        },
+        {
+          "name": "places/ChIJ8eF2kYlNekgRmnxw-rYG19Y/photos/AUGGfZklVnT1i-3W4NzJnL2IeYq3pkXlm1-UjsxkeVzGFSspcHpyBs5-mpHUQPqwD5Wha6WXXOWCXJn9X6hklHF-77hSrW55ZR-_zHelvk9sg4Dk3hRKzqMYjqTytRDESUaSYu2GhwOc5_MQ7EipG32MyL0kXLS-0qQAUuMJ",
+          "widthPx": 2448,
+          "heightPx": 3021,
+          "authorAttributions": [
+            {
+              "displayName": "Vic Johnson",
+              "uri": "//maps.google.com/maps/contrib/105683071681024963460",
+              "photoUri": "//lh3.googleusercontent.com/a/ACg8ocKnFAEqc978OvMxP7ZaC21r7OSdqxtl-JaRQl8SrcMHd157Og=s100-p-k-no-mo"
+            }
+          ]
+        },
+        {
+          "name": "places/ChIJ8eF2kYlNekgRmnxw-rYG19Y/photos/AUGGfZnnngmqOBnkwvCd06beT8uEumn5MWNpnczoj5FjuIr_WbYR-VvOn9X00-MUp4JnDG0sFI6_v5FklMIqNMe26hKz5HP0YhdDaRzufWTVc7SB6AWdb2AhXPQH3MQeKDMZMQ3iqBRrbBECSga5Xr5x4y2KAtoPd9kfs13z",
+          "widthPx": 4032,
+          "heightPx": 2268,
+          "authorAttributions": [
+            {
+              "displayName": "Nick Beardshall",
+              "uri": "//maps.google.com/maps/contrib/109345906529665877990",
+              "photoUri": "//lh3.googleusercontent.com/a-/ALV-UjVD3u3xLw3nsgVcxddJluSUmGy_h17RT-zSLOeX-N62bWWf7vjj=s100-p-k-no-mo"
+            }
+          ]
+        },
+        {
+          "name": "places/ChIJ8eF2kYlNekgRmnxw-rYG19Y/photos/AUGGfZkmkZ93RRLUN4OkpynXVCTFai9LVPKsepYDgoO8fPEDeRz_QB5ZOHBsUHjNfIMxWWyjgfvh7LB2qq8xBh4nVvjX--6oFGtgrjn44bAy6GuUh2evPJ8CcdmRaBCt3PDfMC3ntWj3-m5qqf_IGvGDaudmA7TRr_Yr8uEv",
+          "widthPx": 13792,
+          "heightPx": 2720,
+          "authorAttributions": [
+            {
+              "displayName": "Breny",
+              "uri": "//maps.google.com/maps/contrib/113675813089494287477",
+              "photoUri": "//lh3.googleusercontent.com/a-/ALV-UjVEgSAB_JdCM6T-gGWkVL4_-_1UwnLc3BUsTZd_50kOlVhYYA9D=s100-p-k-no-mo"
+            }
+          ]
+        },
+        {
+          "name": "places/ChIJ8eF2kYlNekgRmnxw-rYG19Y/photos/AUGGfZkectEVGEACxHz8ChcDC5Svq5PtJAjmk2vfsnVxDOyKRmd9C4XajZ891I_MYak4S7ff86yeFbaEDmMfnzU6WWfQecRUEDixP8emJXGb9no8sxXmk5TVRPoQVXhE_LhYOfsVxCy63YhnlTsnA-ZaDYyuHZUxNMwyHy4n",
+          "widthPx": 2976,
+          "heightPx": 2448,
+          "authorAttributions": [
+            {
+              "displayName": "Vic Johnson",
+              "uri": "//maps.google.com/maps/contrib/105683071681024963460",
+              "photoUri": "//lh3.googleusercontent.com/a/ACg8ocKnFAEqc978OvMxP7ZaC21r7OSdqxtl-JaRQl8SrcMHd157Og=s100-p-k-no-mo"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

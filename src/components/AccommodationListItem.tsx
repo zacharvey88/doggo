@@ -68,23 +68,24 @@ const styles = StyleSheet.create({
   container: {
     width: 320,
     height: 415,
-    overflow: 'hidden',
+    overflow: "hidden",
     marginBottom: 10,
   },
   imageContainer: {
-    width: '98%',
-    height: '60%',
-    overflow: 'hidden',
-    alignItems: 'center',
-    justifyContent: 'center',
+    width: "98%",
+    height: "60%",
+    overflow: "hidden",
+    alignItems: "center",
+    justifyContent: "center",
     marginLeft: 3,
     marginTop: 3,
     borderRadius: 10,
     marginBottom: 5,
+   
   },
   image: {
-    width: '100%',
-    height: '100%',
+    width: "100%",
+    height: "100%",
   },
   textContainer: {
     paddingHorizontal: 10,
@@ -92,15 +93,15 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 18,
-    fontWeight: '600',
+    fontWeight: "600",
     marginBottom: 10,
   },
   button: {
-    alignSelf: 'stretch',
+    alignSelf: "stretch",
     borderRadius: 10,
     height: 40,
     marginTop: 10,
-    color: '#841584'
+    color: "#841584",
   },
 });
 
