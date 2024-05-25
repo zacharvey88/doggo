@@ -5,9 +5,10 @@ import {
   Pressable,
   ActivityIndicator,
   ScrollView,
+  SafeAreaView,
 } from "react-native";
 import { Text } from "@/src/components/Themed";
-import { FontAwesome6, FontAwesome } from "@expo/vector-icons";
+import { FontAwesome6 } from "@expo/vector-icons";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 import { Stack } from "expo-router";
 import AccommodationTab from "@/src/components/Accommodation";
@@ -26,86 +27,89 @@ export default function TabSearch() {
   ];
   const [selectedCategory, setSelectedCategory] = useState("Accommodations");
   return (
-    <View style={styles.container}>
-      {loading ? (
-        <>
-          <Stack.Screen options={{ title: "Search Pet Friendly Places" }} />
-          <ActivityIndicator style={styles.loading} />
-          <Text>Loading</Text>
-        </>
-      ) : (
-        <>
-          <View style={styles.searchContainer}>
-            <GooglePlacesAutocomplete
-              fetchDetails={true}
-              placeholder="Search"
-              onPress={(data, details = null) => {
-                setSearchTerm(data.description);
-              }}
-              query={{
-                key: process.env.EXPO_PUBLIC_API_KEY,
-                language: "en",
-              }}
-              onFail={(error) => console.log(error)}
-              styles={{
-                container: styles.autocompleteContainer,
-                listView: styles.listView,
-                textInputContainer: styles.textInputContainer,
-                textInput: styles.textInput,
-              }}
-            />
-          </View>
-          <ScrollView
-            horizontal
-            contentContainerStyle={styles.scrollViewContent}
-            showsHorizontalScrollIndicator={false}
-            style={styles.scrollView}
-          >
-            {categories.map((category) => (
-              <Pressable
-                key={category.name}
-                style={[
-                  styles.iconContainer,
-                  selectedCategory === category.name &&
-                    styles.selectedIconContainer,
-                ]}
-                onPress={() => setSelectedCategory(category.name)}
-              >
-                <FontAwesome6
-                  name={category.icon}
+    <SafeAreaView style={styles.safeArea}>
+      <View style={styles.container}>
+        {loading ? (
+          <>
+            <ActivityIndicator style={styles.loading} />
+            <Text>Loading</Text>
+          </>
+        ) : (
+          <>
+            <View style={styles.searchContainer}>
+              <GooglePlacesAutocomplete
+                fetchDetails={true}
+                placeholder="Where do you want to go?"
+                onPress={(data, details = null) => {
+                  setSearchTerm(data.description);
+                }}
+                query={{
+                  key: process.env.EXPO_PUBLIC_API_KEY,
+                  language: "en",
+                }}
+                onFail={(error) => console.log(error)}
+                styles={{
+                  container: styles.autocompleteContainer,
+                  listView: styles.listView,
+                  textInputContainer: styles.textInputContainer,
+                  textInput: styles.textInput,
+                }}
+              />
+            </View>
+            <ScrollView
+              horizontal
+              contentContainerStyle={styles.scrollViewContent}
+              showsHorizontalScrollIndicator={false}
+              style={styles.scrollView}
+            >
+              {categories.map((category) => (
+                <Pressable
+                  key={category.name}
                   style={[
-                    styles.icon,
-                    selectedCategory === category.name && styles.selectedIcon,
+                    styles.iconContainer,
+                    selectedCategory === category.name &&
+                      styles.selectedIconContainer,
                   ]}
-                />
-                <Text
-                  style={[
-                    styles.filterText,
-                    selectedCategory === category.name && styles.selectedText,
-                  ]}
+                  onPress={() => setSelectedCategory(category.name)}
                 >
-                  {category.name}
-                </Text>
-              </Pressable>
-            ))}
-          </ScrollView>
-          {selectedCategory === "Accommodations" ? (
-            <AccommodationTab
-              searchTerm={searchTerm}
-            />
-          ) : (
-            <PlacesComponent
-              location={searchTerm}
-              category={selectedCategory}
-            />
-          )}
-        </>
-      )}
-    </View>
+                  <FontAwesome6
+                    name={category.icon}
+                    style={[
+                      styles.icon,
+                      selectedCategory === category.name && styles.selectedIcon,
+                    ]}
+                  />
+                  <Text
+                    style={[
+                      styles.filterText,
+                      selectedCategory === category.name && styles.selectedText,
+                    ]}
+                  >
+                    {category.name}
+                  </Text>
+                </Pressable>
+              ))}
+            </ScrollView>
+            {selectedCategory === "Accommodations" ? (
+              <AccommodationTab searchTerm={searchTerm} />
+            ) : (
+              <PlacesComponent
+                location={searchTerm}
+                category={selectedCategory}
+              />
+            )}
+          </>
+        )}
+      </View>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+    backgroundColor: "white",
+  },
   container: {
     flex: 1,
     backgroundColor: "white",
@@ -116,6 +120,7 @@ const styles = StyleSheet.create({
   loading: {},
   searchContainer: {
     width: "100%",
+    marginBottom: 20,
     zIndex: 2,
   },
   autocompleteContainer: {
@@ -133,15 +138,24 @@ const styles = StyleSheet.create({
     borderTopWidth: 0,
     borderBottomWidth: 0,
     backgroundColor: "transparent",
+    padding: 0,
+    margin: 0,
   },
   textInput: {
     marginLeft: 0,
     marginRight: 0,
-    height: 38,
+    height: 50,
     color: "#5d5d5d",
-    fontSize: 16,
+    fontSize: 18,
     backgroundColor: "#FFFFFF",
     borderRadius: 5,
+    borderColor: "#dcdcdc",
+    borderWidth: 1,
+    paddingHorizontal: 10,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 2,
   },
   scrollView: {
     padding: 10,
@@ -188,3 +202,5 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
 });
+
+export default TabSearch;
