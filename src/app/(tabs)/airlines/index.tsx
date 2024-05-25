@@ -107,7 +107,7 @@ const styles = StyleSheet.create({
   },
   image: {
     width: 180,
-    height: 180,
+    height: 120,
     borderWidth: 1,
     borderColor: "#e0e0e0",
   },

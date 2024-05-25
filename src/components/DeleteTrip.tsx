@@ -15,11 +15,11 @@ const deleteTrip = async () => {
     .eq("trip_id", trip_id)
 
 if (error && error.code === '42501') {
-    Alert.alert('Error', 'You must be logged in to do this!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
+    Alert.alert('Error', 'You must be logged in to do this.')
 } else {
   setModalVisible(false)
   setDeletePressed(true)
-  Alert.alert('Success!', 'Successfully deleted.')
+  Alert.alert('Trip deleted successfully!')
 }
 }
 const handleCancel = ()=>{
