@@ -1,11 +1,4 @@
-// src/components/PlacesComponent.tsx
 import React, { useEffect, useState } from "react";
-import beaches from "@/data/beaches.json"
-import restaurants from "@/data/restaurants.json"
-import vets from "@/data/vets.json"
-import parks from "@/data/parks.json"
-import shops from "@/data/shops.json"
- 
 import {
   View,
   Text,
@@ -16,74 +9,82 @@ import {
   Image,
   ScrollView,
 } from "react-native";
-import { fetchPlaces } from "../api/googlePlacesApi";
-import { Link } from "expo-router";
+import { useRouter } from "expo-router";
+import beaches from "@/data/beaches.json";
+import restaurants from "@/data/restaurants.json";
+import vets from "@/data/vets.json";
+import parks from "@/data/parks.json";
+import shops from "@/data/shops.json";
+import { restaurantImages } from "@/data/restaurantImages";
 
 const PlacesComponent = ({ location, category }) => {
   const [places, setPlaces] = useState([]);
   const [loading, setLoading] = useState(true);
-  const photoUri ="https://media.istockphoto.com/id/184928432/photo/pizza-from-the-top-pepperoni-cheese.jpg?s=612x612&w=0&k=20&c=wkC4yrZLcvHqg-9kQtRb1wan_z15eiO1Z297OFSuxpg="
+  const router = useRouter();
+  // const photoUri =
+  //   "https://media.istockphoto.com/id/184928432/photo/pizza-from-the-top-pepperoni-cheese.jpg?s=612x612&w=0&k=20&c=wkC4yrZLcvHqg-9kQtRb1wan_z15eiO1Z297OFSuxpg=";
 
-//   useEffect(() => {
-//     const fetchPlacesData = async () => {
-//       setLoading(true);
-//       let searchString = "";
-//       switch (category) {
-//         case "Restaurants":
-//           searchString = `Pet-friendly restaurants in ${location}`;
-//           break;
-//         case "Vets":
-//           searchString = `vets in ${location}`;
-//           break;
-//         case "Parks":
-//           searchString = `Dog-friendly parks in ${location}`;
-//           break;
-//         case "Beaches":
-//           searchString = `Dog-friendly beaches in ${location}`;
-//           break;
-//         case "Shops":
-//           searchString = `Pet shops in ${location}`;
-//           break;
-//       }
+  //   useEffect(() => {
+  //     const fetchPlacesData = async () => {
+  //       setLoading(true);
+  //       let searchString = "";
+  //       switch (category) {
+  //         case "Restaurants":
+  //           searchString = `Pet-friendly restaurants in ${location}`;
+  //           break;
+  //         case "Vets":
+  //           searchString = `vets in ${location}`;
+  //           break;
+  //         case "Parks":
+  //           searchString = `Dog-friendly parks in ${location}`;
+  //           break;
+  //         case "Beaches":
+  //           searchString = `Dog-friendly beaches in ${location}`;
+  //           break;
+  //         case "Shops":
+  //           searchString = `Pet shops in ${location}`;
+  //           break;
+  //       }
 
-//       try {
-//         const data = await fetchPlaces(searchString);
-// setPlaces(data.places || []);
-//       } catch (error) {
-//         console.error("Error fetching places data:", error);
-//       } finally {
-//         setLoading(false);
-//       }
-//     };
+  //       try {
+  //         const data = await fetchPlaces(searchString);
+  // setPlaces(data.places || []);
+  //       } catch (error) {
+  //         console.error("Error fetching places data:", error);
+  //       } finally {
+  //         setLoading(false);
+  //       }
+  //     };
 
-//     fetchPlacesData();
-//   }, [location, category]);
+  //     fetchPlacesData();
+  //   }, [location, category]);
 
-   useEffect(() => {
+  useEffect(() => {
     const fetchPlacesData = async () => {
       setLoading(true);
-      let data
+      let data;
       switch (category) {
         case "Restaurants":
-          data = restaurants
+          data = restaurants;
           break;
         case "Vets":
-          data = vets
+          data = vets;
           break;
         case "Parks":
-          data = parks
+          data = parks;
           break;
         case "Beaches":
-          data = beaches
+          data = beaches;
           break;
         case "Shops":
-          data = shops
+          data = shops;
           break;
+        default:
+          data = { places: [] };
       }
 
       try {
-        // const data = await fetchPlaces(searchString);
-setPlaces(data.places || []);
+        setPlaces(data.places || []);
       } catch (error) {
         console.error("Error fetching places data:", error);
       } finally {
@@ -101,58 +102,61 @@ setPlaces(data.places || []);
       </View>
     );
   }
-// console.log(places[0].photos[0].name)
+
   return (
     <View style={styles.container}>
       <FlatList
         data={places}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
-          <Link
-            href={{
-              pathname: `/search/placeDetails`,
-              params: {
-                id: item.id,
-                displayName: item.displayName.text,
-                formattedAddress: item.formattedAddress,
-                googleMapsUri: item.googleMapsUri,
-              },
-            }}
-            asChild
+          <Pressable
+            style={styles.placeItem}
+            onPress={() =>
+              router.push({
+                pathname: "search/place-details",
+                params: {
+                  place: JSON.stringify(item),
+                },
+              })
+            }
           >
-            <Pressable style={styles.placeItem}>
-              {item.photos ? (
-                <ScrollView
-                  horizontal
-                  contentContainerStyle={styles.scrollViewContent}
-                  showsHorizontalScrollIndicator={false}
-                  style={styles.scrollView}
-                >
-                  {/* remove the .slice to get all the photos, limit for now due to $$$ */}
-                  {item.photos.slice(0, 3).map((photo, index) => (
-                    <Image
-                      key={index}
-                      source={{
-                        // uri: `https://places.googleapis.com/v1/${photo.name}/media?key=${process.env.EXPO_PUBLIC_API_KEY}&maxWidthPx=400`,
-                        uri: photoUri,
-                      }}
-                      style={styles.image}
-                      resizeMode="cover"
-                    />
-                  ))}
-                </ScrollView>
-              ) : (
-                <Text>No Image Available</Text>
-              )}
-              <Text style={styles.placeName}>{item.displayName.text}</Text>
-              <Text style={styles.placeName}>
-                {item.shortFormattedAddress}
-              </Text>
-              <Text style={styles.placeName}>
-                {item.primaryTypeDisplayName.text}
-              </Text>
-            </Pressable>
-          </Link>
+            {item.photos ? (
+              <ScrollView
+                horizontal
+                contentContainerStyle={styles.scrollViewContent}
+                showsHorizontalScrollIndicator={false}
+                style={styles.scrollView}
+              >
+                {item.photos.slice(0, 3).map((photo, index) => (
+                  <Image
+                    key={index}
+                    source={{
+                      uri: restaurantImages[index],
+                      // uri: `https://places.googleapis.com/v1/${photo.name}/media?key=${process.env.EXPO_PUBLIC_API_KEY}&maxWidthPx=400`
+                    }}
+                    style={styles.image}
+                    resizeMode="cover"
+                  />
+                ))}
+              </ScrollView>
+            ) : (
+              <Text>No Image Available</Text>
+            )}
+            <Text style={styles.placeName}>
+              {item.displayName?.text || "N/A"}
+            </Text>
+            <Text style={styles.address}>
+              {item.shortFormattedAddress || "N/A"}
+            </Text>
+            <Text
+              style={[
+                styles.status,
+                { color: item.currentOpeningHours?.openNow ? "green" : "#b10604" },
+              ]}
+            >
+              {item.currentOpeningHours?.openNow ? "Open Now" : "Closed"}
+            </Text>
+          </Pressable>
         )}
       />
     </View>
@@ -169,6 +173,10 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
+  address: {
+    fontSize: 16,
+    marginVertical: 4,
+  },
   placeItem: {
     marginBottom: 16,
     padding: 16,
@@ -181,20 +189,22 @@ const styles = StyleSheet.create({
   },
   placeName: {
     fontSize: 16,
-   
+    fontWeight: "bold",
   },
   image: {
-    width: 100, // Adjust this value as needed
-    height: 100, // Adjust this value as needed
+    width: 100,
+    height: 100,
     borderRadius: 5,
   },
   scrollView: {
-    marginBottom: 10, // Adjust this value as needed
+    marginBottom: 10,
   },
   scrollViewContent: {
     gap: 10,
   },
+  status: {
+    fontSize: 16,
+  },
 });
-
 
 export default PlacesComponent;
