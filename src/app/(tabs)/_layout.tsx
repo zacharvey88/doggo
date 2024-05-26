@@ -2,8 +2,10 @@ import React from "react";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { FontAwesome6 } from '@expo/vector-icons';
 import { Link, Tabs } from "expo-router";
-import { Pressable, Text, View } from "react-native";
-
+import { Pressable, Text, View, Image } from "react-native";
+import { useEffect, useState } from "react";
+import { supabase } from "@/src/lib/supabase";
+import { Session } from "@supabase/supabase-js";
 import Colors from "@/src/constants/Colors";
 import { useColorScheme } from "@/src/components/useColorScheme";
 import { useClientOnlyValue } from "@/src/components/useClientOnlyValue";
@@ -18,6 +20,34 @@ function TabBarIcon(props: {
 }
 
 export default function TabLayout() {
+
+  const [session, setSession] = useState<Session | null>(null);
+  const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+    });
+    supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session);
+    });
+  },[]);
+
+  useEffect(()=>{
+    fetchAvatar()
+  },[])
+
+  const fetchAvatar = async () => {
+    const { data, error, status } = await supabase
+    .from("profiles")
+    .select("avatar_url")
+    .eq("id", session?.user.id)
+    .single();
+    if (data) {
+      setAvatarUrl(`https://orcurstjttnhckjuhyqb.supabase.co/storage/v1/object/public/avatars/${data.avatar_url}`);
+    }
+  }
+
   const colorScheme = useColorScheme();
 
   return (
@@ -86,9 +116,13 @@ export default function TabLayout() {
         options={{
           title: "Profile",
           headerShown: false,
-          tabBarIcon: ({ color }) => (
-            <Ionicons name="person-circle-sharp" size={30} color={color} />
-          ),
+          tabBarIcon: ({ color }) => {
+            if (session && session.user) {
+              return <Image source={{ uri: avatarUrl }} style={{ width: 30, height: 30, borderRadius: 15 }}/>;
+            } else {
+              return <Ionicons name="person-circle-sharp" size={30} color={color} />;
+            }
+          },
         }}
       />
     </Tabs>

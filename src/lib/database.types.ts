@@ -228,6 +228,8 @@ export type Database = {
       }
       trips: {
         Row: {
+          airlines: any
+          accommodation: any
           accommodation_id: number | null
           airline_id: number | null
           created_at: string

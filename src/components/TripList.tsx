@@ -8,13 +8,12 @@ import { Navigator } from "expo-router";
 import { ActivityIndicator } from "react-native";
 import TripCard from "./TripCard";
 
-export default function TripList({user_id, setModalVisible} : {user_id: string, setModalVisible: any}) {
+export default function TripList({user_id, setDeleteModalVisible, isDeleteModalVisible, toggleDeleteModal, setTripId, setTrips, filteredTrips, setFilteredTrips} : {user_id: string, setDeleteModalVisible: any, isDeleteModalVisible: any, toggleDeleteModal: any, setTripId: any, setTrips: any, filteredTrips: any, setFilteredTrips: any}) {
 
-  const [trips, setTrips] = useState<Database['public']['Tables']['trips']['Row'][]>([]);
   const [loading, setLoading] = useState(false)
 
   useEffect(()=>{
-    getTrips() 
+    getTrips()
   },[])
 
   async function getTrips () {
@@ -29,6 +28,7 @@ export default function TripList({user_id, setModalVisible} : {user_id: string, 
     }
     if(data){
       setTrips(data)
+      setFilteredTrips(data)
     }
       setLoading(false)
   }
@@ -36,18 +36,28 @@ export default function TripList({user_id, setModalVisible} : {user_id: string, 
   return (
     <View style={styles.container}>
       {loading ? (
-        <ActivityIndicator />
+        <>
+        <ActivityIndicator style={styles.loading}/>
+        <Text>Loading...</Text>
+        </>
       ) : (
         <FlatList
-          data={trips}
+          data={filteredTrips}
           keyExtractor={(item) => item.trip_id}
-          ListEmptyComponent={() => <Text style={styles.noTrips}>You don't have any trips</Text>}
-          renderItem={({ item }) => <TripCard trip={item} setModalVisible={setModalVisible}></TripCard>}
           showsVerticalScrollIndicator={false}
+          ItemSeparatorComponent={() => <View style={{height: 20}} />}
+          ListEmptyComponent={<Text style={{fontSize: 16}}>You have no trips saved</Text>}
+          renderItem={({ item }) => <TripCard 
+              trip={item} 
+              setDeleteModalVisible={setDeleteModalVisible} 
+              isDeleteModalVisible={isDeleteModalVisible}
+              toggleDeleteModal={toggleDeleteModal}
+              setTripId={setTripId}>
+            </TripCard>}
         />
       )}
     </View>
-  );
+  )
 }
 
 const styles = StyleSheet.create({
@@ -56,6 +66,8 @@ const styles = StyleSheet.create({
     padding: 20,
     width: "100%",
     borderRadius: 15,
+    justifyContent: 'center',
+    alignItems: 'center'
   },
   noTrips: {
     fontSize: 18,
@@ -63,4 +75,7 @@ const styles = StyleSheet.create({
     color: "#3A90CD",
     textAlign: "center",
   },
+  loading: {
+    marginBottom: 10,
+  }
 });

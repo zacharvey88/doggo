@@ -1,13 +1,15 @@
 import { useState, useEffect } from "react";
 import { supabase } from "@/src/lib/supabase";
-import { StyleSheet, View, Alert, Text, Image } from "react-native";
+import { StyleSheet, View, Alert, Text, Image, Pressable } from "react-native";
 import { Session } from "@supabase/supabase-js";
 import { Link, useNavigation } from "expo-router";
 import Colors from "../constants/Colors";
 import Button from "./Button";
+import UserReviewsList from "./UserReviewsList";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function Account({ session }: { session: Session }) {
+  
   const [loading, setLoading] = useState(true);
   const [username, setUsername] = useState("");
   const [avatarUrl, setAvatarUrl] = useState("");
@@ -90,9 +92,9 @@ export default function Account({ session }: { session: Session }) {
           >Sign Out</Link>
         </View>
       </View>
-      {/* <View>
-        <Button style={styles.signOutButton} onPress={() => supabase.auth.signOut()} text="Sign Out"></Button>
-      </View> */}
+      <View style={styles.listArea}>
+           <UserReviewsList id={session?.user.id} table='reviews_airlines'/>
+      </View>
     </View>
            </SafeAreaView>
 
@@ -114,14 +116,6 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "column",
     gap: 6,
-  },
-  verticallySpaced: {
-    paddingTop: 4,
-    paddingBottom: 4,
-    alignSelf: "stretch",
-  },
-  mt20: {
-    marginTop: 20,
   },
   image: {
     width: "40%",
@@ -148,13 +142,17 @@ const styles = StyleSheet.create({
     color: "gray",
     fontSize: 18,
   },
-  signOutButton: {
-    backgroundColor: '#F9F9F9',
-  },
   links: {
     display: "flex",
     flexDirection: "row",
     gap: 15,
     justifyContent: "center",
   },
+  listArea: {
+    width: '100%',
+    height: '100%',
+    marginTop: 20,
+    paddingTop: 20,
+    alignItems: 'center',
+  }
 });
