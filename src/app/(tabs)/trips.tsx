@@ -10,6 +10,8 @@ import Modal from 'react-native-modal'
 import DeleteTripModal from '@/src/components/DeleteTripModal';
 import { Database } from '@/src/lib/database.types';
 import TripForm from '@/src/components/TripForm';
+import { useAuth } from "@/src/providers/AuthProvider";
+import SignInModal from "@/src/components/SignInModal";
 
 export default function TabTrips() {
   const [isDeleteModalVisible, setDeleteModalVisible] = useState(false);
@@ -19,6 +21,8 @@ export default function TabTrips() {
   const [tripId, setTripId] = useState(null)
   const [trips, setTrips] = useState<Database['public']['Tables']['trips']['Row'][]>([]);
   const [filteredTrips, setFilteredTrips] = useState(trips)
+  const [loginModalVisible, setLoginModalVisible] = useState<boolean>(false);
+  const { session } = useAuth();
 
   const toggleDeleteModal = () => {
     setDeleteModalVisible(!isDeleteModalVisible);
@@ -28,20 +32,24 @@ export default function TabTrips() {
     setCreateModalVisible(!isCreateModalVisible);
   };
   
-
   useEffect(() => {
       fetchTrips();
   }, []);
 
-
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-    });
-    supabase.auth.onAuthStateChange((_event, session) => {
-      setSession(session);
-    });
-  }, []);
+    if (!session) {
+      setLoginModalVisible(true);
+    }
+  }, [session]);
+
+  // useEffect(() => {
+  //   supabase.auth.getSession().then(({ data: { session } }) => {
+  //     setSession(session);
+  //   });
+  //   supabase.auth.onAuthStateChange((_event, session) => {
+  //     setSession(session);
+  //   });
+  // }, []);
 
   const fetchTrips = async () => {
     const { data, error } = await supabase
@@ -54,7 +62,6 @@ export default function TabTrips() {
       setFilteredTrips(data); 
     }
   };
-
 
   return (
     <>
@@ -110,13 +117,26 @@ export default function TabTrips() {
           <Text style={styles.signInTitle}>
             Sign in to see your trips
           </Text>
-          <Link href="/profile" asChild>
+
+<!--       <Link href="/profile" asChild>
             <Pressable style={styles.signInButton}>
               <Text style={styles.btnTitle}>Sign in</Text>
             </Pressable>
-          </Link>
+          </Link> -->
+
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => setLoginModalVisible(true)}
+          >
+            <Text style={styles.btnTitle}>Sign in</Text>
+          </TouchableOpacity>
+
         </View>
       )}
+      <SignInModal
+        visible={loginModalVisible}
+        onClose={() => setLoginModalVisible(false)}
+      />
     </>
   );
 }
@@ -129,9 +149,9 @@ const styles = StyleSheet.create({
   signInContainer: {
     flex: 1,
     padding: 16,
-    justifyContent: 'center',
-    backgroundColor: '#fff',
-    alignItems: 'center',
+    justifyContent: "center",
+    backgroundColor: "#fff",
+    alignItems: "center",
   },
   title: {
     fontSize: 18,
@@ -147,10 +167,10 @@ const styles = StyleSheet.create({
     width: '45%',
   },
   addTripButton: {
-   position:"absolute",
-   bottom:20,
-   right:20,
-   zIndex:1,
+    position: "absolute",
+    bottom: 20,
+    right: 20,
+    zIndex: 1,
   },
   modalDelete: {
     alignSelf: 'center',
@@ -172,21 +192,21 @@ const styles = StyleSheet.create({
     width: 300
   },
   btnTitle: {
-    fontWeight:"bold",
-    fontSize:16,
-    color:"white"
+    fontWeight: "bold",
+    fontSize: 16,
+    color: "white",
   },
   signInTitle: {
     fontSize: 16,
-    textAlign: 'center',
+    textAlign: "center",
   },
   noTripsText: {
     fontSize: 20,
     fontWeight: "bold",
     position: "absolute",
     top: "40%",
-    flex:1,
-    justifyContent:"center"
+    flex: 1,
+    justifyContent: "center",
   },
   loading: {
     marginBottom: 20,
