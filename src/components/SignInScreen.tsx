@@ -14,7 +14,7 @@ import { supabase } from "@/src/lib/supabase";
 import Colors from "@/src/constants/Colors";
 import { StatusBar } from "expo-status-bar";
 
-const SignInScreen = () => {
+const SignInScreen: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);

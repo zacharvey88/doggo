@@ -5,6 +5,7 @@ import { Session } from "@supabase/supabase-js";
 import { Link, useNavigation } from "expo-router";
 import Colors from "../constants/Colors";
 import Button from "./Button";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function Account({ session }: { session: Session }) {
   const [loading, setLoading] = useState(true);
@@ -64,30 +65,44 @@ export default function Account({ session }: { session: Session }) {
   }, [navigation, session]);
 
   return (
-    <View style={styles.container}>
-      <View style={styles.badge}>
+    <SafeAreaView style={styles.safeArea}>
+      <View style={styles.container}>
+        <View style={styles.badge}>
+          <Image
+            source={{
+              uri: avatarUrl
+                ? `https://orcurstjttnhckjuhyqb.supabase.co/storage/v1/object/public/avatars/${avatarUrl}`
+                : defaultImage,
+            }}
+            style={styles.image}
+          />
+          <Text style={styles.fullname}>{fullname}</Text>
+          <Text style={styles.username}>{username}</Text>
+        </View>
 
-
-        <Image source={{ uri:  avatarUrl? `https://orcurstjttnhckjuhyqb.supabase.co/storage/v1/object/public/avatars/${avatarUrl}` : defaultImage }} style={styles.image} />
-        <Text style={styles.fullname}>{fullname}</Text>
-        <Text style={styles.username}>{username}</Text>
+        <Link
+          style={styles.textButton}
+          href={{
+            pathname: "/profile/update",
+            params: { username, avatarUrl, fullname, email },
+          }}
+        >
+          Edit Profile
+        </Link>
+        <Button
+          onPress={() => supabase.auth.signOut()}
+          text="Sign Out"
+        ></Button>
       </View>
-
-      <Link
-        style={styles.textButton}
-        href={{
-          pathname: "/profile/update",
-          params: { username, avatarUrl, fullname, email },
-        }}
-      >
-        Edit Profile
-      </Link>
-      <Button onPress={() => supabase.auth.signOut()} text="Sign Out"></Button>
-    </View>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+    backgroundColor: "white",
+  },
   container: {
     padding: 12,
     marginTop: 10,
