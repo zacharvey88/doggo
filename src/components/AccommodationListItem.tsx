@@ -1,8 +1,7 @@
-import React from 'react';
-import { StyleSheet, Image, Text, View } from 'react-native';
-import { Button } from 'react-native-elements';
-import { Json } from '@/src/lib/database.types';
-import { Link, Stack } from 'expo-router';
+import React from "react";
+import { StyleSheet, Image, Text, View, TouchableOpacity } from "react-native";
+import { Json } from "@/src/lib/database.types";
+import { useRouter } from "expo-router";
 
 type AccommodationListItemProps = {
   accommodation: {
@@ -19,17 +18,21 @@ type AccommodationListItemProps = {
   };
 };
 
-const AccommodationListItem = ({ accommodation }: AccommodationListItemProps) => {
-  const photoUri = Array.isArray(accommodation.photos) && accommodation.photos.length > 0 ? (accommodation.photos[0] as string) : undefined;
-  
+const AccommodationListItem: React.FC<AccommodationListItemProps> = ({
+  accommodation,
+}) => {
+  const router = useRouter();
+  const photoUri =
+    Array.isArray(accommodation.photos) && accommodation.photos.length > 0
+      ? (accommodation.photos[0] as string)
+      : undefined;
+
   return (
     <View style={styles.container}>
       <View style={styles.imageContainer}>
         {photoUri ? (
           <Image
-            source={{
-              uri: photoUri,
-            }}
+            source={{ uri: photoUri }}
             style={styles.image}
             resizeMode="cover"
           />
@@ -40,25 +43,27 @@ const AccommodationListItem = ({ accommodation }: AccommodationListItemProps) =>
       <View style={styles.textContainer}>
         <Text style={styles.title}>{accommodation.title}</Text>
         <Text>{accommodation.description}</Text>
-        <Link href={{
-          pathname: `/search/${accommodation.accommodation_id}`,
-          params: {
-            title: accommodation.title,
-            description: accommodation.description,
-            address: accommodation.address,
-            phone: accommodation.phone,
-            photos: photoUri,
-            postcode: accommodation.postcode,
-            booking_url: accommodation.booking_url,
-            city: accommodation.city,
-            country: accommodation.country
-          }
-        }} asChild>
-        <Button
+        <TouchableOpacity
           style={styles.button}
-          title="See More"
-        />
-        </Link>
+          onPress={() =>
+            router.push({
+              pathname: `/search/${accommodation.accommodation_id}`,
+              params: {
+                title: accommodation.title,
+                description: accommodation.description,
+                address: accommodation.address,
+                phone: accommodation.phone,
+                photos: photoUri,
+                postcode: accommodation.postcode,
+                booking_url: accommodation.booking_url,
+                city: accommodation.city,
+                country: accommodation.country,
+              },
+            })
+          }
+        >
+          <Text style={styles.buttonText}>See More</Text>
+        </TouchableOpacity>
       </View>
     </View>
   );
@@ -81,7 +86,6 @@ const styles = StyleSheet.create({
     marginTop: 3,
     borderRadius: 10,
     marginBottom: 5,
-   
   },
   image: {
     width: "100%",
@@ -101,7 +105,13 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     height: 40,
     marginTop: 10,
-    color: "#841584",
+    backgroundColor: "#841584",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  buttonText: {
+    color: "white",
+    fontSize: 16,
   },
 });
 

@@ -91,7 +91,7 @@ export default function TabSearch() {
               ))}
             </ScrollView>
             {selectedCategory === "Accommodations" ? (
-              <AccommodationTab searchTerm={searchTerm} />
+                <AccommodationTab searchTerm={searchTerm} />
             ) : (
               <PlacesComponent
                 location={searchTerm}
@@ -203,4 +203,3 @@ const styles = StyleSheet.create({
   },
 });
 
-export default TabSearch;
