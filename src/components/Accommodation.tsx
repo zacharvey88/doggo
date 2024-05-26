@@ -57,12 +57,13 @@ const AccommodationTab: React.FC<AccommodationTabProps> = ({ searchTerm }) => {
   return (
     <View style={styles.list}>
       <FlatList
+      style={{width: '100%'}}
         data={filteredAccommodations}
         renderItem={({ item }) => (
           <AccommodationListItem accommodation={item} />
         )}
         keyExtractor={(item) => item.accommodation_id.toString()}
-        contentContainerStyle={{ gap: 10, padding: 10 }}
+        contentContainerStyle={{ gap: 10, padding: 10}}
         showsVerticalScrollIndicator={false}
       />
     </View>
@@ -84,8 +85,7 @@ const styles = StyleSheet.create({
   },
   list: {
     flex: 1,
-    width: "100%",
-    alignItems: "center",
+    width: '100%',
   },
 });
 

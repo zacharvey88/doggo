@@ -16,7 +16,6 @@ const deleteTrip = async () => {
         setFilteredTrips(trips)
     } else {
         setDeleteModalVisible(false)
-        Alert.alert('Trip deleted successfully!')
     }
 }
 

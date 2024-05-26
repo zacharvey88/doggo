@@ -35,7 +35,7 @@ export default function TabLayout() {
 
   useEffect(()=>{
     fetchAvatar()
-  },[])
+  },[session])
 
   const fetchAvatar = async () => {
     const { data, error, status } = await supabase
