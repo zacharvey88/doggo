@@ -13,10 +13,11 @@ import { Pressable, Platform, Alert } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { Session } from "@supabase/supabase-js";
 import { supabase } from "../lib/supabase";
+import { useAuth } from "@/src/providers/AuthProvider";
 
-export default function TripForm() {
+export default function TripForm({toggleCreateModal, onTripAdded}: {toggleCreateModal: any, onTripAdded: () => void}) {
+
   //form state
-
   const [accommodation, setAccommodation] = useState("");
   const [airline, setAirline] = useState("");
   const [airlineId, setAirlineId] = useState(null);
@@ -26,40 +27,13 @@ export default function TripForm() {
   const [endDate, setEndDate] = useState("");
 
   //date picker state
-
   const [showStartPicker, setShowStartPicker] = useState(false);
   const [showEndPicker, setShowEndPicker] = useState(false);
   const [errors, setErrors] = useState({});
   const [validForm, setValidForm] = useState(false);
-  const [session, setSession] = useState<Session | null>(null);
-
-  //
-
-  //get session
-
-  useEffect(() => {
-    const fetchSession = async () => {
-      const {
-        data: { session },
-      } = await supabase.auth.getSession();
-      setSession(session);
-    };
-
-    fetchSession();
-
-    const { data: authListener } = supabase.auth.onAuthStateChange(
-      (_event, session) => {
-        setSession(session);
-      }
-    );
-
-    return () => {
-      authListener.subscription.unsubscribe();
-    };
-  }, []);
+  const {session, loading, profile} = useAuth()
 
   //date picker toggle
-
   const toggleStartDatePicker = () => {
     setShowStartPicker(!showStartPicker);
   };
@@ -150,25 +124,40 @@ export default function TripForm() {
       end_date: endDate,
       title: title,
     });
-    if (error && error.code === "42501") {
-      Alert.alert("Error", "You must be logged in to submit a review");
-    } else {
-      Alert.alert("Success!", "Review submitted.");
+    if (!error) {
+      onTripAdded();
+      toggleCreateModal();
     }
-      setAccommodation("");
-      setAirline("");
-      setStartDate("");
-      setEndDate("");
-      setTitle("");
-      setErrors({});
   };
+
+  // const submitForm = async () => {
+  //   const { data, error } = await supabase.from("trips").insert({
+  //     user_id: session?.user.id,
+  //     airline_id: airlineId, // sort this Sun Express 169
+  //     accommodation_id: accommodationId, //id Seaside Villa
+  //     start_date: startDate,
+  //     end_date: endDate,
+  //     title: title,
+  //   });
+  //   if (error && error.code === "42501") {
+  //     Alert.alert("Error", "You must be logged in to submit a review");
+  //   } else {
+  //     Alert.alert("Success!", "Review submitted.");
+  //   }
+  //     setAccommodation("");
+  //     setAirline("");
+  //     setStartDate("");
+  //     setEndDate("");
+  //     setTitle("");
+  //     setErrors({});
+  //     toggleCreateModal()
+  // };
 
   const handleSubmit = () => {
     if (validateForm()) {
       getAirlinesId();
       getAccommodationId();
       submitForm();
-      console.log(airlineId, accommodationId);
     }
   };
 
@@ -176,13 +165,15 @@ export default function TripForm() {
 
   return (
     <SafeAreaView style={styles.container}>
+      <Text style={styles.formTitle}>Create Your Trip</Text>
+      <View>
       <TextInput
         style={styles.input}
         placeholder="Enter Trip Title"
         value={title}
         onChangeText={setTitle}
         autoCorrect={false}
-        autoCapitalize="none"
+        autoCapitalize="words"
       />
       {errors.title ? (
         <Text style={styles.errorstext}>{errors.title}</Text>
@@ -313,38 +304,49 @@ export default function TripForm() {
       {errors.airline ? (
         <Text style={styles.errorstext}>{errors.airline}</Text>
       ) : null}
-
-      <Button title="Save Trip" onPress={handleSubmit} />
+      </View>
+      <View style={styles.buttonContainer}>
+        <Button title="Save" onPress={handleSubmit} />
+        <Button title="Cancel" onPress={toggleCreateModal} />
+      </View>
     </SafeAreaView>
   );
 };
 
   const styles = StyleSheet.create({
     container: {
-      flex: 1,
       backgroundColor: "#fff",
-      paddingTop: StatusBar.currentHeight,
+      justifyContent: 'space-between',
+      alignItems: 'center',
+    },
+    buttonContainer: {
+      flexDirection: 'row',
+      gap: 10,
+      marginVertical: 20
     },
     input: {
-      height: 40,
-      margin: 12,
+      marginHorizontal: 15,
+      marginTop: 15,
+      height: 35,
       padding: 10,
       borderWidth: 1,
+      borderRadius: 5,
     },
     text: {
       fontSize: 30,
       padding: 10,
     },
     errorstext: {
-      color: "red",
-      marginBottom: 10,
+      color: "#cc0000",
+      marginVertical: 5,
+      marginLeft: 20
     },
     button: {
       height: 50,
       justifyContent: "center",
       alignItems: "center",
       borderRadius: 50,
-      marginTop: 10,
+      marginTop: 30,
       marginBottom: 15,
       backgroundColor: "#075985",
     },
@@ -360,5 +362,10 @@ export default function TripForm() {
     pickerButton: {
       paddingHorizontal: 20,
     },
+    formTitle: {
+      fontSize: 16,
+      textAlign: 'center',
+      marginTop: 10,
+    }
   });
 

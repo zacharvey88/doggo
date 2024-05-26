@@ -1,35 +1,49 @@
 import { View, Text } from "./Themed";
-import { StyleSheet, Image} from "react-native";
+import { StyleSheet, Image, Pressable} from "react-native";
 import dateFormat from "dateformat";
 import { FontAwesome6, FontAwesome, Entypo} from "@expo/vector-icons";
 import { Database } from "../lib/database.types";
-import { useEffect } from "react";
 
-export default function TripCard({trip, setModalVisible} : {trip: Database['public']['Tables']['trips']['Row'], setModalVisible: any}) {
+export default function TripCard({trip, setDeleteModalVisible, isDeleteModalVisible, toggleDeleteModal, setTripId} : {trip: Database['public']['Tables']['trips']['Row'], setDeleteModalVisible: any, isDeleteModalVisible: any, toggleDeleteModal: any, setTripId: any}) {
+
+  const { airline_name = "" } = trip.airlines ?? {};
+  const { title = "", photos = ["https://orcurstjttnhckjuhyqb.supabase.co/storage/v1/object/public/accommodation_photos/photo-placeholder.png"] } = trip.accommodation ?? {};
+ 
+  const start_date = trip.start_date ? dateFormat(trip.start_date, "dd mmm yyyy") : ""; 
+  const end_date = trip.end_date ? `to ${dateFormat(trip.end_date, "dd mmm yyyy")}` : ""; 
+  const location = trip.location ? `in ${trip.location}` : "";
+
+  const handleEditTrip = async (trip_id) => {
+    // Implementation needed
+  }
+
+  const handleDeleteTrip = async (trip_id) => {
+    setTripId(trip_id);
+    toggleDeleteModal();
+  }
 
   return (
     <View>
-      <Image source={{ uri: trip.accommodation.photos[0] }} style={styles.photo}></Image>
+      <Image source={{ uri: photos[0] }} style={styles.photo}></Image>
       <View style={styles.trip}>
         <View style={{ backgroundColor: "#f9f9f9" }}>
           <Text style={styles.tripName}>{trip.title}</Text>
           <View style={styles.feature}>
             <FontAwesome name="map-marker" style={styles.icon}/>
-            <Text style={styles.tripDates}>{trip.accommodation.title} in {trip.location}</Text>
+            <Text style={styles.tripDates}>{title} {location}</Text>
           </View>
           <View style={styles.feature}>
             <FontAwesome name="plane" style={styles.icon}/>
-            <Text style={styles.tripDates}>{trip.airlines.airline_name}</Text>
+            <Text style={styles.tripDates}>{airline_name}</Text>
           </View>
           <View style={styles.feature}>
             <Entypo name="calendar" style={styles.icon}/>
-            <Text style={styles.tripDates}>{dateFormat(trip.start_date, "dd mmm yyyy")} to {dateFormat(trip.end_date, "dd mmm yyyy")}</Text>
+            <Text style={styles.tripDates}>{start_date} {end_date}</Text>
           </View>
-
         </View>
         <View style={styles.icons}>
-          <FontAwesome6 name="edit" style={styles.icon}></FontAwesome6>
-          <FontAwesome6 name="trash" style={styles.icon}></FontAwesome6>
+          <Pressable onPress={() => {handleEditTrip(trip.trip_id)}}><FontAwesome6 name="edit" style={styles.icon}></FontAwesome6></Pressable>
+          <Pressable onPress={() => {handleDeleteTrip(trip.trip_id)}}><FontAwesome6 name="trash" style={styles.icon}></FontAwesome6></Pressable>
         </View>
       </View>
     </View>
@@ -53,7 +67,7 @@ const styles = StyleSheet.create({
     borderBottomRightRadius: 10,
     margin: 0,
     shadowColor: "#000",
-    shadowOffset: { width: 0, height: 1 },
+    shadowOffset: { width: 0, height: 0 },
     shadowOpacity: 0.3,
     shadowRadius: 1,
   },

@@ -5,11 +5,34 @@ import { supabase } from '@/src/lib/supabase';
 import { Session } from '@supabase/supabase-js';
 import { Link } from 'expo-router';
 import TripList from '@/src/components/TripList';
-import { AntDesign } from '@expo/vector-icons';
+import { AntDesign, FontAwesome } from '@expo/vector-icons';
+import Modal from 'react-native-modal'
+import DeleteTripModal from '@/src/components/DeleteTripModal';
+import { Database } from '@/src/lib/database.types';
+import TripForm from '@/src/components/TripForm';
 
 export default function TabTrips() {
-  const [isModalVisible, setModalVisible] = useState(false);
+  const [isDeleteModalVisible, setDeleteModalVisible] = useState(false);
+  const [isCreateModalVisible, setCreateModalVisible] = useState(false);
+  const [isEditModalVisible, setEditModalVisible] = useState(false);
   const [session, setSession] = useState<Session | null>(null);
+  const [tripId, setTripId] = useState(null)
+  const [trips, setTrips] = useState<Database['public']['Tables']['trips']['Row'][]>([]);
+  const [filteredTrips, setFilteredTrips] = useState(trips)
+
+  const toggleDeleteModal = () => {
+    setDeleteModalVisible(!isDeleteModalVisible);
+  };
+
+  const toggleCreateModal = () => {
+    setCreateModalVisible(!isCreateModalVisible);
+  };
+  
+
+  useEffect(() => {
+      fetchTrips();
+  }, []);
+
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -20,55 +43,75 @@ export default function TabTrips() {
     });
   }, []);
 
-  // const deletedTrips = trips;
+  const fetchTrips = async () => {
+    const { data, error } = await supabase
+      .from('trips')
+      .select('*')
+      .eq("user_id", session?.user.id);
+  
+    if (!error && data) {
+      setTrips(data);
+      setFilteredTrips(data); 
+    }
+  };
 
-  // if (tripId && deletePressed) {
-  //   if (deletedTrips.length > 0) {
-  //     for (let i = 0; i < deletedTrips.length; i++) {
-  //       if (deletedTrips[i].trip_id === tripId) {
-  //         deletedTrips.splice(i, 1);
-  //         setDeletePressed(false);
-  //       }
-  //     }
-  //   }
-  // }
-
-  // if (session) {
-  //   if (trips.length === 0) {
-  //     return (
-  //       <View style={styles.container}>
-  //         <Text style={styles.noTripsText}>
-  //           You haven't created any trips yet
-  //         </Text>
-  //         <Link href="/Trip" asChild>
-  //           <Pressable style={styles.addTripButton}>
-  //             <AntDesign name="pluscircle" size={30} color="rgb(1,140,220)" />
-  //           </Pressable>
-  //         </Link>
-  //       </View>
-  //     );
-  //   }
-  // }
 
   return (
     <>
       {session && session.user ? (
+        <>
           <View style={styles.container}>
-              <Pressable style={styles.addTripButton} onPress={() => setModalVisible(true)}>
+              <Pressable style={styles.addTripButton} onPress={toggleCreateModal}>
                 <AntDesign name="pluscircle" size={40} color="rgb(1,140,220)" />
               </Pressable>
             <TripList
               user_id={session.user.id}
-              setModalVisible={setModalVisible}
+              setDeleteModalVisible={setDeleteModalVisible}
+              isDeleteModalVisible={isDeleteModalVisible}
+              toggleDeleteModal={toggleDeleteModal}
+              setTripId={setTripId}
+              setTrips={setTrips}
+              filteredTrips={filteredTrips}
+              setFilteredTrips={setFilteredTrips}
             />
           </View>
+          {/* Delete Trip Modal */}
+          <Modal
+            isVisible={isDeleteModalVisible}
+            animationIn="slideInUp"
+            onBackdropPress={toggleDeleteModal}
+            backdropOpacity={0.8}
+            backdropColor="black">
+            <View style={styles.modalDelete}>
+              <DeleteTripModal 
+                trip_id={tripId} 
+                setDeleteModalVisible={setDeleteModalVisible} 
+                filteredTrips={filteredTrips} 
+                setFilteredTrips={setFilteredTrips}
+                trips={trips}
+              />
+            </View>
+          </Modal>
+          {/* Add trip modal */}
+          <Modal
+            isVisible={isCreateModalVisible}
+            animationIn="slideInUp"
+            onBackdropPress={toggleCreateModal}
+            backdropOpacity={0.8}
+            backdropColor="black">
+            <View style={styles.modalCreate}>
+            <TripForm toggleCreateModal={toggleCreateModal} onTripAdded={fetchTrips} />
+            </View>
+          </Modal>
+          </>
       ) : (
         <View style={styles.signInContainer}>
+          <FontAwesome name="sign-in" style={styles.signInIcon}></FontAwesome>
           <Text style={styles.signInTitle}>
-            You must be logged in to see your trips
+            Sign in to see your trips
           </Text>
           <Link href="/profile" asChild>
-            <Pressable style={styles.button}>
+            <Pressable style={styles.signInButton}>
               <Text style={styles.btnTitle}>Sign in</Text>
             </Pressable>
           </Link>
@@ -82,8 +125,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
   },
   signInContainer: {
     flex: 1,
@@ -96,31 +137,14 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
   },  
-  placeItem: {
-    marginBottom: 16,
-    padding: 16,
-    backgroundColor: '#F9F9F9',
-    borderRadius: 8,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.3,
-    shadowRadius: 1,
-  },
-  button: {
+  signInButton: {
     alignItems: 'center',
     paddingVertical: 12,
     paddingHorizontal: 32,
     borderRadius: 10,
     backgroundColor: '#3990CD',
-    marginTop: 20,
-    width: '72%',
-  },
-  tripText: {
-    fontSize: 14,
-    color: '#666',
-  },
-  addTrip: {
-    color: "black",
+    marginTop: 15,
+    width: '45%',
   },
   addTripButton: {
    position:"absolute",
@@ -128,20 +152,24 @@ const styles = StyleSheet.create({
    right:20,
    zIndex:1,
   },
-  iconContainer: {
-    backgroundColor: '#F9F9F9',
-    flex:1,
-    flexDirection:"row",
-    justifyContent:"flex-end",
-    gap:15,
-  },  
-  modal: {
+  modalDelete: {
+    alignSelf: 'center',
     justifyContent: 'center',
-    alignItems: 'center',
     color: '#000',
     margin: 0,
-    borderRadius: 40,
-    padding: 40
+    borderRadius: 20,
+    height: 120,
+    width: '90%'
+  },
+  modalCreate: {
+    alignSelf: 'center',
+    justifyContent: 'center',
+    color: '#000',
+    margin: 0,
+    borderRadius: 20,
+    padding: 10,
+    height: 500,
+    width: 300
   },
   btnTitle: {
     fontWeight:"bold",
@@ -149,7 +177,6 @@ const styles = StyleSheet.create({
     color:"white"
   },
   signInTitle: {
-    marginTop:40,
     fontSize: 16,
     textAlign: 'center',
   },
@@ -164,4 +191,9 @@ const styles = StyleSheet.create({
   loading: {
     marginBottom: 20,
   },
+  signInIcon: {
+    fontSize: 60,
+    color: '#3990CD',
+    marginBottom: 10,
+  }
 });
