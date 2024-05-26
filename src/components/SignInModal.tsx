@@ -58,11 +58,11 @@ const SignInModal: React.FC<SignInModalProps> = ({ visible, onClose }) => {
             style={styles.pawImage1}
             resizeMode="contain"
           />
-          <Image
+          {/* <Image
             source={require("@/assets/images/paw.png")}
             style={styles.pawImage2}
             resizeMode="contain"
-          />
+          /> */}
         </View>
         <View style={styles.container2}>
           <Pressable style={styles.closeButton} onPress={onClose}>
@@ -208,9 +208,9 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   closeButton: {
+    top: -30,
     position: "absolute",
-    top: 20,
-    right: 20,
+    right: 30,
     zIndex: 1,
   },
 });

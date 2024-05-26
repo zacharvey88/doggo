@@ -23,6 +23,11 @@ const SignUpScreen = () => {
     setLoading(true);
     const { error } = await supabase.auth.signUp({ email, password });
     if (error) Alert.alert(error.message);
+    else {
+      Alert.alert(
+        "Sign-up successful!"
+      );
+    }
     setLoading(false);
   }
   return (

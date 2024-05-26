@@ -31,24 +31,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          title: "Home",
-          headerShown: false,
-          tabBarIcon: ({ color }) => <TabBarIcon name="home" color={color} />,
-
-          // headerRight: () => (
-          //   <Link href="/sign-in" asChild>
-          //     <Pressable>
-          //       {({ pressed }) => (
-          //         <FontAwesome
-          //           name="info-circle"
-          //           size={25}
-          //           color={Colors[colorScheme ?? "light"].text}
-          //           style={{ marginRight: 15, opacity: pressed ? 0.5 : 1 }}
-          //         />
-          //       )}
-          //     </Pressable>
-          //   </Link>
-          // ),
+          tabBarButton: () => null, // Hides the tab
         }}
       />
       <Tabs.Screen
@@ -74,8 +57,9 @@ export default function TabLayout() {
         options={{
           title: "Trips",
           headerShown: false,
-          tabBarIcon: ({ color }) => <FontAwesome6 name="route" size={24} color={color} />,
-
+          tabBarIcon: ({ color }) => (
+            <FontAwesome6 name="route" size={24} color={color} />
+          ),
         }}
       />
       <Tabs.Screen
