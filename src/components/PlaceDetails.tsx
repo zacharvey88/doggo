@@ -24,7 +24,6 @@ const PlaceDetails = ({
 }) => {
   if (!displayName) return null;
   const photoUri ="https://media.istockphoto.com/id/184928432/photo/pizza-from-the-top-pepperoni-cheese.jpg?s=612x612&w=0&k=20&c=wkC4yrZLcvHqg-9kQtRb1wan_z15eiO1Z297OFSuxpg="
-console.log(typeof (photos))
   return (
     <View style={styles.card}>
       <Text style={styles.title}>{displayName}</Text>

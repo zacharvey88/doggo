@@ -25,7 +25,7 @@ export default function Accommodation() {
     return (
         <View style={styles.container}>
             <ScrollView contentContainerStyle={styles.scrollContainer}>
-                <Stack.Screen options={{ title: '' }}/>
+                <Stack.Screen options={{ title: '', headerBackTitle:"Back" }}/>
                 <Text style={styles.title}>{title}</Text>
                 {photos ? (
                 <Image
