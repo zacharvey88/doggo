@@ -3,13 +3,13 @@ import { useEffect, useState } from "react";
 import { View, Text, StyleSheet, Image, Linking, ScrollView } from "react-native";
 import { Button } from "react-native-elements";
 import {StarRatingDisplay} from "react-native-star-rating-widget";
+import { supabase } from "@/src/lib/supabase";
 
 export default function Accommodation() {
 
-    const [rating, setRating] = useState(4);
     const [loading, setLoading] = useState(false);
     const router = useRouter();
-
+  
     const {
         id,
         title,
@@ -20,7 +20,8 @@ export default function Accommodation() {
         postcode,
         booking_url,
         city,
-        country
+        country,
+        rating,
     } = useLocalSearchParams();
     return (
         <View style={styles.container}>
@@ -137,6 +138,7 @@ const styles = StyleSheet.create({
     image: {
         width: '100%',
         height: 275,
+        marginBottom: 10
     },
 });
 
