@@ -67,14 +67,15 @@ export default function ReviewCard({ review, reviews, setFilteredReviews, filter
 }
 
 const styles = StyleSheet.create({
-  container: {  marginBottom: 16,
-  padding: 16,
-  backgroundColor: '#F9F9F9',
-  shadowColor: '#000',
-  shadowOffset: { width: 0, height: 1 },
-  shadowOpacity: 0.3,
-  shadowRadius: 1,
-  borderRadius: 10,
+  container: {  
+    marginBottom: 16,
+    padding: 16,
+    backgroundColor: '#F9F9F9',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.3,
+    shadowRadius: 1,
+    borderRadius: 10,
   },
   title: {
     fontSize: 20,
