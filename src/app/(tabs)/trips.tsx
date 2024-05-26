@@ -1,4 +1,4 @@
-import { StyleSheet, Pressable } from 'react-native';
+import { StyleSheet, Pressable, TouchableOpacity } from 'react-native';
 import { Text, View } from '@/src/components/Themed';
 import { useEffect, useState } from 'react';
 import { supabase } from '@/src/lib/supabase';
@@ -17,7 +17,6 @@ export default function TabTrips() {
   const [isDeleteModalVisible, setDeleteModalVisible] = useState(false);
   const [isCreateModalVisible, setCreateModalVisible] = useState(false);
   const [isEditModalVisible, setEditModalVisible] = useState(false);
-  const [session, setSession] = useState<Session | null>(null);
   const [tripId, setTripId] = useState(null)
   const [trips, setTrips] = useState<Database['public']['Tables']['trips']['Row'][]>([]);
   const [filteredTrips, setFilteredTrips] = useState(trips)
@@ -118,11 +117,11 @@ export default function TabTrips() {
             Sign in to see your trips
           </Text>
 
-<!--       <Link href="/profile" asChild>
+          <Link href="/profile" asChild>
             <Pressable style={styles.signInButton}>
               <Text style={styles.btnTitle}>Sign in</Text>
             </Pressable>
-          </Link> -->
+          </Link>
 
           <TouchableOpacity
             style={styles.button}
