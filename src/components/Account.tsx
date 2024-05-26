@@ -5,6 +5,7 @@ import { Session } from "@supabase/supabase-js";
 import { Link, useNavigation } from "expo-router";
 import Colors from "../constants/Colors";
 import Button from "./Button";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function Account({ session }: { session: Session }) {
   const [loading, setLoading] = useState(true);
@@ -64,6 +65,8 @@ export default function Account({ session }: { session: Session }) {
   }, [navigation, session]);
 
   return (
+
+            <SafeAreaView style={styles.safeArea}>
     <View style={styles.container}>
       <View style={styles.badge}>
         <Image source={{ uri:  avatarUrl? `https://orcurstjttnhckjuhyqb.supabase.co/storage/v1/object/public/avatars/${avatarUrl}` : defaultImage }} style={styles.image} />
@@ -91,10 +94,16 @@ export default function Account({ session }: { session: Session }) {
         <Button style={styles.signOutButton} onPress={() => supabase.auth.signOut()} text="Sign Out"></Button>
       </View> */}
     </View>
+           </SafeAreaView>
+
   );
 }
 
 const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+    backgroundColor: "white",
+  },
   container: {
     padding: 12,
     marginTop: 10,

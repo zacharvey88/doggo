@@ -32,9 +32,8 @@ export default function TabLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          title: "Home",
-          headerShown: false,
-          tabBarIcon: ({ color }) => <TabBarIcon name="home" color={color} />,
+          tabBarButton: () => null, // Hides the tab
+
         }}
       />
       <Tabs.Screen
@@ -58,6 +57,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="trips"
         options={{
+
           title: "Your Trips",
           headerShown: true,
           tabBarIcon: ({ color }) => <FontAwesome6 name="route" size={24} color={color} />,
@@ -78,6 +78,7 @@ export default function TabLayout() {
         //     </Link>
         //   </View>
         // ),
+
         }}
       />
       <Tabs.Screen
