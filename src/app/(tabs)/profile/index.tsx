@@ -13,23 +13,13 @@ import SignInModal from "@/src/components/SignInModal";
 import { useAuth } from "@/src/providers/AuthProvider";
 
 const ProfileScreen: React.FC = () => {
-  const [modalVisible, setModalVisible] = useState<boolean>(false);
-  // const [session, setSession] = useState<Session | null>(null);
+  const [loginModalVisible, setLoginModalVisible] = useState<boolean>(false);
   const { session } = useAuth();
-  // useEffect(() => {
-  //   supabase.auth.getSession().then(({ data: { session } }) => {
-  //     setSession(session);
-  //   });
-
-  //   supabase.auth.onAuthStateChange((_event, session) => {
-  //     setSession(session);
-  //   });
-  // }, []);
 
   useEffect(() => {
     if (!session) {
-      setModalVisible(true);
-    }    
+      setLoginModalVisible(true);
+    }
   }, [session]);
 
   return (
@@ -41,15 +31,15 @@ const ProfileScreen: React.FC = () => {
           <Text style={styles.text}>Please log in to view your profile</Text>
           <TouchableOpacity
             style={styles.button}
-            onPress={() => setModalVisible(true)}
+            onPress={() => setLoginModalVisible(true)}
           >
             <Text style={styles.buttonText}>Login</Text>
           </TouchableOpacity>
         </View>
       )}
       <SignInModal
-        visible={modalVisible}
-        onClose={() => setModalVisible(false)}
+        visible={loginModalVisible}
+        onClose={() => setLoginModalVisible(false)}
       />
     </>
   );

@@ -1,47 +1,39 @@
-import { StyleSheet, Image, Pressable } from "react-native";
+import { StyleSheet, Image, Pressable, TouchableOpacity } from "react-native";
 import { Text, View } from "@/src/components/Themed";
 import { Link } from "expo-router";
 import { useEffect, useState } from "react";
-import { supabase } from "@/src/lib/supabase";
-import { Session } from "@supabase/supabase-js";
-
+import { useAuth } from "@/src/providers/AuthProvider";
+import SignInModal from "../components/SignInModal";
 export default function App() {
-  const [session, setSession] = useState<Session | null>(null);
-  useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-    });
-    supabase.auth.onAuthStateChange((_event, session) => {
-      setSession(session);
-    });
-  }, []);
+  const { session } = useAuth();
+  const [loginModalVisible, setLoginModalVisible] = useState<boolean>(false);
 
   return (
-    <View style={styles.container}>
-      <Image
-        style={styles.image}
-        source={require("@/assets/images/logo.png")}
-        resizeMode="contain"
-      />
-      <Link href="/search" asChild>
-        <Pressable style={styles.button}>
-          <Text style={styles.buttonText}>Start Planning Your Trip</Text>
-        </Pressable>
-      </Link>
-      {session && session.user ? (
-        <Link href="/profile" asChild>
-          <Pressable style={styles.signOutButton}>
-            <Text style={styles.buttonText}>Sign Out</Text>
+    <>
+      <View style={styles.container}>
+        <Image
+          style={styles.image}
+          source={require("@/assets/images/logo.png")}
+          resizeMode="contain"
+        />
+        <Link href="/search" asChild>
+          <Pressable style={styles.button}>
+            <Text style={styles.buttonText}>Start Planning Your Trip</Text>
           </Pressable>
         </Link>
-      ) : (
-        <Link href="/profile" asChild>
-          <Pressable style={styles.signInButton}>
+
+          <TouchableOpacity
+            style={styles.signInButton}
+            onPress={() => setLoginModalVisible(true)}
+          >
             <Text style={styles.buttonText}>Sign In / Register</Text>
-          </Pressable>
-        </Link>
-      )}
-    </View>
+          </TouchableOpacity>
+      </View>
+      <SignInModal
+        visible={loginModalVisible}
+        onClose={() => setLoginModalVisible(false)}
+      />
+    </>
   );
 }
 
