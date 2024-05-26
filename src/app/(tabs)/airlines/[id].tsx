@@ -7,11 +7,14 @@ import Modal from "react-native-modal"
 import ReviewForm from "@/src/components/ReviewForm";
 import { Session } from "@supabase/supabase-js";
 import { supabase } from "@/src/lib/supabase";
+import TripListSmall from "@/src/components/TripListSmall";
 export default function Airline() {
   const [session, setSession] = useState<Session | null>(null);
-  const [rating, setRating] = useState(4);
+  const [rating, setRating] = useState(0);
   const router = useRouter();
-  const [isModalVisible, setModalVisible] = useState(false);
+  const [isReviewModalVisible, setReviewModalVisible] = useState(false);
+  const [isTripModalVisible, setTripModalVisible] = useState(false);
+
 
   useEffect(() => {
     const fetchSession = async () => {
@@ -34,6 +37,10 @@ export default function Airline() {
     };
   }, []);
 
+  useEffect(() => {
+    getRating();
+  }, [rating]);
+
   const { 
     id, 
     airline_name,
@@ -47,8 +54,24 @@ export default function Airline() {
     policy_restrictions
   } = useLocalSearchParams();
 
-  const toggleModal = () => {
-    setModalVisible(!isModalVisible);
+  const getRating = async () => {
+    const { data: ratings, error } = await supabase
+      .from("reviews_airlines")
+      .select("rating")
+      .eq("airline_id", id)
+    if (ratings) {
+      const totalRatings = ratings.reduce((acc, rating) => acc + rating.rating, 0)
+      const averageRating = totalRatings / ratings.length
+      setRating(averageRating)
+    }
+  }
+
+  const toggleReviewModal = () => {
+    setReviewModalVisible(!isReviewModalVisible);
+  };
+
+  const toggleTripModal = () => {
+    setTripModalVisible(!isTripModalVisible);
   };
 
   const goToReviews = () => {
@@ -63,21 +86,37 @@ export default function Airline() {
   return (
     <>
       <Modal style={styles.modal}
-        isVisible={isModalVisible}
+        isVisible={isReviewModalVisible}
         animationIn="slideInUp"
-        onBackdropPress={toggleModal}
+        onBackdropPress={toggleReviewModal}
         backdropOpacity={0.8}
         backdropColor="black"
         >
-        <View style={styles.modal}>
+        <View style={styles.modalReview}>
           <ReviewForm 
             id={id} 
             edit={false}
-            setModalVisible={setModalVisible}
+            setModalVisible={setReviewModalVisible}
             session={session}
           />
         </View>
       </Modal>
+
+      <Modal style={styles.modal}
+        isVisible={isTripModalVisible}
+        animationIn="slideInUp"
+        onBackdropPress={toggleTripModal}
+        backdropOpacity={0.8}
+        backdropColor="black"
+        >
+        <View style={styles.modalTrip}>
+          <TripListSmall
+            user_id={session?.user.id}
+            setModalVisible={setTripModalVisible}
+          />
+        </View>
+      </Modal>
+
     <View style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         <Stack.Screen options={{ title: "" }} />
@@ -100,14 +139,14 @@ export default function Airline() {
             title="Add Review" 
             titleStyle={{ fontSize: 14 }}
             style={styles.button}
-            onPress={toggleModal}
+            onPress={toggleReviewModal}
             
           />
           <Button 
             title="Add to trip" 
             titleStyle={{ fontSize: 14 }}
             style={styles.button}
-            onPress={() => {}}
+            onPress={toggleTripModal}
           />
         </View>
         {policy_reservations && 
@@ -203,12 +242,19 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: '#3A90CD',
   },
-  modal: {
+  modalReview: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     color: '#000',
     margin: 0,
     borderRadius: 40,
+  },
+  modalTrip: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    color: '#000',
+    margin: 0,
   },
 });

@@ -4,13 +4,11 @@ import StarRating from 'react-native-star-rating-widget'
 import { Button } from 'react-native-elements'
 import { supabase } from '../lib/supabase'
 
-export default function addReviewForm({id, setModalVisible, session, edit, existingRating, existingReviewText }: {id: number, setModalVisible: any, session: Session | null, edit?: { review_id: number, rating: number, review_text: string }, existingRating?: number, existingReviewText?: string}) {
+export default function addReviewForm({id, setModalVisible, session, edit, existingRating, existingReviewText }: {id: number, setReviewModalVisible: any, session: Session | null, edit?: { review_id: number, rating: number, review_text: string }, existingRating?: number, existingReviewText?: string}) {
   const [rating, setRating] = useState(0)
   const [reviewText, setReviewText] = useState('')
 
   useEffect(() => {
-    console.log(existingRating);
-    
     if(edit) {      
       getExistingReview()
     }    
@@ -25,7 +23,6 @@ export default function addReviewForm({id, setModalVisible, session, edit, exist
       console.log(error);
     }
     if (data) {
-      console.log(data);
       setExistingReviewText(data[0].review_text)
       setExistingRating(data[0].rating)
     }
