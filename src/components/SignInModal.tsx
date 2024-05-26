@@ -100,7 +100,7 @@ const SignInModal: React.FC<SignInModalProps> = ({ visible, onClose }) => {
 
           <View style={styles.signupContainer}>
             <Text style={styles.text}>Don't have an account?</Text>
-            <Link href="/sign-up" style={styles.textButton}>
+            <Link href="/sign-up" style={styles.textButton} onPress={onClose}>
               Sign up
             </Link>
           </View>

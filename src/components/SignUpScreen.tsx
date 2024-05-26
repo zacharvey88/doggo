@@ -9,7 +9,7 @@ import {
   TouchableOpacity,
 } from "react-native";
 import React, { useState } from "react";
-import { Link } from "expo-router";
+import { Link, Redirect, useRouter } from "expo-router";
 import { supabase } from "@/src/lib/supabase";
 import Colors from "@/src/constants/Colors";
 import { StatusBar } from "expo-status-bar";
@@ -18,15 +18,20 @@ const SignUpScreen = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-
+const router = useRouter()
   async function signUpWithEmail() {
     setLoading(true);
     const { error } = await supabase.auth.signUp({ email, password });
     if (error) Alert.alert(error.message);
     else {
-      Alert.alert(
-        "Sign-up successful!"
-      );
+      Alert.alert("Sign-up successful!");
+
+      const { error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+      if (error) Alert.alert(error.message);
+      router.push('/search')
     }
     setLoading(false);
   }
