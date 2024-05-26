@@ -185,10 +185,8 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   selectedIconContainer: {
-    backgroundColor: "#FF6347",
-    shadowColor: "#FF6347",
-    borderWidth: 2,
-    borderColor: "#FF6347",
+    backgroundColor: "#3A90CD",
+    shadowColor: "#black",
   },
   selectedIcon: {
     color: "#FFFFFF",
