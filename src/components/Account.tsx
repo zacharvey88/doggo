@@ -20,7 +20,7 @@ export default function Account({ session }: { session: Session }) {
   const [loading, setLoading] = useState(true);
   const [username, setUsername] = useState("");
   const [avatarUrl, setAvatarUrl] = useState("");
-  const [fullname, setFullname] = useState("");
+  const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const navigation = useNavigation();
   const defaultImage = "https://i.sstatic.net/l60Hf.png";
@@ -41,7 +41,7 @@ export default function Account({ session }: { session: Session }) {
 
       if (data) {
         setUsername(data.username);
-        setFullname(data.full_name);
+        setFullName(data.full_name);
         setAvatarUrl(data.avatar_url);
         setEmail(data.email);
       }
@@ -70,16 +70,35 @@ export default function Account({ session }: { session: Session }) {
     return unsubscribe;
   }, [navigation, session]);
 
-  const handleSignOut = async () => {
-    const { error } = await supabase.auth.signOut();
-    if (error) Alert.alert(error.message);
+  const handleSignOut = () => {
+    Alert.alert(
+      "Confirm Sign Out",
+      "Are you sure you want to sign out?",
+      [
+        {
+          text: "Cancel",
+          style: "cancel",
+        },
+        {
+          text: "Sign Out",
+          onPress: async () => {
+            const { error } = await supabase.auth.signOut();
+            if (error) Alert.alert(error.message);
+          },
+          style: "destructive",
+        },
+      ],
+      { cancelable: false }
+    );
   };
 
   return (
     <SafeAreaView style={styles.safeArea}>
       <ScrollView contentContainerStyle={styles.scrollViewContent}>
         {loading ? (
-          <ActivityIndicator size="large" color={Colors.light.tint} />
+          <View style={styles.loadingContainer}>
+            <ActivityIndicator size="large" color="gray" />
+          </View>
         ) : (
           <>
             <View style={styles.badge}>
@@ -91,14 +110,14 @@ export default function Account({ session }: { session: Session }) {
                 }}
                 style={styles.image}
               />
-              <Text style={styles.fullname}>{fullname}</Text>
+              <Text style={styles.fullName}>{fullName}</Text>
               <Text style={styles.username}>{username}</Text>
 
               <Link
                 style={styles.textButton}
                 href={{
                   pathname: "/profile/update",
-                  params: { username, avatarUrl, fullname, email },
+                  params: { username, avatarUrl, fullName, email },
                 }}
               >
                 Edit Profile
@@ -109,8 +128,11 @@ export default function Account({ session }: { session: Session }) {
               <UserReviewsList id={session?.user.id} table="reviews_airlines" />
             </View>
 
-            <TouchableOpacity style={styles.button} onPress={handleSignOut}>
-              <Text style={styles.buttonText}>Sign Out</Text>
+            <TouchableOpacity
+              style={styles.signOutButton}
+              onPress={handleSignOut}
+            >
+              <Text style={styles.signOutButtonText}>Sign Out</Text>
             </TouchableOpacity>
           </>
         )}
@@ -123,6 +145,12 @@ const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
     backgroundColor: "white",
+    justifyContent:"space-between"
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
   },
   scrollViewContent: {
     flexGrow: 1,
@@ -132,13 +160,16 @@ const styles = StyleSheet.create({
   },
   badge: {
     alignItems: "center",
-    marginBottom: 20,
+    gap: 5,
+    marginTop:10,
   },
   image: {
     width: 150,
     height: 150,
-    borderRadius: 50,
+    borderRadius: 75,
     marginBottom: 10,
+    borderWidth: 1,
+    color: "gray",
   },
   textButton: {
     color: Colors.light.tint,
@@ -146,10 +177,12 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginTop: 10,
   },
-  fullname: {
+  fullName: {
     fontWeight: "bold",
     fontSize: 22,
     marginBottom: 5,
+    marginTop:10,
+    color: "#333",
   },
   username: {
     color: "gray",
@@ -159,18 +192,20 @@ const styles = StyleSheet.create({
   listArea: {
     width: "100%",
     marginBottom: 20,
+    paddingHorizontal: 20,
   },
-  button: {
-    backgroundColor: Colors.light.tint,
-    paddingVertical: 15,
-    borderRadius: 15,
+  signOutButton: {
+    borderColor: "gray",
+    borderWidth: 1,
+    paddingHorizontal: 15,
+    paddingVertical: 10,
+    borderRadius: 10,
     alignItems: "center",
     justifyContent: "center",
-    width: "80%",
+    marginBottom: 20,
   },
-  buttonText: {
-    color: "white",
-    fontSize: 18,
-    fontWeight: "bold",
+  signOutButtonText: {
+    fontSize: 16,
+    color: "gray",
   },
 });

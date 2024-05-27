@@ -71,12 +71,13 @@ const SignUpScreen = () => {
         style={styles.background}
       />
       <View style={styles.foreground}>
-        <Image
+        {/* <Image
           source={require("@/assets/images/paw.png")}
-          style={styles.pawImage1}
+          style={styles.pawImage}
           resizeMode="contain"
-        />
-        <Text style={styles.titleText}>Get started</Text>
+        /> */}
+        <Text style={styles.titleText}>Don't Leave Doggo At Home!</Text>
+        <Text style={styles.subtitleText}>Create an account now</Text>
         <View style={styles.form}>
           <TextInput
             value={email}
@@ -129,9 +130,9 @@ const styles = StyleSheet.create({
     width: "100%",
     height: "100%",
     position: "absolute",
-    opacity: 0.8,
+    opacity: 0.9,
   },
-  pawImage1: {
+  pawImage: {
     width: 100,
     height: 100,
     marginTop: 30,
@@ -141,24 +142,22 @@ const styles = StyleSheet.create({
     padding: 30,
   },
   titleText: {
-    marginTop: 50,
+    marginTop: 40,
     fontSize: 40,
-    fontWeight: "bold",
+    fontWeight: "800",
     color: "white",
-    textAlign: "left",
-    maxWidth: "50%",
-    marginTop: 50,
+    textAlign:"center"
   },
   subtitleText: {
-    fontSize: 20,
+    fontSize: 22,
     color: "white",
     textAlign: "center",
-    marginVertical: 20,
-    maxWidth: "60%",
+    marginTop: 40,
+    fontWeight:"500",
     alignSelf: "center",
   },
   form: {
-    marginTop: 150,
+    marginTop: 180,
   },
   input: {
     padding: 10,

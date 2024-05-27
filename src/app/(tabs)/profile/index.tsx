@@ -48,19 +48,19 @@ const styles = StyleSheet.create({
   container: {
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "white"
+    backgroundColor: "white",
   },
   text: {
     fontSize: 18,
   },
   button: {
-    backgroundColor: "#2A99D0",
-    paddingVertical: 15,
-    borderRadius: 15,
     alignItems: "center",
-    justifyContent: "center",
-    marginTop: 20,
-    width: 100,
+    paddingVertical: 12,
+    paddingHorizontal: 32,
+    borderRadius: 10,
+    backgroundColor: "#3990CD",
+    marginTop: 15,
+    width: "45%",
   },
   buttonDisabled: {
     backgroundColor: "gray",
@@ -76,7 +76,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     backgroundColor: "#fff",
     alignItems: "center",
-    marginTop: 60
+    marginTop: 60,
   },
   signInIcon: {
     fontSize: 60,

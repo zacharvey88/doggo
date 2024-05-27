@@ -16,7 +16,6 @@ const AccommodationTab: React.FC<AccommodationTabProps> = ({ searchTerm }) => {
     Database["public"]["Tables"]["accommodation"]["Row"][]
   >([]);
   const [loading, setLoading] = useState(false);
-
   useEffect(() => {
     async function getAccommodation() {
       setLoading(true);
@@ -40,7 +39,7 @@ const AccommodationTab: React.FC<AccommodationTabProps> = ({ searchTerm }) => {
       setFilteredAccommodations(accommodation);
     } else {
       const filtered = accommodation.filter((acc) =>
-        acc.city.toLowerCase().includes(searchTerm.toLowerCase())
+        searchTerm.toLowerCase().includes(acc.city.toLowerCase())
       );
       setFilteredAccommodations(filtered);
     }
@@ -49,7 +48,7 @@ const AccommodationTab: React.FC<AccommodationTabProps> = ({ searchTerm }) => {
   if (loading) {
     return (
       <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color="#0000ff" />
+        <ActivityIndicator size="large" color="gray" />
       </View>
     );
   }

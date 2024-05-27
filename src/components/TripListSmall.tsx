@@ -48,25 +48,42 @@ export default function TripListSmall({user_id, setModalVisible, table} : {user_
   return (
     <View style={styles.container}>
       {loading ? (
-        <ActivityIndicator />
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color="gray" />
+        </View>
       ) : (
         <FlatList
           data={trips}
-          ListEmptyComponent={() => <Text style={styles.noTrips}>You don't have any trips</Text>}
+          ListEmptyComponent={() => (
+            <Text style={styles.noTrips}>You don't have any trips</Text>
+          )}
           renderItem={({ item }) => (
-            <Pressable onPress={()=>{addToTrip(item.trip_id, item.title)}}>
+            <Pressable
+              onPress={() => {
+                addToTrip(item.trip_id, item.title);
+              }}
+            >
               <View style={styles.tripItem}>
                 <View style={{ backgroundColor: "#f9f9f9" }}>
                   <Text style={styles.tripName}>{item.title}</Text>
-                  <Text style={styles.tripDates}>Tokyo - {dateFormat(item.start_date, "mmm yyyy")}</Text>
+                  <Text style={styles.tripDates}>
+                    Tokyo - {dateFormat(item.start_date, "mmm yyyy")}
+                  </Text>
                 </View>
-                <FontAwesome6 name="calendar-plus" style={styles.icon}></FontAwesome6>
+                <FontAwesome6
+                  name="calendar-plus"
+                  style={styles.icon}
+                ></FontAwesome6>
               </View>
             </Pressable>
           )}
         />
       )}
-      <Button title={"Create New Trip"} style={styles.button} onPress={() => Navigator.push('trips')} />
+      <Button
+        title={"Create New Trip"}
+        style={styles.button}
+        onPress={() => Navigator.push("trips")}
+      />
     </View>
   );
 }
@@ -76,6 +93,11 @@ const styles = StyleSheet.create({
     padding: 20,
     width: "90%",
     borderRadius: 15,
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
   },
   tripItem: {
     flexDirection: "row",
@@ -106,7 +128,7 @@ const styles = StyleSheet.create({
   },
   button: {
     marginTop: 20,
-    height: 40, 
+    height: 40,
     fontSize: 16,
     width: "100%",
   },

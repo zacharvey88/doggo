@@ -38,7 +38,7 @@ const SignInScreen = () => {
       Alert.alert(error.message);
     } else {
       if (from === "landing") {
-        router.push("/search");
+        navigation.navigate("search");
       } else {
         navigation.goBack();
       }
@@ -56,10 +56,10 @@ const SignInScreen = () => {
       <View style={styles.foreground}>
         <Image
           source={require("@/assets/images/paw.png")}
-          style={styles.pawImage1}
+          style={styles.pawImage}
           resizeMode="contain"
         />
-        <Text style={styles.titleText}>Welcome back! </Text>
+        <Text style={styles.titleText}>Welcome! </Text>
         <View style={styles.form}>
           <TextInput
             value={email}
@@ -94,7 +94,7 @@ const SignInScreen = () => {
         </View>
         <View style={styles.signupContainer}>
           <Text style={styles.text}>Don't have an account? </Text>
-          <Link href="/sign-up" style={styles.textButton}>
+          <Link replace href="/sign-up" style={styles.textButton}>
             Sign up
           </Link>
         </View>
@@ -107,33 +107,34 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "white",
+  justifyContent:"space-between"
   },
   background: {
     flex: 1,
     width: "100%",
     height: "100%",
     position: "absolute",
-    opacity: 0.8,
+    opacity: 0.9,
   },
-  pawImage1: {
-    width: 100,
-    height: 100,
-    marginTop: 30,
-    opacity: 0.5,
+  pawImage: {
+    width: 150,
+    height: 150,
+    marginTop: 10,
+    opacity: 0.8,
+    alignSelf:'center'
   },
   foreground: {
     padding: 30,
   },
   titleText: {
-    fontSize: 40,
-    fontWeight: "bold",
+    fontSize: 50,
+    fontWeight: "700",
     color: "white",
-    textAlign: "left",
-    maxWidth: "60%",
-    marginTop: 50,
+    marginTop: 30,
+    textAlign:"center"
   },
   form: {
-    marginTop: 150,
+    marginTop: 160,
   },
   input: {
     padding: 10,
@@ -186,13 +187,6 @@ const styles = StyleSheet.create({
   focused: {
     borderColor: "#2A99D0",
     borderWidth: 2,
-  },
-  logo: {
-    marginTop: 20,
-    resizeMode: 'contain',
-    width: 200,
-    height: 200,
-    alignSelf: 'center'
   }
 });
 

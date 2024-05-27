@@ -11,7 +11,6 @@ import {
 import { Text } from "@/src/components/Themed";
 import { FontAwesome6 } from "@expo/vector-icons";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
-import { Stack } from "expo-router";
 import AccommodationTab from "@/src/components/Accommodation";
 import PlacesComponent from "@/src/components/PlacesComponents";
 
@@ -31,10 +30,9 @@ export default function TabSearch() {
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
         {loading ? (
-          <>
-            <ActivityIndicator style={styles.loading} />
-            <Text>Loading</Text>
-          </>
+          <View style={styles.loadingContainer}>
+            <ActivityIndicator size="large" color="gray" />
+          </View>
         ) : (
           <>
             <View style={styles.searchContainer}>
@@ -92,7 +90,7 @@ export default function TabSearch() {
               ))}
             </ScrollView>
             {selectedCategory === "Stays" ? (
-                <AccommodationTab searchTerm={searchTerm} />
+              <AccommodationTab searchTerm={searchTerm} />
             ) : (
               <PlacesComponent
                 location={searchTerm}
@@ -118,7 +116,11 @@ const styles = StyleSheet.create({
     paddingTop: 20,
     paddingHorizontal: 10,
   },
-  loading: {},
+  loadingContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
   searchContainer: {
     width: "95%",
     marginBottom: 20,

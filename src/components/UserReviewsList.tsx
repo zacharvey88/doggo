@@ -45,23 +45,22 @@ export default function UserReviewsList({ id}: { id: number}) {
   return (
     <View style={styles.container}>
       {loading ? (
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color="gray" />
+        </View>
+      ) : reviews.length > 0 ? (
         <>
-          <ActivityIndicator style={styles.loading} />
-          <Text>Loading</Text>
-        </>
-      ) : (
-        reviews.length > 0 ? (
-            <>
-            <Modal style={styles.modal}
-              isVisible={isModalVisible}
-              animationIn="slideInUp"
-              onBackdropPress={toggleModal}
-              backdropOpacity={0.8}
-              backdropColor="black"
-              >
-              <View style={styles.modal}>
-                <ReviewForm 
-                id={id} 
+          <Modal
+            style={styles.modal}
+            isVisible={isModalVisible}
+            animationIn="slideInUp"
+            onBackdropPress={toggleModal}
+            backdropOpacity={0.8}
+            backdropColor="black"
+          >
+            <View style={styles.modal}>
+              <ReviewForm
+                id={id}
                 edit={true}
                 setModalVisible={setModalVisible}
                 session={session}
@@ -77,16 +76,23 @@ export default function UserReviewsList({ id}: { id: number}) {
         </View>
         <FlatList 
           data={filteredReviews} 
-          renderItem={({ item }) => <UserReviewCard review={item} table={table} reviews={reviews} filteredReviews={filteredReviews} setFilteredReviews={setFilteredReviews} setModalVisible={setModalVisible} setExistingRating={setExistingRating} setExistingReviewText={setExistingReviewText}/>} 
+          renderItem={({ item }) => <UserReviewCard 
+                review={item} 
+                table={table} 
+                reviews={reviews} 
+                filteredReviews={filteredReviews} 
+                setFilteredReviews={setFilteredReviews} 
+                setModalVisible={setModalVisible} 
+                setExistingRating={setExistingRating} 
+                setExistingReviewText={setExistingReviewText}/>} 
           showsVerticalScrollIndicator={false}
         />
         </>
-        ) : (
-          <Text style={styles.title}>No reviews yet</Text>
-        )
+      ) : (
+        <Text style={styles.title}>No reviews yet</Text>
       )}
     </View>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
