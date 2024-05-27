@@ -29,10 +29,10 @@ export default function Accommodation() {
     })
 
     return (
+
       <View style={styles.container}>
         <ScrollView contentContainerStyle={styles.scrollContainer}>
-          <Stack.Screen options={{ title: "" }} />
-
+  <Stack.Screen options={{ title: '', headerBackTitle:"Back" }}/>
           {/* {photos && photos.length > 0 ? (
             <ScrollView horizontal contentContainerStyle={styles.image}>
               {photos.map((photo: string, index: number) => (
@@ -50,6 +50,7 @@ export default function Accommodation() {
           )} */}
           
           {photos ? (
+
                 <Image
                     source={{
                     uri: photos,
