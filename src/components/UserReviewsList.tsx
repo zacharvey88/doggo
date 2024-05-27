@@ -1,22 +1,24 @@
-import { FlatList, StyleSheet, Text, View, ActivityIndicator } from 'react-native'
+import { FlatList, StyleSheet, Text, View, ActivityIndicator, Pressable } from 'react-native'
 import { supabase } from '@/src/lib/supabase'
 import { useEffect, useState } from 'react'
 import { Database } from '@/src/lib/database.types'
-import ReviewCard from './ReviewCard'
-import { useLocalSearchParams } from 'expo-router'
 import Modal from 'react-native-modal'
 import ReviewForm from "@/src/components/ReviewForm";
-export default function UserReviewsList({ id, table }: { id: number; table: keyof Database['public']['Tables'] }) {
-  const [reviews, setReviews] = useState<Database['public']['Tables'][typeof table]['Row'][]>([]);
+import { useAuth } from "@/src/providers/AuthProvider";
+import UserReviewCard from './UserReviewCard'
+
+export default function UserReviewsList({ id}: { id: number}) {
+  const [reviews, setReviews] = useState([]);
   const [filteredReviews, setFilteredReviews] = useState(reviews);
   const [loading, setLoading] = useState(false);
-  const session = useLocalSearchParams()
   const [isModalVisible, setModalVisible] = useState(false);
   const [existingReviewText, setExistingReviewText] = useState('')
   const [existingRating, setExistingRating] = useState(0)
+  const {session, profile} = useAuth()
+  const [table, setTable] = useState('reviews_airlines')
 
   useEffect(() => {
-    getReviews();    
+    getReviews();   
   }, [id, table]);
 
   const toggleModal = () => {
@@ -27,13 +29,16 @@ export default function UserReviewsList({ id, table }: { id: number; table: keyo
     setLoading(true);
     const { data, error } = await supabase
       .from(table)
-      .select('*, profiles(username, avatar_url)')
-      .eq(table === 'reviews_accommodation' ? 'accommodation_id' : 'airline_id', id)
+      .select(`*, ${table === 'reviews_airlines' ? 'airlines(airline_name)' : 'accommodation(title)'}`)
+      .eq('user_id', id)
       .order('created_at', { ascending: false });
     if (data) {
       setReviews(data);
       setFilteredReviews(data);      
     }
+    if (error) {
+      console.log(error);
+    } 
     setLoading(false);    
   }
   
@@ -63,24 +68,25 @@ export default function UserReviewsList({ id, table }: { id: number; table: keyo
                 existingRating={existingRating}
               />
             </View>
-          </Modal>
-          <FlatList
-            data={filteredReviews}
-            renderItem={({ item }) => (
-              <ReviewCard
-                review={item}
-                session={session}
-                reviews={reviews}
-                filteredReviews={filteredReviews}
-                setFilteredReviews={setFilteredReviews}
-                setModalVisible={setModalVisible}
-                setExistingRating={setExistingRating}
-                setExistingReviewText={setExistingReviewText}
-              />
-            )}
-            contentContainerStyle={{ padding: 10 }}
-            showsVerticalScrollIndicator={false}
-          />
+            </Modal>
+        <View style={styles.tabs}>
+          <Pressable onPress={()=>{setTable('reviews_airlines')}} style={styles.tab}><Text style={styles.tabText}>Airline Reviews</Text></Pressable>
+          <Pressable onPress={()=>{setTable('reviews_accommodation')}} style={styles.tab}><Text style={styles.tabText}>Property Reviews</Text></Pressable>
+          <Pressable onPress={()=>{setTable('reviews_airlines')}} style={styles.tab}><Text style={styles.tabText}>Property Listings</Text></Pressable>
+        </View>
+        <FlatList 
+          data={filteredReviews} 
+          renderItem={({ item }) => <UserReviewCard 
+                review={item} 
+                table={table} 
+                reviews={reviews} 
+                filteredReviews={filteredReviews} 
+                setFilteredReviews={setFilteredReviews} 
+                setModalVisible={setModalVisible} 
+                setExistingRating={setExistingRating} 
+                setExistingReviewText={setExistingReviewText}/>} 
+          showsVerticalScrollIndicator={false}
+        />
         </>
       ) : (
         <Text style={styles.title}>No reviews yet</Text>
@@ -117,6 +123,25 @@ const styles = StyleSheet.create({
     margin: 0,
     borderRadius: 40,
   },
+  tabs: {
+    flexDirection: "row",
+    gap: 10,
+    padding: 10,
+  },
+  tab: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#3A90CD',
+    padding: 5,
+    borderTopLeftRadius: 10,
+    borderTopRightRadius: 10,
+  },
+  tabText: {
+    color: 'white',
+    textAlign: 'center',
+    fontWeight: '600'
+  }
 })
 
 
