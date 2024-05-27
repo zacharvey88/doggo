@@ -14,14 +14,16 @@ export default function ReviewsList({ id, table }: { id: number; table: keyof Da
   const [isModalVisible, setModalVisible] = useState(false);
   const [existingReviewText, setExistingReviewText] = useState('')
   const [existingRating, setExistingRating] = useState(0)
+  const [review_id, setReviewId] = useState(null)
+
+  const toggleModal = () => {
+    setModalVisible(!isModalVisible);
+  };
 
   useEffect(() => {
     getReviews();    
   }, [id, table]);
 
-  const toggleModal = () => {
-    setModalVisible(!isModalVisible);
-  };
 
   async function getReviews() {
     setLoading(true);
@@ -60,14 +62,16 @@ export default function ReviewsList({ id, table }: { id: number; table: keyof Da
                 edit={true}
                 setModalVisible={setModalVisible}
                 session={session}
-                existingReviewText={existingReviewText}
                 existingRating={existingRating}
+                existingReviewText={existingReviewText}
+                table={table}
+                review_id={review_id}
               />
             </View>
             </Modal>
         <FlatList 
           data={filteredReviews} 
-          renderItem={({ item }) => <ReviewCard review={item} session={session} reviews={reviews} filteredReviews={filteredReviews} setFilteredReviews={setFilteredReviews} setModalVisible={setModalVisible} setExistingRating={setExistingRating} setExistingReviewText={setExistingReviewText} table={table} />} 
+          renderItem={({ item }) => <ReviewCard review={item} session={session} reviews={reviews} filteredReviews={filteredReviews} setFilteredReviews={setFilteredReviews} setModalVisible={setModalVisible} setExistingRating={setExistingRating} setExistingReviewText={setExistingReviewText} table={table} setReviewId={setReviewId} />} 
           contentContainerStyle={{ padding: 10 }}
           showsVerticalScrollIndicator={false}
         />
