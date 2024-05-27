@@ -47,17 +47,6 @@ const SignUpScreen = () => {
       Alert.alert(error.message);
     } else {
       Alert.alert("Sign-up successful!");
-
-      const { error: signInError } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-      });
-
-      if (signInError) {
-        Alert.alert(signInError.message);
-      } else {
-        router.push("/search");
-      }
     }
 
     setLoading(false);
