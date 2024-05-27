@@ -11,7 +11,6 @@ import {
 import { Text } from "@/src/components/Themed";
 import { FontAwesome6 } from "@expo/vector-icons";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
-import { Stack } from "expo-router";
 import AccommodationTab from "@/src/components/Accommodation";
 import PlacesComponent from "@/src/components/PlacesComponents";
 

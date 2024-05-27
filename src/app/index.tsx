@@ -6,7 +6,6 @@ import { useAuth } from "@/src/providers/AuthProvider";
 import SignInModal from "../components/SignInModal";
 export default function App() {
   const { session } = useAuth();
-  // const [loginModalVisible, setLoginModalVisible] = useState<boolean>(false);
   const router = useRouter();
   return (
     <>
@@ -39,10 +38,7 @@ export default function App() {
           </TouchableOpacity>
         </View>
       </View>
-      {/* <SignInModal
-        visible={loginModalVisible}
-        onClose={() => setLoginModalVisible(false)}
-      /> */}
+
     </>
   );
 }
