@@ -46,6 +46,20 @@ const SignInScreen = () => {
     setLoading(false);
   }
 
+  async function resetPassword() {
+    if (!email) {
+      Alert.alert("Please enter your email address to reset password");
+      return;
+    }
+
+    const { error } = await supabase.auth.api.resetPasswordForEmail(email);
+    if (error) {
+      Alert.alert(error.message);
+    } else {
+      Alert.alert("Password reset email sent!");
+    }
+  }
+
   return (
     <View style={styles.container}>
       <StatusBar style="light" />
@@ -91,6 +105,12 @@ const SignInScreen = () => {
               {loading ? "Signing in..." : "Sign In"}
             </Text>
           </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.forgotPasswordButton}
+            onPress={resetPassword}
+          >
+            <Text style={styles.forgotPasswordText}>Forgot Password?</Text>
+          </TouchableOpacity>
         </View>
         <View style={styles.signupContainer}>
           <Text style={styles.text}>Don't have an account? </Text>
@@ -107,7 +127,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "white",
-  justifyContent:"space-between"
+    justifyContent: "space-between",
   },
   background: {
     flex: 1,
@@ -121,7 +141,7 @@ const styles = StyleSheet.create({
     height: 150,
     marginTop: 10,
     opacity: 0.8,
-    alignSelf:'center'
+    alignSelf: "center",
   },
   foreground: {
     padding: 30,
@@ -131,7 +151,7 @@ const styles = StyleSheet.create({
     fontWeight: "700",
     color: "white",
     marginTop: 30,
-    textAlign:"center"
+    textAlign: "center",
   },
   form: {
     marginTop: 160,
@@ -165,11 +185,20 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "bold",
   },
+  forgotPasswordButton: {
+    marginTop: 20,
+  },
+  forgotPasswordText: {
+    color: "gray",
+    textAlign: "center",
+    fontSize: 16,
+    fontWeight: "600",
+  },
   textButton: {
     color: Colors.light.tint,
     marginVertical: 10,
     fontSize: 16,
-    fontWeight:"600"
+    fontWeight: "600",
   },
   text: {
     textAlign: "center",
@@ -182,12 +211,12 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     gap: 5,
-    marginTop: 40,
+    marginTop: 20,
   },
   focused: {
     borderColor: "#2A99D0",
     borderWidth: 2,
-  }
+  },
 });
 
 export default SignInScreen;
