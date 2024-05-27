@@ -82,7 +82,7 @@ const SignInScreen = () => {
         </View>
         <View style={styles.signupContainer}>
           <Text style={styles.text}>Don't have an account?</Text>
-          <Link href="/sign-up" style={styles.textButton}>
+          <Link replace href="/sign-up" style={styles.textButton}>
             Sign up
           </Link>
         </View>
@@ -165,6 +165,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     marginTop: 20,
+    gap: 5
   },
 });
 

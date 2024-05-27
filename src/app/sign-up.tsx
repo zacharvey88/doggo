@@ -41,12 +41,12 @@ const SignUpScreen = () => {
     const { error } = await supabase.auth.signUp({
       email,
       password,
-      options: {
-        data: {
-          full_name: fullName,
-          username,
-        },
-      },
+      // options: {
+      //   data: {
+      //     full_name: fullName,
+      //     username,
+      //   },
+      // },
     });
 
     if (error) {
@@ -98,7 +98,7 @@ const SignUpScreen = () => {
           <Text style={styles.titleText}>Sign Up</Text>
         </View>
         <View style={styles.form}>
-          <TextInput
+          {/* <TextInput
             value={fullName}
             onChangeText={setFullName}
             placeholder="Full Name"
@@ -113,7 +113,7 @@ const SignUpScreen = () => {
             placeholderTextColor="#7c7c7c"
             style={styles.input}
             autoCapitalize="none"
-          />
+          /> */}
           <TextInput
             value={email}
             onChangeText={setEmail}
@@ -141,9 +141,9 @@ const SignUpScreen = () => {
           </TouchableOpacity>
         </View>
 
-        <View style={styles.signupContainer}>
+        <View style={styles.loginContainer}>
           <Text style={styles.text}>Already have an account?</Text>
-          <Link href="/sign-in" style={styles.textButton}>
+          <Link replace href="/sign-in" style={styles.textButton}>
             Login
           </Link>
         </View>
@@ -243,11 +243,12 @@ const styles = StyleSheet.create({
     color: "gray",
     fontSize: 16,
   },
-  signupContainer: {
+  loginContainer: {
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
     marginTop: 20,
+    gap:5,
   },
 });
 
