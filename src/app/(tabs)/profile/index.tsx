@@ -6,23 +6,14 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { useEffect, useState } from "react";
-import { Session } from "@supabase/supabase-js";
-import { supabase } from "@/src/lib/supabase";
 import Account from "@/src/components/Account";
-import SignInModal from "@/src/components/SignInModal";
 import { useAuth } from "@/src/providers/AuthProvider";
 import { useRouter } from "expo-router";
 import { FontAwesome } from "@expo/vector-icons";
 
 const ProfileScreen: React.FC = () => {
-  const [loginModalVisible, setLoginModalVisible] = useState<boolean>(false);
   const { session } = useAuth();
 const router = useRouter()
-  useEffect(() => {
-    if (!session) {
-      setLoginModalVisible(true);
-    }
-  }, [session]);
 
   return (
     <>
@@ -34,18 +25,15 @@ const router = useRouter()
           <Text style={styles.signInTitle}>Sign in to view your profile</Text>
 
           <TouchableOpacity
-            // onPress={() => setLoginModalVisible(true)}
-            style={styles.signInButton}
-            onPress={() => router.push("/sign-in")}
+              style={styles.button}
+              onPress={()=>router.push('/sign-in')
+}
           >
             <Text style={styles.btnTitle}>Sign in</Text>
           </TouchableOpacity>
         </View>
       )}
-      {/* <SignInModal
-        visible={loginModalVisible}
-        onClose={() => setLoginModalVisible(false)}
-      /> */}
+   
     </>
   );
 };
