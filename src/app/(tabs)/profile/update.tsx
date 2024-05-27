@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { supabase } from "@/src/lib/supabase";
-import { StyleSheet, View, Alert, Image, Text } from "react-native";
+import { StyleSheet, View, Alert, Image, Text, ScrollView } from "react-native";
 import { Input } from "@rneui/themed";
 import Button from "@components/Button";
 import { useRouter, useLocalSearchParams } from "expo-router";
@@ -21,7 +21,7 @@ export default function UpdateAccount() {
   const [fullName, setFullName] = useState(initialFullName || "");
   const [email, setEmail] = useState(initialEmail || "");
   const router = useRouter();
-  const {session}= useAuth()
+  const { session } = useAuth();
 
   async function updateProfile({
     username,
@@ -67,13 +67,17 @@ export default function UpdateAccount() {
   }
 
   return (
-    <View style={styles.container}>
+    <ScrollView contentContainerStyle={styles.container}>
       <View style={styles.verticallySpaced}>
-        <Input label="Email" style={{ textDecorationLine: "none" }} value={email} disabled />
-
-        <View>
+        <Input
+          label="Email"
+          value={email}
+          disabled
+          inputStyle={styles.inputDisabled}
+        />
+        <View style={styles.avatarContainer}>
           <Avatar
-            size={200}
+            size={120}
             url={avatarUrl}
             onUpload={(url: string) => {
               setAvatarUrl(url);
@@ -84,13 +88,19 @@ export default function UpdateAccount() {
       </View>
       <View style={styles.verticallySpaced}>
         <Input
-          label="User name"
+          label="Username"
           value={username}
           onChangeText={setUsername}
+          inputStyle={styles.input}
         />
       </View>
       <View style={styles.verticallySpaced}>
-        <Input label="Full Name" value={fullName} onChangeText={setFullName} />
+        <Input
+          label="Full Name"
+          value={fullName}
+          onChangeText={setFullName}
+          inputStyle={styles.input}
+        />
       </View>
 
       <View style={[styles.verticallySpaced, styles.mt20]}>
@@ -102,29 +112,31 @@ export default function UpdateAccount() {
           disabled={loading}
         />
       </View>
-    </View>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: 40,
-    padding: 12,
+    flexGrow: 1,
+    padding: 16,
+    backgroundColor: "white",
   },
   verticallySpaced: {
-    paddingTop: 4,
-    paddingBottom: 4,
+    paddingVertical: 10,
     alignSelf: "stretch",
+  },
+  avatarContainer: {
+    alignItems: "center",
+    marginVertical: 20,
+  },
+  input: {
+    color: "#333",
+  },
+  inputDisabled: {
+    color: "#999",
   },
   mt20: {
     marginTop: 20,
-  },
-  image: {
-    width: "40%",
-    aspectRatio: 1,
-    resizeMode: "cover",
-    alignSelf: "center",
-    borderRadius: 100,
-    borderWidth: 1,
   },
 });
