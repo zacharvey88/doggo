@@ -4,12 +4,18 @@ import { View, Text, StyleSheet, Image, Linking, ScrollView } from "react-native
 import { Button } from "react-native-elements";
 import {StarRatingDisplay} from "react-native-star-rating-widget";
 import { supabase } from "@/src/lib/supabase";
+import Modal from "react-native-modal";
+import TripListSmall from "@/src/components/TripListSmall";
+import { useAuth } from "@/src/providers/AuthProvider";
+import ReviewForm from "@/src/components/ReviewForm";
 
 export default function Accommodation() {
 
     const [loading, setLoading] = useState(false);
     const router = useRouter();
-  
+    const [isTripModalVisible, setTripModalVisible] = useState(false);
+    const [isReviewModalVisible, setReviewModalVisible] = useState(false);
+    const {session, profile} = useAuth()
     const {
         id,
         title,
@@ -24,11 +30,50 @@ export default function Accommodation() {
         rating,
     } = useLocalSearchParams();
 
-    useEffect(()=>{
-      console.log(photos);
-    })
+    const toggleTripModal = () => {
+      setTripModalVisible(!isTripModalVisible);
+    };
+
+    const toggleReviewModal = () => {
+      setReviewModalVisible(!isReviewModalVisible);
+    };
+  
 
     return (
+      <>
+      <Modal 
+        isVisible={isTripModalVisible}
+        animationIn="slideInUp"
+        onBackdropPress={toggleTripModal}
+        backdropOpacity={0.8}
+        backdropColor="black"
+        >
+        <View style={styles.modalTrip}>
+          <TripListSmall
+            user_id={session?.user.id}
+            setModalVisible={setTripModalVisible}
+            table={"accommodation"}
+          />
+        </View>
+      </Modal>
+
+      <Modal
+        isVisible={isReviewModalVisible}
+        animationIn="slideInUp"
+        onBackdropPress={toggleReviewModal}
+        backdropOpacity={0.8}
+        backdropColor="black"
+        >
+        <View style={styles.modalReview}>
+          <ReviewForm 
+            id={id} 
+            edit={false}
+            setModalVisible={setReviewModalVisible}
+            session={session}
+            table={'accommodation'}
+          />
+        </View>
+      </Modal>
 
       <View style={styles.container}>
         <ScrollView contentContainerStyle={styles.scrollContainer}>
@@ -78,11 +123,18 @@ export default function Accommodation() {
               style={styles.button}
               onPress={() => router.push(`/search/${id}/reviews`)}
             />
+                      <Button 
+            title="Add Review" 
+            titleStyle={{ fontSize: 14 }}
+            style={styles.button}
+            onPress={toggleReviewModal}
+            
+          />
             <Button
               title="Add to trip"
               titleStyle={{ fontSize: 14 }}
               style={styles.button}
-              onPress={() => {}}
+              onPress={toggleTripModal}
             />
           </View>
 
@@ -108,6 +160,7 @@ export default function Accommodation() {
           )}
         </ScrollView>
       </View>
+      </>
     );
 }
 
@@ -126,7 +179,6 @@ const styles = StyleSheet.create({
       marginBottom: 15,
     },
     button: {
-      margin: 10,
       height: 35,  
     },
     textContainer: {
@@ -137,6 +189,7 @@ const styles = StyleSheet.create({
       flexDirection: 'row',
       marginBottom: 20,
       marginTop: 5,
+      gap: 5
     },
     header: {
       fontSize: 18,
@@ -163,6 +216,21 @@ const styles = StyleSheet.create({
         height: 275,
         marginBottom: 10,
         borderRadius: 10,
+    },
+    modalTrip: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+      color: '#000',
+      margin: 0,
+    },
+    modalReview: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+      color: '#000',
+      margin: 0,
+      borderRadius: 40,
     },
 });
 

@@ -10,14 +10,14 @@ import { Navigator } from "expo-router";
 import { ActivityIndicator } from "react-native";
 import { useLocalSearchParams } from "expo-router";
 
-export default function TripListSmall({user_id, setModalVisible} : {user_id: string, setModalVisible: any}) {
+export default function TripListSmall({user_id, setModalVisible, table} : {user_id: string, setModalVisible: any, table: string}) {
 
   const [trips, setTrips] = useState<Database['public']['Tables']['trips']['Row'][]>([]);
   const [loading, setLoading] = useState(false)
   const { id } = useLocalSearchParams();
 
   useEffect(()=>{
-    getTrips()    
+    getTrips()
   },[])
 
   async function getTrips () {
@@ -34,13 +34,13 @@ export default function TripListSmall({user_id, setModalVisible} : {user_id: str
     setLoading(true)
     const { data, error } = await supabase
       .from('trips')
-      .update({ airline_id: id })
+      .update(table === "airlines" ? {airline_id: id} : {accommodation_id: id})
       .eq('trip_id', trip_id)
       if (error) {
         console.log(error);
       } else {
         setModalVisible(false)
-        Alert.alert(` Airline added to ${title}`)
+        Alert.alert(`${table === "airlines" ? "Airline" : "Accommodation"} added to ${title}`)
       }
     setLoading(false)
   }
@@ -66,7 +66,7 @@ export default function TripListSmall({user_id, setModalVisible} : {user_id: str
           )}
         />
       )}
-      <Button title={"Create New Trip"} style={styles.button} onPress={() => Navigator.push('tripForm')} />
+      <Button title={"Create New Trip"} style={styles.button} onPress={() => Navigator.push('trips')} />
     </View>
   );
 }
