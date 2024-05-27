@@ -1,5 +1,5 @@
 import { View, StyleSheet } from "react-native";
-import { useLocalSearchParams } from "expo-router";
+import { Stack, useLocalSearchParams } from "expo-router";
 import ReviewsList from "@/src/components/ReviewsList";
 export default function Reviews() {
 

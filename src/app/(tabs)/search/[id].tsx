@@ -3,13 +3,13 @@ import { useEffect, useState } from "react";
 import { View, Text, StyleSheet, Image, Linking, ScrollView } from "react-native";
 import { Button } from "react-native-elements";
 import {StarRatingDisplay} from "react-native-star-rating-widget";
+import { supabase } from "@/src/lib/supabase";
 
 export default function Accommodation() {
 
-    const [rating, setRating] = useState(4);
     const [loading, setLoading] = useState(false);
     const router = useRouter();
-
+  
     const {
         id,
         title,
@@ -20,14 +20,37 @@ export default function Accommodation() {
         postcode,
         booking_url,
         city,
-        country
+        country,
+        rating,
     } = useLocalSearchParams();
+
+    useEffect(()=>{
+      console.log(photos);
+    })
+
     return (
-        <View style={styles.container}>
-            <ScrollView contentContainerStyle={styles.scrollContainer}>
-                <Stack.Screen options={{ title: '', headerBackTitle:"Back" }}/>
-                <Text style={styles.title}>{title}</Text>
-                {photos ? (
+
+      <View style={styles.container}>
+        <ScrollView contentContainerStyle={styles.scrollContainer}>
+  <Stack.Screen options={{ title: '', headerBackTitle:"Back" }}/>
+          {/* {photos && photos.length > 0 ? (
+            <ScrollView horizontal contentContainerStyle={styles.image}>
+              {photos.map((photo: string, index: number) => (
+                <Image
+                  key={index}
+                  source={{
+                    uri: photos[index],
+                  }}
+                  style={styles.image}
+                />
+              ))}
+            </ScrollView>
+          ) : (
+            <Text>No Images Available</Text>
+          )} */}
+          
+          {photos ? (
+
                 <Image
                     source={{
                     uri: photos,
@@ -38,52 +61,53 @@ export default function Accommodation() {
                 ) : (
                 <Text>No Image Available</Text>
                 )}
-                <StarRatingDisplay rating={rating}/>
-                <View style={styles.buttonContainer}>
-                    <Button 
-                    title="Book Now" 
-                    titleStyle={{ fontSize: 14 }}
-                    style={styles.button}
-                    onPress={() => {Linking.openURL(booking_url)}}
-                    />
-                    <Button 
-                    title="See Reviews" 
-                    titleStyle={{ fontSize: 14 }}
-                    style={styles.button}
-                    onPress={() => router.push(`/search/${id}/reviews`)}
-                    />
-                    <Button 
-                    title="Add to trip" 
-                    titleStyle={{ fontSize: 14 }}
-                    style={styles.button}
-                    onPress={() => {}}
-                    />
-                </View>
+          <Text style={styles.title}>{title}</Text>
+          <StarRatingDisplay rating={rating} />
+          <View style={styles.buttonContainer}>
+            <Button
+              title="Book Now"
+              titleStyle={{ fontSize: 14 }}
+              style={styles.button}
+              onPress={() => {
+                Linking.openURL(booking_url);
+              }}
+            />
+            <Button
+              title="See Reviews"
+              titleStyle={{ fontSize: 14 }}
+              style={styles.button}
+              onPress={() => router.push(`/search/${id}/reviews`)}
+            />
+            <Button
+              title="Add to trip"
+              titleStyle={{ fontSize: 14 }}
+              style={styles.button}
+              onPress={() => {}}
+            />
+          </View>
 
-                {description &&
-                <View style={styles.textContainer}>
-                    <Text style={styles.header}>Description</Text>
-                    <Text style={styles.text}>{description}</Text>
-                </View>
-                }
-                {address &&
-                <View style={styles.textContainer}>
-                    <Text style={styles.header}>Address</Text>
-                    <Text style={styles.text}>{address}</Text>
-                    <Text style={styles.text}>{postcode}</Text>
-                    <Text style={styles.text}>{city}</Text>
-                    <Text style={styles.text}>{country}</Text>
-                </View>
-                }
-                {phone &&
-                <View style={styles.textContainer}>
-                    <Text style={styles.header}>Phone</Text>
-                    <Text style={styles.text}>{phone}</Text>
-                </View>
-                }
-
-            </ScrollView>
-        </View>
+          {description && (
+            <View style={styles.textContainer}>
+              <Text style={styles.text}>{description}</Text>
+            </View>
+          )}
+          {address && (
+            <View style={styles.textContainer}>
+              <Text style={styles.header}>Address</Text>
+              <Text style={styles.text}>{address}</Text>
+              <Text style={styles.text}>{postcode}</Text>
+              <Text style={styles.text}>{city}</Text>
+              <Text style={styles.text}>{country}</Text>
+            </View>
+          )}
+          {phone && (
+            <View style={styles.textContainer}>
+              <Text style={styles.header}>Phone</Text>
+              <Text style={styles.text}>{phone}</Text>
+            </View>
+          )}
+        </ScrollView>
+      </View>
     );
 }
 
@@ -137,6 +161,8 @@ const styles = StyleSheet.create({
     image: {
         width: '100%',
         height: 275,
+        marginBottom: 10,
+        borderRadius: 10,
     },
 });
 

@@ -18,14 +18,14 @@ export default function TabSearch() {
   const [loading, setLoading] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const categories = [
-    { name: "Accommodations", icon: "bed" },
+    { name: "Stays", icon: "bed" },
     { name: "Restaurants", icon: "utensils" },
     { name: "Vets", icon: "hospital" },
     { name: "Parks", icon: "tree" },
     { name: "Beaches", icon: "umbrella-beach" },
     { name: "Shops", icon: "shop" },
   ];
-  const [selectedCategory, setSelectedCategory] = useState("Accommodations");
+  const [selectedCategory, setSelectedCategory] = useState("Stays");
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
@@ -90,7 +90,7 @@ export default function TabSearch() {
                 </Pressable>
               ))}
             </ScrollView>
-            {selectedCategory === "Accommodations" ? (
+            {selectedCategory === "Stays" ? (
                 <AccommodationTab searchTerm={searchTerm} />
             ) : (
               <PlacesComponent
@@ -119,7 +119,7 @@ const styles = StyleSheet.create({
   },
   loading: {},
   searchContainer: {
-    width: "100%",
+    width: "95%",
     marginBottom: 20,
     zIndex: 2,
   },
@@ -185,10 +185,8 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   selectedIconContainer: {
-    backgroundColor: "#FF6347",
-    shadowColor: "#FF6347",
-    borderWidth: 2,
-    borderColor: "#FF6347",
+    backgroundColor: "#3A90CD",
+    shadowColor: "#black",
   },
   selectedIcon: {
     color: "#FFFFFF",
