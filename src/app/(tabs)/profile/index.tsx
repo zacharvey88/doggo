@@ -12,6 +12,7 @@ import Account from "@/src/components/Account";
 import SignInModal from "@/src/components/SignInModal";
 import { useAuth } from "@/src/providers/AuthProvider";
 import { useRouter } from "expo-router";
+import { FontAwesome } from "@expo/vector-icons";
 
 const ProfileScreen: React.FC = () => {
   const [loginModalVisible, setLoginModalVisible] = useState<boolean>(false);
@@ -28,15 +29,16 @@ const router = useRouter()
       {session && session.user ? (
         <Account session={session} />
       ) : (
-        <View style={styles.container}>
-          <Text style={styles.text}>Please log in to view your profile</Text>
+        <View style={styles.signInContainer}>
+          <FontAwesome name="sign-in" style={styles.signInIcon}></FontAwesome>
+          <Text style={styles.signInTitle}>Sign in to view your profile</Text>
+
           <TouchableOpacity
-              style={styles.button}
-              onPress={()=>router.push('/sign-in')
-}
             // onPress={() => setLoginModalVisible(true)}
+            style={styles.signInButton}
+            onPress={() => router.push("/sign-in")}
           >
-            <Text style={styles.buttonText}>Login</Text>
+            <Text style={styles.btnTitle}>Sign in</Text>
           </TouchableOpacity>
         </View>
       )}
@@ -51,10 +53,14 @@ const router = useRouter()
 export default ProfileScreen;
 
 const styles = StyleSheet.create({
-  container: {
+  safeArea: {
     flex: 1,
+    backgroundColor: "white",
+  },
+  container: {
     justifyContent: "center",
     alignItems: "center",
+    backgroundColor: "white"
   },
   text: {
     fontSize: 18,
@@ -75,5 +81,36 @@ const styles = StyleSheet.create({
     color: "white",
     fontSize: 18,
     fontWeight: "bold",
+  },
+  signInContainer: {
+    flex: 1,
+    padding: 16,
+    justifyContent: "center",
+    backgroundColor: "#fff",
+    alignItems: "center",
+    marginTop: 60
+  },
+  signInIcon: {
+    fontSize: 60,
+    color: "#3990CD",
+    marginBottom: 10,
+  },
+  signInTitle: {
+    fontSize: 16,
+    textAlign: "center",
+  },
+  btnTitle: {
+    fontWeight: "bold",
+    fontSize: 16,
+    color: "white",
+  },
+  signInButton: {
+    alignItems: "center",
+    paddingVertical: 12,
+    paddingHorizontal: 32,
+    borderRadius: 10,
+    backgroundColor: "#3990CD",
+    marginTop: 15,
+    width: "45%",
   },
 });

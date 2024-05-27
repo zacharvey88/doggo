@@ -95,7 +95,8 @@ const SignUpScreen = () => {
       </View>
       <View style={styles.container2}>
         <View style={styles.title}>
-          <Text style={styles.titleText}>Sign Up</Text>
+          <Text style={styles.titleText}>Don't Leave Doggo At Home!</Text>
+          <Text style={styles.subTitle}>Create an account now</Text>
         </View>
         <View style={styles.form}>
           <TextInput
@@ -185,9 +186,18 @@ const styles = StyleSheet.create({
     paddingTop: 10,
   },
   titleText: {
+    marginTop: 50,
     fontSize: 40,
     fontWeight: "bold",
     color: "white",
+    fontFamily: 'Futura',
+    textAlign: 'center'
+  },
+  subTitle: {
+    marginTop: 20,
+    fontFamily: 'Futura',
+    fontSize: 25,
+    color: 'white'
   },
   pawImage1: {
     width: 150,
@@ -200,7 +210,7 @@ const styles = StyleSheet.create({
   form: {
     display: "flex",
     alignContent: "space-around",
-    marginTop: 150,
+    marginTop: 100,
   },
   label: {
     color: "gray",

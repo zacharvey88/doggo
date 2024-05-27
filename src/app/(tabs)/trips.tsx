@@ -1,4 +1,4 @@
-import { StyleSheet, Pressable, TouchableOpacity } from "react-native";
+import { StyleSheet, Pressable, TouchableOpacity, SafeAreaView } from "react-native";
 import { Text, View } from "@/src/components/Themed";
 import { useEffect, useState } from "react";
 import { supabase } from "@/src/lib/supabase";
@@ -57,7 +57,7 @@ export default function TabTrips() {
   };
 
   return (
-    <>
+    <SafeAreaView style={styles.safeArea}>
       {session && session.user ? (
         <>
           <View style={styles.container}>
@@ -112,7 +112,7 @@ export default function TabTrips() {
       ) : (
         <View style={styles.signInContainer}>
           <FontAwesome name="sign-in" style={styles.signInIcon}></FontAwesome>
-          <Text style={styles.signInTitle}>Sign in to see your trips</Text>
+          <Text style={styles.signInTitle}>Sign in to view your trips</Text>
 
           <TouchableOpacity
             // onPress={() => setLoginModalVisible(true)}
@@ -127,34 +127,22 @@ export default function TabTrips() {
         visible={loginModalVisible}
         onClose={() => setLoginModalVisible(false)}
       /> */}
-    </>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+    backgroundColor: "white",
+  },
   container: {
     flex: 1,
     backgroundColor: "#fff",
   },
-  signInContainer: {
-    flex: 1,
-    padding: 16,
-    justifyContent: "center",
-    backgroundColor: "#fff",
-    alignItems: "center",
-  },
   title: {
     fontSize: 18,
     fontWeight: "bold",
-  },
-  signInButton: {
-    alignItems: "center",
-    paddingVertical: 12,
-    paddingHorizontal: 32,
-    borderRadius: 10,
-    backgroundColor: "#3990CD",
-    marginTop: 15,
-    width: "45%",
   },
   addTripButton: {
     position: "absolute",
@@ -181,15 +169,6 @@ const styles = StyleSheet.create({
     height: 500,
     width: 300,
   },
-  btnTitle: {
-    fontWeight: "bold",
-    fontSize: 16,
-    color: "white",
-  },
-  signInTitle: {
-    fontSize: 16,
-    textAlign: "center",
-  },
   noTripsText: {
     fontSize: 20,
     fontWeight: "bold",
@@ -201,9 +180,34 @@ const styles = StyleSheet.create({
   loading: {
     marginBottom: 20,
   },
+  signInContainer: {
+    flex: 1,
+    padding: 16,
+    justifyContent: "center",
+    backgroundColor: "#fff",
+    alignItems: "center",
+  },
   signInIcon: {
     fontSize: 60,
     color: "#3990CD",
     marginBottom: 10,
+  },
+  signInTitle: {
+    fontSize: 16,
+    textAlign: "center",
+  },
+  btnTitle: {
+    fontWeight: "bold",
+    fontSize: 16,
+    color: "white",
+  },
+  signInButton: {
+    alignItems: "center",
+    paddingVertical: 12,
+    paddingHorizontal: 32,
+    borderRadius: 10,
+    backgroundColor: "#3990CD",
+    marginTop: 15,
+    width: "45%",
   },
 });

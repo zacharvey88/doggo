@@ -48,9 +48,13 @@ const SignInScreen = () => {
         style={styles.background}
       />
       <View style={styles.foreground}>
-        <Text style={styles.titleText}>Login here</Text>
-        <Text style={styles.subtitleText}>
-          Welcome back, you've been missed!
+        {/* <Text style={styles.titleText}>Login here</Text> */}
+        <Image
+        source={require("@/assets/images/paw.png")}
+        style={styles.logo}
+      />
+        <Text style={styles.titleText}>
+          Welcome!
         </Text>
         <View style={styles.form}>
           <TextInput
@@ -81,7 +85,7 @@ const SignInScreen = () => {
           </TouchableOpacity>
         </View>
         <View style={styles.signupContainer}>
-          <Text style={styles.text}>Don't have an account?</Text>
+          <Text style={styles.text}>Don't have an account? </Text>
           <Link href="/sign-up" style={styles.textButton}>
             Sign up
           </Link>
@@ -94,7 +98,7 @@ const SignInScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center",
+    justifyContent: "space-between",
     backgroundColor: "white",
   },
   background: {
@@ -108,11 +112,12 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   titleText: {
-    fontSize: 30,
+    fontSize: 50,
     fontWeight: "bold",
     color: "white",
     textAlign: "center",
-    marginTop: 50,
+    fontFamily: 'Futura',
+    marginTop: 10
   },
   subtitleText: {
     fontSize: 20,
@@ -121,7 +126,7 @@ const styles = StyleSheet.create({
     marginVertical: 20,
   },
   form: {
-    marginTop: 50,
+    marginTop: 130,
   },
   input: {
     padding: 10,
@@ -166,6 +171,13 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginTop: 20,
   },
+  logo: {
+    marginTop: 20,
+    resizeMode: 'contain',
+    width: 200,
+    height: 200,
+    alignSelf: 'center'
+  }
 });
 
 export default SignInScreen;
