@@ -8,7 +8,7 @@ import {
   Pressable,
   Image,
   ScrollView,
-  Animated
+  TouchableOpacity
 } from "react-native";
 import { useRouter } from "expo-router";
 import beaches from "@/data/beaches.json";
@@ -110,8 +110,9 @@ const PlacesComponent = ({ location, category }) => {
         data={places}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
-          <Pressable
+          <TouchableOpacity
             style={styles.placeItem}
+            activeOpacity={0.5}
             onPress={() =>
               router.push({
                 pathname: "search/place-details",
@@ -157,7 +158,7 @@ const PlacesComponent = ({ location, category }) => {
             >
               {item.currentOpeningHours?.openNow ? "Open Now" : "Closed"}
             </Text>
-          </Pressable>
+          </TouchableOpacity>
         )}
       />
     </View>
