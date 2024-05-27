@@ -79,7 +79,9 @@ export default function Account({ session }: { session: Session }) {
     <SafeAreaView style={styles.safeArea}>
       <ScrollView contentContainerStyle={styles.scrollViewContent}>
         {loading ? (
-          <ActivityIndicator size="large" color={Colors.light.tint} />
+          <View style={styles.loadingContainer}>
+            <ActivityIndicator size="large" color="gray" />
+          </View>
         ) : (
           <>
             <View style={styles.badge}>
@@ -123,6 +125,11 @@ const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
     backgroundColor: "white",
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
   },
   scrollViewContent: {
     flexGrow: 1,

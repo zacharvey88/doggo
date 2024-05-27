@@ -22,7 +22,6 @@ export default function TabTrips() {
     Database["public"]["Tables"]["trips"]["Row"][]
   >([]);
   const [filteredTrips, setFilteredTrips] = useState(trips);
-  // const [loginModalVisible, setLoginModalVisible] = useState<boolean>(false);
   const { session } = useAuth();
   const router = useRouter();
   const toggleDeleteModal = () => {
@@ -36,12 +35,6 @@ export default function TabTrips() {
   useEffect(() => {
     fetchTrips();
   }, []);
-
-  // useEffect(() => {
-  //   if (!session) {
-  //     setLoginModalVisible(true);
-  //   }
-  // }, [session]);
 
 
   const fetchTrips = async () => {
@@ -123,10 +116,7 @@ export default function TabTrips() {
           </TouchableOpacity>
         </View>
       )}
-      {/* <SignInModal
-        visible={loginModalVisible}
-        onClose={() => setLoginModalVisible(false)}
-      /> */}
+ 
     </SafeAreaView>
   );
 }

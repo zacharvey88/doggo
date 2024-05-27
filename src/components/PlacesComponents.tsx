@@ -8,7 +8,7 @@ import {
   Pressable,
   Image,
   ScrollView,
-  TouchableOpacity
+  TouchableOpacity,
 } from "react-native";
 import { useRouter } from "expo-router";
 import beaches from "@/data/beaches.json";
@@ -22,43 +22,6 @@ const PlacesComponent = ({ location, category }) => {
   const [places, setPlaces] = useState([]);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
-  // const photoUri =
-  //   "https://media.istockphoto.com/id/184928432/photo/pizza-from-the-top-pepperoni-cheese.jpg?s=612x612&w=0&k=20&c=wkC4yrZLcvHqg-9kQtRb1wan_z15eiO1Z297OFSuxpg=";
-
-  //   useEffect(() => {
-  //     const fetchPlacesData = async () => {
-  //       setLoading(true);
-  //       let searchString = "";
-  //       switch (category) {
-  //         case "Restaurants":
-  //           searchString = `Pet-friendly restaurants in ${location}`;
-  //           break;
-  //         case "Vets":
-  //           searchString = `vets in ${location}`;
-  //           break;
-  //         case "Parks":
-  //           searchString = `Dog-friendly parks in ${location}`;
-  //           break;
-  //         case "Beaches":
-  //           searchString = `Dog-friendly beaches in ${location}`;
-  //           break;
-  //         case "Shops":
-  //           searchString = `Pet shops in ${location}`;
-  //           break;
-  //       }
-
-  //       try {
-  //         const data = await fetchPlaces(searchString);
-  // setPlaces(data.places || []);
-  //       } catch (error) {
-  //         console.error("Error fetching places data:", error);
-  //       } finally {
-  //         setLoading(false);
-  //       }
-  //     };
-
-  //     fetchPlacesData();
-  //   }, [location, category]);
 
   useEffect(() => {
     const fetchPlacesData = async () => {
@@ -99,7 +62,8 @@ const PlacesComponent = ({ location, category }) => {
   if (loading) {
     return (
       <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color="#0000ff" />
+          <ActivityIndicator size="large" color="gray" />
+    
       </View>
     );
   }
@@ -134,7 +98,6 @@ const PlacesComponent = ({ location, category }) => {
                     key={index}
                     source={{
                       uri: restaurantImages[index],
-                      // uri: `https://places.googleapis.com/v1/${photo.name}/media?key=${process.env.EXPO_PUBLIC_API_KEY}&maxWidthPx=400`
                     }}
                     style={styles.image}
                     resizeMode="cover"
@@ -153,13 +116,18 @@ const PlacesComponent = ({ location, category }) => {
             <Text
               style={[
                 styles.status,
-                { color: item.currentOpeningHours?.openNow ? "green" : "#b10604" },
+                {
+                  color: item.currentOpeningHours?.openNow
+                    ? "green"
+                    : "#b10604",
+                },
               ]}
             >
               {item.currentOpeningHours?.openNow ? "Open Now" : "Closed"}
             </Text>
           </TouchableOpacity>
         )}
+        contentContainerStyle={styles.listContent}
       />
     </View>
   );
@@ -181,13 +149,14 @@ const styles = StyleSheet.create({
   },
   placeItem: {
     marginBottom: 16,
-    padding: 16,
+    padding: 12,
     backgroundColor: "#f9f9f9",
     borderRadius: 8,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.3,
     shadowRadius: 1,
+    
   },
   placeName: {
     fontSize: 16,
@@ -206,6 +175,10 @@ const styles = StyleSheet.create({
   },
   status: {
     fontSize: 16,
+  },
+  listContent: {
+    padding: 16,
+    flexGrow: 1,
   },
 });
 

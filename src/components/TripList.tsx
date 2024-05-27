@@ -36,28 +36,31 @@ export default function TripList({user_id, setDeleteModalVisible, isDeleteModalV
   return (
     <View style={styles.container}>
       {loading ? (
-        <>
-        <ActivityIndicator style={styles.loading}/>
-        <Text>Loading...</Text>
-        </>
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color="gray" />
+        </View>
       ) : (
         <FlatList
           data={filteredTrips}
           keyExtractor={(item) => item.trip_id}
           showsVerticalScrollIndicator={false}
-          ItemSeparatorComponent={() => <View style={{height: 20}} />}
-          ListEmptyComponent={<Text style={{fontSize: 16}}>You have no trips saved</Text>}
-          renderItem={({ item }) => <TripCard 
-              trip={item} 
-              setDeleteModalVisible={setDeleteModalVisible} 
+          ItemSeparatorComponent={() => <View style={{ height: 20 }} />}
+          ListEmptyComponent={
+            <Text style={{ fontSize: 16 }}>You have no trips saved</Text>
+          }
+          renderItem={({ item }) => (
+            <TripCard
+              trip={item}
+              setDeleteModalVisible={setDeleteModalVisible}
               isDeleteModalVisible={isDeleteModalVisible}
               toggleDeleteModal={toggleDeleteModal}
-              setTripId={setTripId}>
-            </TripCard>}
+              setTripId={setTripId}
+            ></TripCard>
+          )}
         />
       )}
     </View>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
@@ -66,8 +69,8 @@ const styles = StyleSheet.create({
     padding: 20,
     width: "100%",
     borderRadius: 15,
-    justifyContent: 'center',
-    alignItems: 'center'
+    justifyContent: "center",
+    alignItems: "center",
   },
   noTrips: {
     fontSize: 18,
@@ -75,7 +78,10 @@ const styles = StyleSheet.create({
     color: "#3A90CD",
     textAlign: "center",
   },
-  loading: {
-    marginBottom: 10,
-  }
+
+  loadingContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
 });

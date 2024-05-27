@@ -40,23 +40,22 @@ export default function UserReviewsList({ id, table }: { id: number; table: keyo
   return (
     <View style={styles.container}>
       {loading ? (
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color="gray" />
+        </View>
+      ) : reviews.length > 0 ? (
         <>
-          <ActivityIndicator style={styles.loading} />
-          <Text>Loading</Text>
-        </>
-      ) : (
-        reviews.length > 0 ? (
-            <>
-            <Modal style={styles.modal}
-              isVisible={isModalVisible}
-              animationIn="slideInUp"
-              onBackdropPress={toggleModal}
-              backdropOpacity={0.8}
-              backdropColor="black"
-              >
-              <View style={styles.modal}>
-                <ReviewForm 
-                id={id} 
+          <Modal
+            style={styles.modal}
+            isVisible={isModalVisible}
+            animationIn="slideInUp"
+            onBackdropPress={toggleModal}
+            backdropOpacity={0.8}
+            backdropColor="black"
+          >
+            <View style={styles.modal}>
+              <ReviewForm
+                id={id}
                 edit={true}
                 setModalVisible={setModalVisible}
                 session={session}
@@ -64,20 +63,30 @@ export default function UserReviewsList({ id, table }: { id: number; table: keyo
                 existingRating={existingRating}
               />
             </View>
-            </Modal>
-        <FlatList 
-          data={filteredReviews} 
-          renderItem={({ item }) => <ReviewCard review={item} session={session} reviews={reviews} filteredReviews={filteredReviews} setFilteredReviews={setFilteredReviews} setModalVisible={setModalVisible} setExistingRating={setExistingRating} setExistingReviewText={setExistingReviewText}/>} 
-          contentContainerStyle={{ padding: 10 }}
-          showsVerticalScrollIndicator={false}
-        />
+          </Modal>
+          <FlatList
+            data={filteredReviews}
+            renderItem={({ item }) => (
+              <ReviewCard
+                review={item}
+                session={session}
+                reviews={reviews}
+                filteredReviews={filteredReviews}
+                setFilteredReviews={setFilteredReviews}
+                setModalVisible={setModalVisible}
+                setExistingRating={setExistingRating}
+                setExistingReviewText={setExistingReviewText}
+              />
+            )}
+            contentContainerStyle={{ padding: 10 }}
+            showsVerticalScrollIndicator={false}
+          />
         </>
-        ) : (
-          <Text style={styles.title}>No reviews yet</Text>
-        )
+      ) : (
+        <Text style={styles.title}>No reviews yet</Text>
       )}
     </View>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
