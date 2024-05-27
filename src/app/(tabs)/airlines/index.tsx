@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import { Database } from '@/src/lib/database.types';
 import { SearchBar } from 'react-native-elements';
 import { Link, Stack } from 'expo-router';
+import { SafeAreaView } from 'react-native';
 
 export default function TabAirlines() {
 
@@ -42,17 +43,18 @@ export default function TabAirlines() {
   }
 
   return (
+    <SafeAreaView style={styles.safeArea}>
     <View style={styles.container}>
       {loading ? (
         <>
-          <Stack.Screen options={{ title: "Airline Pet Policies"}} />
+          {/* <Stack.Screen options={{ title: "Airline Pet Policies"}} /> */}
           <ActivityIndicator style={styles.loading} />
           <Text>Loading</Text>
         </>
       ) : (
         <>
           <SearchBar
-            placeholder="Search for an airline..."
+            placeholder="Search airline pet policies"
             onChangeText={value => setSearchTerm(value)}
             value={searchTerm}
             lightTheme
@@ -95,15 +97,19 @@ export default function TabAirlines() {
         </>
       )}
     </View>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
+  safeArea: {
     flex: 1,
+    backgroundColor: "white",
+  },
+  container: {
     alignItems: 'center',
     justifyContent: 'center',
-    padding: 20,
+    paddingHorizontal: 20,
   },
   image: {
     width: 180,
@@ -116,11 +122,16 @@ const styles = StyleSheet.create({
     backgroundColor: "transparent",
     borderBottomColor: "transparent",
     borderTopColor: "transparent",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 2,
+    marginBottom: 5
   },
   searchInput: {
     backgroundColor: "#e0e0e0",
   },
   loading: {
     marginBottom: 30,
-  }
+  },
 });

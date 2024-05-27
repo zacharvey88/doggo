@@ -12,24 +12,32 @@ export default function App() {
     <>
       <View style={styles.container}>
         <Image
-          style={styles.image}
+          style={styles.logo}
           source={require("@/assets/images/logo.png")}
           resizeMode="contain"
         />
-        <Link href="/search" asChild>
-          <Pressable style={styles.button}>
-            <Text style={styles.buttonText}>Start Planning Your Trip</Text>
-          </Pressable>
-        </Link>
 
-        <TouchableOpacity
-          style={styles.signInButton}
-          onPress={() =>
-            router.push({ pathname: "/sign-in", params: { from: "landing" } })
-          }
-        >
-          <Text style={styles.buttonText}>Sign In / Register</Text>
-        </TouchableOpacity>
+        <Image
+          style={styles.slogan}
+          source={require("@/assets/images/slogan.png")}
+          resizeMode="contain"
+        />
+        <View style={styles.buttonContainer}>
+          <Link href="/search" asChild>
+            <Pressable style={styles.button}>
+              <Text style={styles.buttonText}>PLAN YOUR TRIP</Text>
+            </Pressable>
+          </Link>
+
+          <TouchableOpacity
+            style={styles.signInButton}
+            onPress={() =>
+              router.push({ pathname: "/sign-in", params: { from: "landing" } })
+            }
+          >
+            <Text style={styles.buttonText}>LOGIN / REGISTER</Text>
+          </TouchableOpacity>
+        </View>
       </View>
       {/* <SignInModal
         visible={loginModalVisible}
@@ -45,54 +53,47 @@ const styles = StyleSheet.create({
     maxHeight: "100%",
     maxWidth: "100%",
     flex: 1,
-    paddingTop: 100,
-  },
-  button: {
-    position: "absolute",
-    bottom: "20%",
-    alignItems: "center",
-    justifyContent: "center",
-    paddingVertical: 12,
-    paddingHorizontal: 32,
-    borderRadius: 10,
-    elevation: 3,
-    backgroundColor: "rgb(1,140,220)",
+    paddingVertical: 30,
   },
   buttonText: {
     fontSize: 16,
-    fontWeight: "bold",
+    fontWeight: 'bold',
     color: "white",
+    fontFamily: 'Roboto'
   },
-  separator: {
-    marginVertical: 30,
-    height: 1,
-    width: "80%",
-  },
-  image: {
-    width: "100%",
+  logo: {
+    width: "90%",
     height: "60%",
   },
   signInText: {
     fontWeight: "bold",
   },
+  buttonContainer: {
+    flex: 1,
+    flexDirection: 'column',
+    gap: 5,
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+    button: {
+    paddingVertical: 12,
+    paddingHorizontal: 32,
+    borderRadius: 10,
+    elevation: 3,
+    backgroundColor: "#3990CD",
+    width: 260,
+    alignItems: 'center'
+  },
   signInButton: {
-    position: "absolute",
-    bottom: "13%",
-    justifyContent: "center",
     paddingVertical: 12,
     paddingHorizontal: 57,
     borderRadius: 10,
     elevation: 3,
-    backgroundColor: "rgb(1,140,220)",
+    backgroundColor: "#3990CD",
+    width: 260,
+    alignItems: 'center'
   },
-  signOutButton: {
-    position: "absolute",
-    bottom: "13%",
-    justifyContent: "center",
-    paddingVertical: 12,
-    paddingHorizontal: 89,
-    borderRadius: 10,
-    elevation: 3,
-    backgroundColor: "rgb(1,140,220)",
-  },
+  slogan: {
+    width: '80%'
+  }
 });

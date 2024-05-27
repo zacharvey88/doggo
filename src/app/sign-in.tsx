@@ -60,7 +60,6 @@ const SignInScreen = () => {
           resizeMode="contain"
         />
         <Text style={styles.titleText}>Welcome back! </Text>
-
         <View style={styles.form}>
           <TextInput
             value={email}
@@ -94,8 +93,8 @@ const SignInScreen = () => {
           </TouchableOpacity>
         </View>
         <View style={styles.signupContainer}>
-          <Text style={styles.text}>New user?</Text>
-          <Link replace href="/sign-up" style={styles.textButton}>
+          <Text style={styles.text}>Don't have an account? </Text>
+          <Link href="/sign-up" style={styles.textButton}>
             Sign up
           </Link>
         </View>
@@ -188,6 +187,13 @@ const styles = StyleSheet.create({
     borderColor: "#2A99D0",
     borderWidth: 2,
   },
+  logo: {
+    marginTop: 20,
+    resizeMode: 'contain',
+    width: 200,
+    height: 200,
+    alignSelf: 'center'
+  }
 });
 
 export default SignInScreen;
