@@ -4,7 +4,7 @@ import StarRating from 'react-native-star-rating-widget'
 import { Button } from 'react-native-elements'
 import { supabase } from '../lib/supabase'
 
-export default function addReviewForm({id, setModalVisible, session, edit, existingRating, existingReviewText }: {id: number, setReviewModalVisible: any, session: Session | null, edit?: { review_id: number, rating: number, review_text: string }, existingRating?: number, existingReviewText?: string}) {
+export default function AddReviewForm({id, setModalVisible, session, edit, existingRating, existingReviewText, table }: {id: number, setModalVisible: any, session: Session | null, edit?: { review_id: number, rating: number, review_text: string }, existingRating?: number, existingReviewText?: string, table: string}) {
   const [rating, setRating] = useState(0)
   const [reviewText, setReviewText] = useState('')
 
@@ -16,7 +16,7 @@ export default function addReviewForm({id, setModalVisible, session, edit, exist
 
   const  getExistingReview = async () => {
     const { data, error } = await supabase
-      .from('reviews_airlines')
+      .from(`reviews_${table}`)
       .select('review_text, rating')
       .eq('review_id', edit.review_id)
     if (error) {
@@ -31,11 +31,11 @@ export default function addReviewForm({id, setModalVisible, session, edit, exist
   const handleAddReview = async () => {
     
     const { data, error } = await supabase
-      .from('reviews_airlines')
+      .from(`reviews_${table}`)
       .insert(
         {
           user_id: session?.user.id,
-          airline_id: id,
+          [table === 'airlines' ? 'airline_id' : 'accommodation_id']: id,
           rating: rating,
           review_text: reviewText
         }
@@ -50,7 +50,7 @@ export default function addReviewForm({id, setModalVisible, session, edit, exist
 
   const handleEditReview = async () => {
     const { data, error } = await supabase
-      .from('reviews_airlines')
+      .from(`reviews_${table}`)
       .update(
         {
           rating: rating,

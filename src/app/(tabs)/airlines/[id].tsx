@@ -8,34 +8,14 @@ import ReviewForm from "@/src/components/ReviewForm";
 import { Session } from "@supabase/supabase-js";
 import { supabase } from "@/src/lib/supabase";
 import TripListSmall from "@/src/components/TripListSmall";
+import { useAuth } from "@/src/providers/AuthProvider";
 export default function Airline() {
-  const [session, setSession] = useState<Session | null>(null);
+
   const [rating, setRating] = useState(0);
   const router = useRouter();
   const [isReviewModalVisible, setReviewModalVisible] = useState(false);
   const [isTripModalVisible, setTripModalVisible] = useState(false);
-
-
-  useEffect(() => {
-    const fetchSession = async () => {
-      const {
-        data: { session },
-      } = await supabase.auth.getSession();
-      setSession(session);
-    };
-
-    fetchSession();
-
-    const { data: authListener } = supabase.auth.onAuthStateChange(
-      (_event, session) => {
-        setSession(session);
-      }
-    );
-
-    return () => {
-      authListener.subscription.unsubscribe();
-    };
-  }, []);
+  const {session, loading, profile} = useAuth()
 
   useEffect(() => {
     getRating();
@@ -85,7 +65,7 @@ export default function Airline() {
 
   return (
     <>
-      <Modal style={styles.modal}
+      <Modal 
         isVisible={isReviewModalVisible}
         animationIn="slideInUp"
         onBackdropPress={toggleReviewModal}
@@ -98,11 +78,12 @@ export default function Airline() {
             edit={false}
             setModalVisible={setReviewModalVisible}
             session={session}
+            table={'airlines'}
           />
         </View>
       </Modal>
 
-      <Modal style={styles.modal}
+      <Modal 
         isVisible={isTripModalVisible}
         animationIn="slideInUp"
         onBackdropPress={toggleTripModal}
@@ -113,6 +94,7 @@ export default function Airline() {
           <TripListSmall
             user_id={session?.user.id}
             setModalVisible={setTripModalVisible}
+            table={"airlines"}
           />
         </View>
       </Modal>

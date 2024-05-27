@@ -5,7 +5,7 @@ import { FontAwesome } from '@expo/vector-icons';
 import { useLocalSearchParams } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { supabase } from '../lib/supabase';
-export default function ReviewCard({ review, reviews, setFilteredReviews, filteredReviews, setModalVisible, setExistingRating, setExistingReviewText }: { review: { review_id: number, rating: number, review_text: string, avatar_url: string, created_at: string, username: string } }) {
+export default function ReviewCard({ review, reviews, setFilteredReviews, filteredReviews, setModalVisible, setExistingRating, setExistingReviewText, table }: { review: { review_id: number, rating: number, review_text: string, avatar_url: string, created_at: string, username: string, table: string } }) {
   const { review_id, rating, review_text, created_at} = review;
   const { avatar_url, username } = review.profiles  
   const session = useLocalSearchParams().session as string;
@@ -14,6 +14,7 @@ export default function ReviewCard({ review, reviews, setFilteredReviews, filter
   useEffect(() => { 
     getUsername()
   },[session])  
+
   const getUsername = async () => {
     const { data: { user } } = await supabase.auth.getUser();
     const { data, error } = await supabase
@@ -27,7 +28,7 @@ export default function ReviewCard({ review, reviews, setFilteredReviews, filter
   const handleDeleteReview = async () => {    
     setFilteredReviews(filteredReviews.filter((review) => review.review_id !== review_id))
     const { data, error } = await supabase
-    .from('reviews_airlines')
+    .from(`${table}`)
     .delete()
     .eq('review_id', review_id);
     if (error) {

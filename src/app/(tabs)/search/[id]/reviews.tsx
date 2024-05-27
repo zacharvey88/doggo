@@ -2,7 +2,7 @@ import { View, StyleSheet, Text} from "react-native";
 import { useLocalSearchParams } from "expo-router";
 import ReviewsList from "@/src/components/ReviewsList";
 
-export default function accommodationReviews() {
+export default function AccommodationReviews() {
 
     const { id } = useLocalSearchParams();
     

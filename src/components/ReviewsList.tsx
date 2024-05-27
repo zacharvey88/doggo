@@ -67,7 +67,7 @@ export default function ReviewsList({ id, table }: { id: number; table: keyof Da
             </Modal>
         <FlatList 
           data={filteredReviews} 
-          renderItem={({ item }) => <ReviewCard review={item} session={session} reviews={reviews} filteredReviews={filteredReviews} setFilteredReviews={setFilteredReviews} setModalVisible={setModalVisible} setExistingRating={setExistingRating} setExistingReviewText={setExistingReviewText}/>} 
+          renderItem={({ item }) => <ReviewCard review={item} session={session} reviews={reviews} filteredReviews={filteredReviews} setFilteredReviews={setFilteredReviews} setModalVisible={setModalVisible} setExistingRating={setExistingRating} setExistingReviewText={setExistingReviewText} table={table} />} 
           contentContainerStyle={{ padding: 10 }}
           showsVerticalScrollIndicator={false}
         />
