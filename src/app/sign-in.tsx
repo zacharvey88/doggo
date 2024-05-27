@@ -8,17 +8,24 @@ import {
   Image,
   TouchableOpacity,
 } from "react-native";
-import { Link } from "expo-router";
+import {
+  Link,
+  useRouter,
+  useNavigation,
+  useLocalSearchParams,
+} from "expo-router";
 import { supabase } from "@/src/lib/supabase";
 import Colors from "@/src/constants/Colors";
 import { StatusBar } from "expo-status-bar";
-import { useLocalSearchParams, useRouter, useNavigation } from "expo-router";
+
 const SignInScreen = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
+  const [emailFocused, setEmailFocused] = useState<boolean>(false);
+  const [passwordFocused, setPasswordFocused] = useState<boolean>(false);
   const navigation = useNavigation();
-   const { from } = useLocalSearchParams();
+  const { from } = useLocalSearchParams();
   const router = useRouter();
 
   async function signInWithEmail() {
@@ -33,12 +40,11 @@ const SignInScreen = () => {
       if (from === "landing") {
         router.push("/search");
       } else {
-        navigation.goBack(); 
+        navigation.goBack();
       }
     }
     setLoading(false);
   }
-
 
   return (
     <View style={styles.container}>
@@ -48,29 +54,31 @@ const SignInScreen = () => {
         style={styles.background}
       />
       <View style={styles.foreground}>
-        {/* <Text style={styles.titleText}>Login here</Text> */}
         <Image
-        source={require("@/assets/images/paw.png")}
-        style={styles.logo}
-      />
-        <Text style={styles.titleText}>
-          Welcome!
-        </Text>
+          source={require("@/assets/images/paw.png")}
+          style={styles.pawImage1}
+          resizeMode="contain"
+        />
+        <Text style={styles.titleText}>Welcome back! </Text>
         <View style={styles.form}>
           <TextInput
             value={email}
             onChangeText={setEmail}
+            onFocus={() => setEmailFocused(true)}
+            onBlur={() => setEmailFocused(false)}
             placeholder="Email"
             placeholderTextColor="#7c7c7c"
             autoCapitalize="none"
-            style={styles.input}
+            style={[styles.input, emailFocused && styles.focused]}
           />
           <TextInput
             value={password}
             onChangeText={setPassword}
+            onFocus={() => setPasswordFocused(true)}
+            onBlur={() => setPasswordFocused(false)}
             placeholder="Password"
             placeholderTextColor="#7c7c7c"
-            style={styles.input}
+            style={[styles.input, passwordFocused && styles.focused]}
             secureTextEntry
             autoCapitalize="none"
           />
@@ -80,7 +88,7 @@ const SignInScreen = () => {
             disabled={loading}
           >
             <Text style={styles.buttonText}>
-              {loading ? "Signing in..." : "Login"}
+              {loading ? "Signing in..." : "Sign In"}
             </Text>
           </TouchableOpacity>
         </View>
@@ -98,7 +106,6 @@ const SignInScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "space-between",
     backgroundColor: "white",
   },
   background: {
@@ -108,42 +115,46 @@ const styles = StyleSheet.create({
     position: "absolute",
     opacity: 0.8,
   },
+  pawImage1: {
+    width: 100,
+    height: 100,
+    marginTop: 30,
+    opacity: 0.5,
+  },
   foreground: {
-    padding: 20,
+    padding: 30,
   },
   titleText: {
-    fontSize: 50,
+    fontSize: 40,
     fontWeight: "bold",
     color: "white",
-    textAlign: "center",
-    fontFamily: 'Futura',
-    marginTop: 10
-  },
-  subtitleText: {
-    fontSize: 20,
-    color: "white",
-    textAlign: "center",
-    marginVertical: 20,
+    textAlign: "left",
+    maxWidth: "60%",
+    marginTop: 50,
   },
   form: {
-    marginTop: 130,
+    marginTop: 150,
   },
   input: {
     padding: 10,
-    marginTop: 5,
-    marginBottom: 20,
-    backgroundColor: "#EBEEEC",
+    marginBottom: 15,
+    borderColor: "#cfd4d4",
     borderRadius: 10,
     height: 50,
     fontSize: 16,
+    borderWidth: 1,
   },
   button: {
-    backgroundColor: "#2A99D0",
-    paddingVertical: 15,
+    backgroundColor: Colors.light.tint,
+    paddingVertical: 18,
     borderRadius: 15,
     alignItems: "center",
     justifyContent: "center",
     marginTop: 20,
+    shadowRadius: 10,
+    shadowOffset: { width: 4, height: 4 },
+    shadowOpacity: 0.4,
+    shadowColor: Colors.light.tint,
   },
   buttonDisabled: {
     backgroundColor: "gray",
@@ -156,8 +167,8 @@ const styles = StyleSheet.create({
   textButton: {
     color: Colors.light.tint,
     marginVertical: 10,
-    textDecorationLine: "underline",
     fontSize: 16,
+    fontWeight:"600"
   },
   text: {
     textAlign: "center",
@@ -169,7 +180,12 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
-    marginTop: 20,
+    gap: 5,
+    marginTop: 40,
+  },
+  focused: {
+    borderColor: "#2A99D0",
+    borderWidth: 2,
   },
   logo: {
     marginTop: 20,
