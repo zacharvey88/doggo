@@ -6,51 +6,53 @@ import Button from "@components/Button";
 import { useRouter, useLocalSearchParams } from "expo-router";
 import { Session } from "@supabase/supabase-js";
 import Avatar from "@/src/components/Avatar";
+import { useAuth } from "@/src/providers/AuthProvider";
 
 export default function UpdateAccount() {
   const {
     username: initialUsername,
     avatarUrl: initialAvatarUrl,
-    fullname: initialFullname,
+    fullName: initialFullName,
     email: initialEmail,
   } = useLocalSearchParams();
   const [loading, setLoading] = useState(false);
   const [username, setUsername] = useState(initialUsername || "");
   const [avatarUrl, setAvatarUrl] = useState(initialAvatarUrl || "");
-  const [fullname, setFullname] = useState(initialFullname || "");
+  const [fullName, setFullName] = useState(initialFullName || "");
   const [email, setEmail] = useState(initialEmail || "");
   const router = useRouter();
-  const [session, setSession] = useState<Session | null>(null);
+  // const [session, setSession] = useState<Session | null>(null);
+  const {session}= useAuth()
 
-  useEffect(() => {
-    const fetchSession = async () => {
-      const {
-        data: { session },
-      } = await supabase.auth.getSession();
-      setSession(session);
-    };
+  // useEffect(() => {
+  //   const fetchSession = async () => {
+  //     const {
+  //       data: { session },
+  //     } = await supabase.auth.getSession();
+  //     setSession(session);
+  //   };
 
-    fetchSession();
+  //   fetchSession();
 
-    const { data: authListener } = supabase.auth.onAuthStateChange(
-      (_event, session) => {
-        setSession(session);
-      }
-    );
+  //   const { data: authListener } = supabase.auth.onAuthStateChange(
+  //     (_event, session) => {
+  //       setSession(session);
+  //     }
+  //   );
 
-    return () => {
-      authListener.subscription.unsubscribe();
-    };
-  }, []);
+  //   return () => {
+  //     authListener.subscription.unsubscribe();
+  //   };
+  // }, []);
 
   async function updateProfile({
     username,
     avatar_url,
-    fullname,
+    fullName,
   }: {
     username: string;
     avatar_url: string;
-    fullname: string;
+    fullName: string;
   }) {
     try {
       setLoading(true);
@@ -60,7 +62,7 @@ export default function UpdateAccount() {
         id: session.user.id,
         username,
         avatar_url,
-        full_name: fullname,
+        full_name: fullName,
         updated_at: new Date(),
       };
 
@@ -70,10 +72,9 @@ export default function UpdateAccount() {
         throw error;
       }
 
-      // Update the local state to reflect the new profile data
       setUsername(username);
       setAvatarUrl(avatar_url);
-      setFullname(fullname);
+      setFullName(fullName);
 
       Alert.alert("Account updated successfully");
       router.back();
@@ -98,7 +99,7 @@ export default function UpdateAccount() {
             url={avatarUrl}
             onUpload={(url: string) => {
               setAvatarUrl(url);
-              updateProfile({ username, fullname, avatar_url: url });
+              updateProfile({ username, fullName, avatar_url: url });
             }}
           />
         </View>
@@ -111,14 +112,14 @@ export default function UpdateAccount() {
         />
       </View>
       <View style={styles.verticallySpaced}>
-        <Input label="Full Name" value={fullname} onChangeText={setFullname} />
+        <Input label="Full Name" value={fullName} onChangeText={setFullName} />
       </View>
 
       <View style={[styles.verticallySpaced, styles.mt20]}>
         <Button
           text={loading ? "Loading ..." : "Update"}
           onPress={() =>
-            updateProfile({ username, avatar_url: avatarUrl, fullname })
+            updateProfile({ username, avatar_url: avatarUrl, fullName })
           }
           disabled={loading}
         />

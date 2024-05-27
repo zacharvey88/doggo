@@ -5,11 +5,10 @@ import {
   StyleSheet,
   Alert,
   Image,
-  Pressable,
   TouchableOpacity,
 } from "react-native";
 import React, { useState } from "react";
-import { Link, Redirect, useRouter } from "expo-router";
+import { Link, useRouter } from "expo-router";
 import { supabase } from "@/src/lib/supabase";
 import Colors from "@/src/constants/Colors";
 import { StatusBar } from "expo-status-bar";
@@ -17,24 +16,69 @@ import { StatusBar } from "expo-status-bar";
 const SignUpScreen = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [fullName, setFullName] = useState("");
+  const [username, setUsername] = useState("");
   const [loading, setLoading] = useState(false);
-const router = useRouter()
+  const router = useRouter();
+
+  const validateEmail = (email: string) => {
+    const re = /\S+@\S+\.\S+/;
+    return re.test(email);
+  };
+
   async function signUpWithEmail() {
+    if (!validateEmail(email)) {
+      Alert.alert("Invalid email address");
+      return;
+    }
+
+    if (password.length < 6) {
+      Alert.alert("Password must be at least 6 characters");
+      return;
+    }
+
     setLoading(true);
-    const { error } = await supabase.auth.signUp({ email, password });
-    if (error) Alert.alert(error.message);
-    else {
+    const { error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        data: {
+          full_name: fullName,
+          username,
+        },
+      },
+    });
+
+    if (error) {
+      Alert.alert(error.message);
+    } else {
+      // Store additional user info
+      // const { data, error: userError } = await supabase
+      //   .from("profiles")
+      //   .insert([
+      //     { id: supabase.auth.user()?.id, full_name: fullName, username },
+      //   ]);
+
+      // if (userError) {
+      //   Alert.alert(userError.message);
+      // } else {
       Alert.alert("Sign-up successful!");
 
-      const { error } = await supabase.auth.signInWithPassword({
+      const { error: signInError } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
-      if (error) Alert.alert(error.message);
-      router.push('/search')
+
+      if (signInError) {
+        Alert.alert(signInError.message);
+      } else {
+        router.push("/search");
+      }
     }
+
     setLoading(false);
   }
+
   return (
     <View style={styles.container}>
       <StatusBar style="light" />
@@ -60,11 +104,28 @@ const router = useRouter()
         </View>
         <View style={styles.form}>
           <TextInput
+            value={fullName}
+            onChangeText={setFullName}
+            placeholder="Full Name"
+            placeholderTextColor="#7c7c7c"
+            style={styles.input}
+            autoCapitalize="none"
+          />
+          <TextInput
+            value={username}
+            onChangeText={setUsername}
+            placeholder="Username"
+            placeholderTextColor="#7c7c7c"
+            style={styles.input}
+            autoCapitalize="none"
+          />
+          <TextInput
             value={email}
             onChangeText={setEmail}
             placeholder="Email"
             placeholderTextColor="#7c7c7c"
             style={styles.input}
+            autoCapitalize="none"
           />
           <TextInput
             value={password}

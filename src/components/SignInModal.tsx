@@ -77,6 +77,7 @@ const SignInModal: React.FC<SignInModalProps> = ({ visible, onClose }) => {
               onChangeText={setEmail}
               placeholder="Email"
               placeholderTextColor="#7c7c7c"
+              autoCapitalize="none"
               style={styles.input}
             />
             <TextInput
@@ -86,6 +87,7 @@ const SignInModal: React.FC<SignInModalProps> = ({ visible, onClose }) => {
               placeholderTextColor="#7c7c7c"
               style={styles.input}
               secureTextEntry
+              autoCapitalize="none"
             />
             <TouchableOpacity
               style={[styles.button, loading && styles.buttonDisabled]}

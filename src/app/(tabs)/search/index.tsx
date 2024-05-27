@@ -6,6 +6,7 @@ import {
   ActivityIndicator,
   ScrollView,
   SafeAreaView,
+  TouchableOpacity,
 } from "react-native";
 import { Text } from "@/src/components/Themed";
 import { FontAwesome6 } from "@expo/vector-icons";
@@ -63,7 +64,7 @@ export default function TabSearch() {
               style={styles.scrollView}
             >
               {categories.map((category) => (
-                <Pressable
+                <TouchableOpacity
                   key={category.name}
                   style={[
                     styles.iconContainer,
@@ -87,7 +88,7 @@ export default function TabSearch() {
                   >
                     {category.name}
                   </Text>
-                </Pressable>
+                </TouchableOpacity>
               ))}
             </ScrollView>
             {selectedCategory === "Stays" ? (
@@ -185,8 +186,10 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   selectedIconContainer: {
-    backgroundColor: "#3A90CD",
-    shadowColor: "#black",
+    backgroundColor: "#2A99D0",
+    shadowColor: "#2A99D0",
+    borderWidth: 2,
+    borderColor: "#2A99D0",
   },
   selectedIcon: {
     color: "#FFFFFF",
