@@ -4,29 +4,31 @@ import StarRating from 'react-native-star-rating-widget'
 import { Button } from 'react-native-elements'
 import { supabase } from '../lib/supabase'
 
-export default function AddReviewForm({id, setModalVisible, session, edit, existingRating, existingReviewText, table }: {id: number, setModalVisible: any, session: Session | null, edit?: { review_id: number, rating: number, review_text: string }, existingRating?: number, existingReviewText?: string, table: string}) {
-  const [rating, setRating] = useState(0)
-  const [reviewText, setReviewText] = useState('')
+export default function ReviewForm({id, setModalVisible, session, edit, existingRating, existingReviewText, table, review_id }: {id: number, setModalVisible: any, session: Session | null, edit?: { review_id: number, rating: number, review_text: string }, existingRating?: number, existingReviewText?: string, table: string, review_id: Number}) {
+  const [rating, setRating] = useState(existingRating ? existingRating : 0)
+  const [reviewText, setReviewText] = useState(existingReviewText ? existingReviewText : '')
 
   useEffect(() => {
-    if(edit) {      
-      getExistingReview()
-    }    
+
+    
+    // if(edit) {      
+    //   getExistingReview()
+    // }    
   }, [])
 
-  const  getExistingReview = async () => {
-    const { data, error } = await supabase
-      .from(`reviews_${table}`)
-      .select('review_text, rating')
-      .eq('review_id', edit.review_id)
-    if (error) {
-      console.log(error);
-    }
-    if (data) {
-      setExistingReviewText(data[0].review_text)
-      setExistingRating(data[0].rating)
-    }
-  }
+  // const  getExistingReview = async () => {
+  //   const { data, error } = await supabase
+  //     .from(`reviews_${table}`)
+  //     .select('review_text, rating')
+  //     .eq('review_id', edit.review_id)
+  //   if (error) {
+  //     console.log(error);
+  //   }
+  //   if (data) {
+  //     setExistingReviewText(data[0].review_text)
+  //     setExistingRating(data[0].rating)
+  //   }
+  // }
 
   const handleAddReview = async () => {
     
@@ -50,15 +52,17 @@ export default function AddReviewForm({id, setModalVisible, session, edit, exist
 
   const handleEditReview = async () => {
     const { data, error } = await supabase
-      .from(`reviews_${table}`)
+      .from(`${table}`)
       .update(
         {
           rating: rating,
           review_text: reviewText
         }
       )
-      .eq('review_id', edit.review_id)
+      .eq('review_id', review_id)
       if (error) {
+        console.log(error);
+        
         Alert.alert('Something went wrong. Please try again.')
       } else {
         setModalVisible(false)
@@ -71,15 +75,17 @@ export default function AddReviewForm({id, setModalVisible, session, edit, exist
       {edit ? null : <Text>How was your experience?</Text>}
       <StarRating
         style={styles.stars}
-        rating={edit ? existingRating : rating}
+        rating={rating}
         onChange={setRating}
+
       /><TextInput 
       multiline={true} 
       numberOfLines={4} 
       style={styles.input}
       onChangeText={setReviewText}
       placeholder={edit ? '' : 'Write a review...'}
-      value={edit ? existingReviewText : reviewText}
+      value={reviewText}
+
     >
     </TextInput>
       <Button 

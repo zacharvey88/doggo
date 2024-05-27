@@ -5,7 +5,7 @@ import { FontAwesome } from '@expo/vector-icons';
 import { useLocalSearchParams } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { supabase } from '../lib/supabase';
-export default function ReviewCard({ review, reviews, setFilteredReviews, filteredReviews, setModalVisible, setExistingRating, setExistingReviewText, table }: { review: { review_id: number, rating: number, review_text: string, avatar_url: string, created_at: string, username: string, table: string } }) {
+export default function ReviewCard({ review, reviews, setFilteredReviews, filteredReviews, setModalVisible, setExistingRating, setExistingReviewText, table, setReviewId }: { review: { review_id: number, rating: number, review_text: string, avatar_url: string, created_at: string, username: string, table: string, setReviewId: any } }) {
   const { review_id, rating, review_text, created_at} = review;
   const { avatar_url, username } = review.profiles  
   const session = useLocalSearchParams().session as string;
@@ -38,6 +38,7 @@ export default function ReviewCard({ review, reviews, setFilteredReviews, filter
   }
 
   const handleEditReview = async () => {
+    setReviewId(review_id)
     setExistingRating(rating)
     setExistingReviewText(review_text)
     setModalVisible(true)
