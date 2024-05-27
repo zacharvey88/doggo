@@ -1,25 +1,29 @@
 import { useState, useEffect } from "react";
 import { supabase } from "@/src/lib/supabase";
-import { StyleSheet, View, Alert, Text, Image, Pressable } from "react-native";
+import {
+  StyleSheet,
+  View,
+  Alert,
+  Text,
+  Image,
+  TouchableOpacity,
+  ActivityIndicator,
+  ScrollView,
+} from "react-native";
 import { Session } from "@supabase/supabase-js";
 import { Link, useNavigation } from "expo-router";
 import Colors from "../constants/Colors";
-import Button from "./Button";
 import UserReviewsList from "./UserReviewsList";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function Account({ session }: { session: Session }) {
-  
   const [loading, setLoading] = useState(true);
   const [username, setUsername] = useState("");
   const [avatarUrl, setAvatarUrl] = useState("");
   const [fullname, setFullname] = useState("");
   const [email, setEmail] = useState("");
   const navigation = useNavigation();
-  const defaultImage =
-  "https://i.sstatic.net/l60Hf.png";
-
-
+  const defaultImage = "https://i.sstatic.net/l60Hf.png";
 
   const fetchProfile = async () => {
     try {
@@ -57,7 +61,7 @@ export default function Account({ session }: { session: Session }) {
   }, [session]);
 
   useEffect(() => {
-    const unsubscribe = navigation.addListener('focus', () => {
+    const unsubscribe = navigation.addListener("focus", () => {
       if (session) {
         fetchProfile();
       }
@@ -66,38 +70,52 @@ export default function Account({ session }: { session: Session }) {
     return unsubscribe;
   }, [navigation, session]);
 
+  const handleSignOut = async () => {
+    const { error } = await supabase.auth.signOut();
+    if (error) Alert.alert(error.message);
+  };
+
   return (
+    <SafeAreaView style={styles.safeArea}>
+      <ScrollView contentContainerStyle={styles.scrollViewContent}>
+        {loading ? (
+          <ActivityIndicator size="large" color={Colors.light.tint} />
+        ) : (
+          <>
+            <View style={styles.badge}>
+              <Image
+                source={{
+                  uri: avatarUrl
+                    ? `https://orcurstjttnhckjuhyqb.supabase.co/storage/v1/object/public/avatars/${avatarUrl}`
+                    : defaultImage,
+                }}
+                style={styles.image}
+              />
+              <Text style={styles.fullname}>{fullname}</Text>
+              <Text style={styles.username}>{username}</Text>
 
-            <SafeAreaView style={styles.safeArea}>
-    <View style={styles.container}>
-      <View style={styles.badge}>
-        <Image source={{ uri:  avatarUrl? `https://orcurstjttnhckjuhyqb.supabase.co/storage/v1/object/public/avatars/${avatarUrl}` : defaultImage }} style={styles.image} />
-        <Text style={styles.fullname}>{fullname}</Text>
-        <Text style={styles.username}>{username}</Text>
-        <View style={styles.links}>
-          <Link
-            style={styles.textButton}
-            href={{
-              pathname: "/profile/update",
-              params: { username, avatarUrl, fullname, email },
-            }}
-          >Edit Profile</Link>
-          <Link
-            style={styles.textButton}
-            onPress={() => supabase.auth.signOut()}
-            href={{
-              pathname: "/profile",
-              params: { username, avatarUrl, fullname, email },
-            }}
-          >Sign Out</Link>
-        </View>
-      </View>
-      <View style={styles.listArea}>
-           <UserReviewsList id={session?.user.id} table='reviews_airlines'/>
-      </View>
-    </View>
-           </SafeAreaView>
+              <Link
+                style={styles.textButton}
+                href={{
+                  pathname: "/profile/update",
+                  params: { username, avatarUrl, fullname, email },
+                }}
+              >
+                Edit Profile
+              </Link>
+            </View>
 
+            <View style={styles.listArea}>
+              <UserReviewsList id={session?.user.id} table="reviews_airlines" />
+            </View>
+
+            <TouchableOpacity style={styles.button} onPress={handleSignOut}>
+              <Text style={styles.buttonText}>Sign Out</Text>
+            </TouchableOpacity>
+          </>
+        )}
+      </ScrollView>
+    </SafeAreaView>
   );
 }
 
@@ -106,53 +124,53 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "white",
   },
-  container: {
-    padding: 12,
-    marginTop: 10,
-    flex: 1,
+  scrollViewContent: {
+    flexGrow: 1,
     justifyContent: "space-between",
+    alignItems: "center",
+    padding: 20,
   },
   badge: {
-    display: "flex",
-    flexDirection: "column",
-    gap: 6,
+    alignItems: "center",
+    marginBottom: 20,
   },
   image: {
-    width: "40%",
-    aspectRatio: 1,
-    resizeMode: "cover",
-    alignSelf: "center",
-    borderRadius: 100,
+    width: 150,
+    height: 150,
+    borderRadius: 50,
+    marginBottom: 10,
   },
   textButton: {
     color: Colors.light.tint,
     textDecorationLine: "underline",
-    alignSelf: "center",
     fontSize: 16,
-    marginTop: 20,
+    marginTop: 10,
   },
   fullname: {
-    marginTop: 16,
-    alignSelf: "center",
     fontWeight: "bold",
     fontSize: 22,
+    marginBottom: 5,
   },
   username: {
-    alignSelf: "center",
     color: "gray",
     fontSize: 18,
-  },
-  links: {
-    display: "flex",
-    flexDirection: "row",
-    gap: 15,
-    justifyContent: "center",
+    marginBottom: 20,
   },
   listArea: {
-    width: '100%',
-    height: '100%',
-    marginTop: 20,
-    paddingTop: 20,
-    alignItems: 'center',
-  }
+    width: "100%",
+    marginBottom: 20,
+  },
+  button: {
+    backgroundColor: Colors.light.tint,
+    paddingVertical: 15,
+    borderRadius: 15,
+    alignItems: "center",
+    justifyContent: "center",
+    width: "80%",
+  },
+  buttonText: {
+    color: "white",
+    fontSize: 18,
+    fontWeight: "bold",
+  },
 });

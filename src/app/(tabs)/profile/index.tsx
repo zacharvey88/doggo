@@ -6,22 +6,13 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { useEffect, useState } from "react";
-import { Session } from "@supabase/supabase-js";
-import { supabase } from "@/src/lib/supabase";
 import Account from "@/src/components/Account";
-import SignInModal from "@/src/components/SignInModal";
 import { useAuth } from "@/src/providers/AuthProvider";
 import { useRouter } from "expo-router";
 
 const ProfileScreen: React.FC = () => {
-  const [loginModalVisible, setLoginModalVisible] = useState<boolean>(false);
   const { session } = useAuth();
 const router = useRouter()
-  useEffect(() => {
-    if (!session) {
-      setLoginModalVisible(true);
-    }
-  }, [session]);
 
   return (
     <>
@@ -34,16 +25,12 @@ const router = useRouter()
               style={styles.button}
               onPress={()=>router.push('/sign-in')
 }
-            // onPress={() => setLoginModalVisible(true)}
           >
             <Text style={styles.buttonText}>Login</Text>
           </TouchableOpacity>
         </View>
       )}
-      {/* <SignInModal
-        visible={loginModalVisible}
-        onClose={() => setLoginModalVisible(false)}
-      /> */}
+   
     </>
   );
 };
