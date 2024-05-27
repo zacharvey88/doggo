@@ -21,29 +21,7 @@ export default function UpdateAccount() {
   const [fullName, setFullName] = useState(initialFullName || "");
   const [email, setEmail] = useState(initialEmail || "");
   const router = useRouter();
-  // const [session, setSession] = useState<Session | null>(null);
   const {session}= useAuth()
-
-  // useEffect(() => {
-  //   const fetchSession = async () => {
-  //     const {
-  //       data: { session },
-  //     } = await supabase.auth.getSession();
-  //     setSession(session);
-  //   };
-
-  //   fetchSession();
-
-  //   const { data: authListener } = supabase.auth.onAuthStateChange(
-  //     (_event, session) => {
-  //       setSession(session);
-  //     }
-  //   );
-
-  //   return () => {
-  //     authListener.subscription.unsubscribe();
-  //   };
-  // }, []);
 
   async function updateProfile({
     username,
