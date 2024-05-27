@@ -87,16 +87,12 @@ const SignUpScreen = () => {
         style={styles.background}
       />
       <View style={styles.foreground}>
-        <Image
+        {/* <Image
           source={require("@/assets/images/paw.png")}
           style={styles.pawImage1}
           resizeMode="contain"
-        />
-        <Image
-          source={require("@/assets/images/paw.png")}
-          style={styles.pawImage2}
-          resizeMode="contain"
-        />
+        /> */}
+ 
       </View>
       <View style={styles.container2}>
         <View style={styles.title}>
@@ -187,7 +183,7 @@ const styles = StyleSheet.create({
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    paddingTop: 180,
+    paddingTop: 10,
   },
   titleText: {
     fontSize: 40,
