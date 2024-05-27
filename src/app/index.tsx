@@ -1,13 +1,13 @@
 import { StyleSheet, Image, Pressable, TouchableOpacity } from "react-native";
 import { Text, View } from "@/src/components/Themed";
-import { Link } from "expo-router";
+import { Link, router, useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import { useAuth } from "@/src/providers/AuthProvider";
 import SignInModal from "../components/SignInModal";
 export default function App() {
   const { session } = useAuth();
-  const [loginModalVisible, setLoginModalVisible] = useState<boolean>(false);
-
+  // const [loginModalVisible, setLoginModalVisible] = useState<boolean>(false);
+  const router = useRouter();
   return (
     <>
       <View style={styles.container}>
@@ -22,17 +22,19 @@ export default function App() {
           </Pressable>
         </Link>
 
-          <TouchableOpacity
-            style={styles.signInButton}
-            onPress={() => setLoginModalVisible(true)}
-          >
-            <Text style={styles.buttonText}>Sign In / Register</Text>
-          </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.signInButton}
+          onPress={() =>
+            router.push({ pathname: "/sign-in", params: { from: "landing" } })
+          }
+        >
+          <Text style={styles.buttonText}>Sign In / Register</Text>
+        </TouchableOpacity>
       </View>
-      <SignInModal
+      {/* <SignInModal
         visible={loginModalVisible}
         onClose={() => setLoginModalVisible(false)}
-      />
+      /> */}
     </>
   );
 }

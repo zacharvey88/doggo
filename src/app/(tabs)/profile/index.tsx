@@ -11,11 +11,12 @@ import { supabase } from "@/src/lib/supabase";
 import Account from "@/src/components/Account";
 import SignInModal from "@/src/components/SignInModal";
 import { useAuth } from "@/src/providers/AuthProvider";
+import { useRouter } from "expo-router";
 
 const ProfileScreen: React.FC = () => {
   const [loginModalVisible, setLoginModalVisible] = useState<boolean>(false);
   const { session } = useAuth();
-
+const router = useRouter()
   useEffect(() => {
     if (!session) {
       setLoginModalVisible(true);
@@ -30,17 +31,19 @@ const ProfileScreen: React.FC = () => {
         <View style={styles.container}>
           <Text style={styles.text}>Please log in to view your profile</Text>
           <TouchableOpacity
-            style={styles.button}
-            onPress={() => setLoginModalVisible(true)}
+              style={styles.button}
+              onPress={()=>router.push('/sign-in')
+}
+            // onPress={() => setLoginModalVisible(true)}
           >
             <Text style={styles.buttonText}>Login</Text>
           </TouchableOpacity>
         </View>
       )}
-      <SignInModal
+      {/* <SignInModal
         visible={loginModalVisible}
         onClose={() => setLoginModalVisible(false)}
-      />
+      /> */}
     </>
   );
 };
