@@ -55,10 +55,9 @@ export default function TabAirlines() {
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
         {loading ? (
-          <>
-            <ActivityIndicator style={styles.loading} />
-            <Text>Loading</Text>
-          </>
+          <View style={styles.loadingContainer}>
+            <ActivityIndicator size="large" color="gray" />
+          </View>
         ) : (
           <>
             <SearchBar
@@ -123,6 +122,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     padding: 10,
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
   },
   image: {
     width: 170,
