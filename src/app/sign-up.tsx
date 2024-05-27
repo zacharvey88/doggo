@@ -63,6 +63,20 @@ const SignUpScreen = () => {
     setLoading(false);
   }
 
+  async function resetPassword() {
+    if (!validateEmail(email)) {
+      Alert.alert("Invalid email address");
+      return;
+    }
+
+    const { error } = await supabase.auth.resetPasswordForEmail(email);
+    if (error) {
+      Alert.alert(error.message);
+    } else {
+      Alert.alert("Password reset email sent!");
+    }
+  }
+
   return (
     <View style={styles.container}>
       <StatusBar style="light" />
@@ -71,11 +85,6 @@ const SignUpScreen = () => {
         style={styles.background}
       />
       <View style={styles.foreground}>
-        {/* <Image
-          source={require("@/assets/images/paw.png")}
-          style={styles.pawImage}
-          resizeMode="contain"
-        /> */}
         <Text style={styles.titleText}>Don't Leave Doggo At Home!</Text>
         <Text style={styles.subtitleText}>Create an account now</Text>
         <View style={styles.form}>
@@ -99,6 +108,11 @@ const SignUpScreen = () => {
             style={[styles.input, passwordFocused && styles.focused]}
             secureTextEntry
           />
+          {passwordFocused && (
+            <Text style={styles.passwordHint}>
+              Password must be at least 6 characters
+            </Text>
+          )}
           <TouchableOpacity
             style={[styles.button, loading && styles.buttonDisabled]}
             onPress={signUpWithEmail}
@@ -108,6 +122,7 @@ const SignUpScreen = () => {
               {loading ? "Signing up..." : "Sign Up"}
             </Text>
           </TouchableOpacity>
+     
         </View>
         <View style={styles.signinContainer}>
           <Text style={styles.text}>Already have an account?</Text>
@@ -132,12 +147,6 @@ const styles = StyleSheet.create({
     position: "absolute",
     opacity: 0.9,
   },
-  pawImage: {
-    width: 100,
-    height: 100,
-    marginTop: 30,
-    opacity: 0.5,
-  },
   foreground: {
     padding: 30,
   },
@@ -146,14 +155,14 @@ const styles = StyleSheet.create({
     fontSize: 40,
     fontWeight: "800",
     color: "white",
-    textAlign:"center"
+    textAlign: "center",
   },
   subtitleText: {
     fontSize: 22,
     color: "white",
     textAlign: "center",
     marginTop: 40,
-    fontWeight:"500",
+    fontWeight: "500",
     alignSelf: "center",
   },
   form: {
@@ -210,6 +219,11 @@ const styles = StyleSheet.create({
   focused: {
     borderColor: "#2A99D0",
     borderWidth: 2,
+  },
+  passwordHint: {
+    color: "gray",
+    fontSize: 14,
+    marginBottom: 15,
   },
 });
 
