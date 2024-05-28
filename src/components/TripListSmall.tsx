@@ -6,15 +6,16 @@ import { StyleSheet, FlatList, Pressable, Alert } from "react-native";
 import dateFormat from "dateformat";
 import { FontAwesome6} from "@expo/vector-icons";
 import { Button } from "react-native-elements";
-import { Navigator } from "expo-router";
+import { useRouter } from "expo-router";
 import { ActivityIndicator } from "react-native";
-import { useLocalSearchParams } from "expo-router";
+import { useLocalSearchParams,  } from "expo-router";
 
 export default function TripListSmall({user_id, setModalVisible, table} : {user_id: string, setModalVisible: any, table: string}) {
 
   const [trips, setTrips] = useState<Database['public']['Tables']['trips']['Row'][]>([]);
   const [loading, setLoading] = useState(false)
   const { id } = useLocalSearchParams();
+  const router = useRouter();
 
   useEffect(()=>{
     getTrips()
@@ -83,7 +84,7 @@ export default function TripListSmall({user_id, setModalVisible, table} : {user_
         <Button
           title={"Create New Trip"}
           style={styles.button}
-          onPress={() => Navigator.push("trips")}
+          onPress={() => router.push('/add-trip')}
         />
         <Button
           title={"Cancel"}
