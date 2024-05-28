@@ -52,8 +52,8 @@ const SignInScreen = () => {
       return;
     }
 
-    const { error } = await supabase.auth.api.resetPasswordForEmail(email);
-    if (error) {
+    const { error } = await supabase.auth.resetPasswordForEmail(email);
+    if (error) {    
       Alert.alert(error.message);
     } else {
       Alert.alert("Password reset email sent!");

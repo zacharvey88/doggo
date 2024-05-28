@@ -12,6 +12,7 @@ import { Database } from "@/src/lib/database.types";
 import { SearchBar } from "react-native-elements";
 import { Link } from "expo-router";
 import { SafeAreaView } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
 
 export default function TabAirlines() {
   const [airlines, setAirlines] = useState<
@@ -60,16 +61,20 @@ export default function TabAirlines() {
           </View>
         ) : (
           <>
-            <SearchBar
+              <SearchBar
                 placeholder="Search airline pet policies"
-                
-              onChangeText={(value) => setSearchTerm(value)}
-              value={searchTerm}
-              lightTheme
-              round
-              containerStyle={styles.searchContainer}
-              inputContainerStyle={styles.searchInput}
-            />
+                placeholderTextColor
+                onChangeText={(value) => setSearchTerm(value)}
+                value={searchTerm}
+                inputStyle={styles.inputText}
+                lightTheme
+                round
+                containerStyle={styles.searchContainer}
+                inputContainerStyle={styles.searchInput}
+                searchIcon={
+                  <Ionicons name="search-outline" style={styles.searchIcon} />
+                }
+              />
             <FlatList
               data={filteredAirlines}
               keyExtractor={(item) => item.airline_id.toString()}
@@ -120,8 +125,8 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    padding: 15,
-
+    padding: 5,
+    paddingTop: 12,
   },
   loadingContainer: {
     flex: 1,
@@ -139,23 +144,36 @@ const styles = StyleSheet.create({
     backgroundColor: "transparent",
     borderBottomColor: "transparent",
     borderTopColor: "transparent",
+    marginBottom: 10,
     shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
+    shadowOffset: { width: 0, height: 0 },
     shadowOpacity: 0.2,
     shadowRadius: 2,
-    marginBottom: 10,
+    marginHorizontal:3
   },
   searchInput: {
     backgroundColor: "#eee",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0.2,
+    shadowRadius: 2,
+  },
+  searchIcon: {
+    fontSize: 18,
+    color: "#5d5d5d",
+  },
+  inputText: {
+    color: "#5d5d5d",
   },
   flatListContent: {
     paddingBottom: 20,
   },
   columnWrapper: {
-    justifyContent: "space-between",
+    justifyContent: "space-evenly",
+    gap: 5,
   },
   itemContainer: {
-    width: "48%",
+    width: "45%",
     marginBottom: 16,
     alignItems: "center",
   },

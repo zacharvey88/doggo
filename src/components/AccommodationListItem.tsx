@@ -121,16 +121,7 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     marginBottom: 3,
   },
-  // button: {
-  //   alignSelf: "stretch",
-  //   borderRadius: 10,
-  //   height: 40,
-  //   width: '100%',
-  //   marginTop: 10,
-  //   backgroundColor: "#3A90CD",
-  //   alignItems: "center",
-  //   justifyContent: "center",
-  // },
+
   buttonText: {
     color: "white",
     fontSize: 16,
