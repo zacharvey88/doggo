@@ -19,6 +19,7 @@ const deleteTrip = async () => {
     }
 }
 
+
 return (
 <View style={styles.container}>
     <Text style={styles.deleteText}>Are you sure you wish to delete this trip?</Text>

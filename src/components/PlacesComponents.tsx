@@ -142,7 +142,7 @@ const PlacesComponent = ({ location, category }) => {
                 ))}
               </ScrollView>
             ) : (
-              <Text>No Image Available</Text>
+              <Text style={styles.noImage}>No Image Available</Text>
             )}
             <Text style={styles.placeName}>
               {item.displayName?.text || "N/A"}
@@ -201,7 +201,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   image: {
-    width: 100,
+    width: 125,
     height: 100,
     borderRadius: 5,
   },
@@ -209,7 +209,8 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   scrollViewContent: {
-    gap: 10,
+    flex: 1,
+    justifyContent: 'space-between'
   },
   status: {
     fontSize: 16,
@@ -217,6 +218,9 @@ const styles = StyleSheet.create({
   listContent: {
     flexGrow: 1,
   },
+  noImage: {
+    marginBottom: 5 
+  }
 });
 
 export default PlacesComponent;

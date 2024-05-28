@@ -87,6 +87,17 @@ function RootLayoutNav() {
               headerShown: false,
             }}
           />
+          
+          <Stack.Screen
+            name="manage-properties"
+            options={{
+              headerTitle: "",
+              headerBackTitleVisible: true,
+              headerBackTitle: "Back",
+              headerShown: true,
+            }}
+          />
+
         </Stack>
         
       </AuthProvider>
