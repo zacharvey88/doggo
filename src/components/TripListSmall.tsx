@@ -140,7 +140,7 @@ const styles = StyleSheet.create({
     padding:5,
     flexGrow: 1,
     backgroundColor:"rgb(1,140,220)",
-    borderRadius:15,
+    borderRadius: 10,
   },
   noTrips: {
     fontSize: 18,

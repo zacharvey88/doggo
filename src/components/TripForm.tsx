@@ -89,8 +89,9 @@ export default function TripForm({
 
     if (!error) {
       onTripAdded();
-      toggleCreateModal();
     }
+
+    toggleCreateModal();
   };
 
   const handleSubmit = async () => {
@@ -102,6 +103,7 @@ export default function TripForm({
   return (
     <SafeAreaView style={styles.container}>
       <View>
+        <Text style={styles.label}>Trip Name</Text>
         <TextInput
           style={styles.input}
           placeholder="Enter Trip Title"
@@ -114,6 +116,7 @@ export default function TripForm({
           <Text style={styles.errorstext}>{errors.title}</Text>
         ) : null}
 
+<Text style={styles.label}>Start Date</Text>
         <Pressable onPress={toggleStartDatePicker}>
           <TextInput
             style={styles.input}
@@ -146,6 +149,7 @@ export default function TripForm({
           <Text style={styles.errorstext}>{errors.startDate}</Text>
         ) : null}
 
+<Text style={styles.label}>End Date</Text>
         <Pressable onPress={toggleEndDatePicker}>
           <TextInput
             style={styles.input}
@@ -180,11 +184,13 @@ export default function TripForm({
 
       </View>
       <View style={styles.buttonContainer}>
-        <Button
-          style={styles.button}
-          title="Create Your Trip"
-          onPress={handleSubmit}
-        />
+      <Pressable onPress={handleSubmit} style={styles.button}>
+        <Text style={styles.buttonText}>Create Your Trip</Text>
+      </Pressable>
+
+      <Pressable onPress={toggleCreateModal} style={styles.button}>
+        <Text style={styles.buttonText}>Cancel</Text>
+      </Pressable>
         {/* <Button style={styles.button} title="Cancel" onPress={() => router.push("/trips")} /> */}
       </View>
     </SafeAreaView>
@@ -224,12 +230,12 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     gap: 10,
     marginVertical: 20,
+    alignItems: 'center',
   },
   input: {
     width: 300,
     marginHorizontal: 15,
-    marginTop: 15,
-    height: 35,
+    height: 40,
     padding: 10,
     borderWidth: 1,
     borderRadius: 5,
@@ -241,13 +247,14 @@ const styles = StyleSheet.create({
   errorstext: {
     color: "#cc0000",
     marginVertical: 5,
-    marginLeft: 20,
+    marginLeft: 15,
   },
-
   buttonText: {
-    fontSize: 14,
+    fontSize: 15,
     fontWeight: "500",
     color: "#fff",
+    fontFamily: 'Futura',
+    textAlign: 'center'
   },
   datePicker: {
     height: 120,
@@ -286,4 +293,19 @@ const styles = StyleSheet.create({
     height: 40,
     fontSize: 16,
   },
+  label: {
+    fontSize: 16,
+    fontWeight: '500',
+    marginLeft: 15,
+    marginBottom: 5,
+    marginVertical: 10,
+    fontFamily: 'Futura'
+  },
+  button: {
+    backgroundColor: '#3A90CD',
+    borderRadius: 10,
+    height: 40,
+    width: 135,
+    padding: 10
+  }
 });

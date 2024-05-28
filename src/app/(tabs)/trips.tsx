@@ -25,6 +25,7 @@ export default function TabTrips() {
   const [filteredTrips, setFilteredTrips] = useState(trips);
   const { session } = useAuth();
   const router = useRouter();
+
   const toggleDeleteModal = () => {
     setDeleteModalVisible(!isDeleteModalVisible);
   };
@@ -75,10 +76,10 @@ export default function TabTrips() {
       {session && session.user ? (
         <>
           <View style={styles.container}>
-              <Pressable style={styles.addTripButton} onPress={()=>{router.push('/add-trip')}} >
+              <Pressable style={styles.addTripButton} onPress={(toggleCreateModal, onTripAdded)=>{router.push('/add-trip')}} >
                 <AntDesign name="pluscircle" size={40} color="rgb(1,140,220)" />
               </Pressable>
-            <Text style={styles.title}>Your Saved Trips</Text>
+            {/* <Text style={styles.title}>Your Saved Trips</Text> */}
             <TripList
               user_id={session.user.id}
               setDeleteModalVisible={setDeleteModalVisible}
@@ -88,6 +89,7 @@ export default function TabTrips() {
               setTrips={setTrips}
               filteredTrips={filteredTrips}
               setFilteredTrips={setFilteredTrips}
+              trips={trips}
             />
           </View>
           {/* Delete Trip Modal */}
