@@ -66,8 +66,6 @@ export default function TripForm({toggleCreateModal, onTripAdded}: {toggleCreate
   const validateForm = () => {
     let errors = {};
 
-    if (!accommodation) errors.accommodation = "Accommodation is required";
-    if (!airline) errors.airline = "Airline is required";
     if (!title) errors.title = "Title is required";
     if (!startDate) errors.startDate = "Start date is required";
     if (!endDate) errors.endDate = "End date is required";
@@ -77,49 +75,30 @@ export default function TripForm({toggleCreateModal, onTripAdded}: {toggleCreate
     return Object.keys(errors).length === 0;
   };
 
-  const getAirlinesId = async () => {
-    const { data } = await supabase
-      .from("airlines")
-      .select("*")
-      .eq("airline_name", airline);
-    if (data) {
-      setAirlineId(data[0].airline_id);
-    }
-  };
-  const getAccommodationId = async () => {
-    const { data } = await supabase
-      .from("accommodation")
-      .select("*")
-      .eq("title", accommodation);
-    if (data) {
-      setAccommodationId(data[0].accommodation_id);
-    }
-  };
 
   const submitForm = async () => {
+    
     const { data, error } = await supabase.from("trips").insert({
       user_id: session?.user.id,
-      airline_id: airlineId, // sort this Sun Express 169
-      accommodation_id: accommodationId, //id Seaside Villa
       start_date: startDate,
       end_date: endDate,
       title: title,
     });
-
     
     if (!error) {
       onTripAdded();
       toggleCreateModal();
     }
   };
+  
 
-  const handleSubmit = () => {    
+  const handleSubmit = async () => {    
     if (validateForm()) {
-      getAirlinesId();
-      getAccommodationId();
-      submitForm();
+       submitForm();
+
+      
+      }
     }
-  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -135,17 +114,6 @@ export default function TripForm({toggleCreateModal, onTripAdded}: {toggleCreate
         />
         {errors.title ? (
           <Text style={styles.errorstext}>{errors.title}</Text>
-        ) : null}
-        <TextInput
-          style={styles.input}
-          placeholder="Enter Accommodation Name"
-          value={accommodation}
-          onChangeText={setAccommodation}
-          autoCorrect={false}
-          autoCapitalize="none"
-        />
-        {errors.accommodation ? (
-          <Text style={styles.errorstext}>{errors.accommodation}</Text>
         ) : null}
 
         <Pressable onPress={toggleStartDatePicker}>
@@ -211,17 +179,7 @@ export default function TripForm({toggleCreateModal, onTripAdded}: {toggleCreate
         {errors.endDate ? (
           <Text style={styles.errorstext}>{errors.endDate}</Text>
         ) : null}
-        <TextInput
-          style={styles.input}
-          placeholder="Enter Airline Name"
-          value={airline}
-          onChangeText={setAirline}
-          autoCorrect={false}
-          autoCapitalize="none"
-        />
-        {errors.airline ? (
-          <Text style={styles.errorstext}>{errors.airline}</Text>
-        ) : null}
+
       </View>
       <View style={styles.buttonContainer}>
         <Button title="Save" onPress={handleSubmit} />

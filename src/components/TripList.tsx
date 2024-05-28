@@ -12,26 +12,26 @@ export default function TripList({user_id, setDeleteModalVisible, isDeleteModalV
 
   const [loading, setLoading] = useState(false)
 
-  useEffect(()=>{
-    getTrips()
-  },[])
+  // useEffect(()=>{
+  //   getTrips()
+  // },[])
 
-  async function getTrips () {
-    setLoading(true)
-    const {data, error} = await supabase
-    .from('trips')
-    .select('*, accommodation(title, photos), airlines(airline_name)')
-    .eq("user_id",user_id)
-    .order('start_date', { ascending: false });
-    if (error) {
-      console.log(error);
-    }
-    if(data){
-      setTrips(data)
-      setFilteredTrips(data)
-    }
-      setLoading(false)
-  }
+  // async function getTrips () {
+  //   setLoading(true)
+  //   const {data, error} = await supabase
+  //   .from('trips')
+  //   .select('*, accommodation(title, photos), airlines(airline_name)')
+  //   .eq("user_id",user_id)
+  //   .order('start_date', { ascending: false });
+  //   if (error) {
+  //     console.log(error);
+  //   }
+  //   if(data){
+  //     setTrips(data)
+  //     setFilteredTrips(data)
+  //   }
+  //     setLoading(false)
+  // }
 
   return (
     <View style={styles.container}>
