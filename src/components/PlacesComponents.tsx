@@ -121,14 +121,14 @@ const PlacesComponent = ({ location, category }) => {
               })
             }
           >
-            {item.photos ? (
+            {/* {item.photos ? (
               <ScrollView
                 horizontal
                 contentContainerStyle={styles.scrollViewContent}
                 showsHorizontalScrollIndicator={false}
                 style={styles.scrollView}
               >
-                {item.photos.slice(0, 3).map((photo, index) => (
+                {item.photos.slice(0, 1).map((photo, index) => (
                   <Image
                     key={index}
                     source={{
@@ -140,28 +140,43 @@ const PlacesComponent = ({ location, category }) => {
                     resizeMode="cover"
                   />
                 ))}
-              </ScrollView>
-            ) : (
-              <Text>No Image Available</Text>
-            )}
-            <Text style={styles.placeName}>
-              {item.displayName?.text || "N/A"}
-            </Text>
-            <Text style={styles.address}>
-              {item.shortFormattedAddress || "N/A"}
-            </Text>
-            <Text
-              style={[
-                styles.status,
-                {
-                  color: item.currentOpeningHours?.openNow
-                    ? "green"
-                    : "#b10604",
-                },
-              ]}
-            >
-              {item.currentOpeningHours?.openNow ? "Open Now" : "Closed"}
-            </Text>
+              </ScrollView> */}
+
+            <View style={styles.imageContainer}>
+              {item.photos ? (
+                <Image
+                  source={{
+                    uri: restaurantImages[0],
+                    // https://places.googleapis.com/v1/${item.photos[0].name}/media?key=${process.env.EXPO_PUBLIC_API_KEY}&maxWidthPx=400
+                  }}
+                  style={styles.image}
+                  resizeMode="cover"
+                />
+              ) : (
+                <Text>No Image Available</Text>
+              )}
+            </View>
+
+            <View style={styles.textContainer}>
+              <Text style={styles.placeName}>
+                {item.displayName?.text || "N/A"}
+              </Text>
+              <Text style={styles.address}>
+                {item.shortFormattedAddress || "N/A"}
+              </Text>
+              <Text
+                style={[
+                  styles.status,
+                  {
+                    color: item.currentOpeningHours?.openNow
+                      ? "green"
+                      : "#b10604",
+                  },
+                ]}
+              >
+                {item.currentOpeningHours?.openNow ? "Open Now" : "Closed"}
+              </Text>
+            </View>
           </TouchableOpacity>
         )}
         contentContainerStyle={styles.listContent}
@@ -174,36 +189,51 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: "center",
-    padding: 5,
+    padding: 10,
   },
   loadingContainer: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
   },
+  imageContainer: {
+    width: "100%",
+    height: 150,
+    overflow: "hidden",
+    alignItems: "center",
+    justifyContent: "center",
+    borderTopLeftRadius: 15,
+    borderTopRightRadius: 15,
+    marginBottom: 5,
+    
+  },
+  textContainer: {
+    paddingHorizontal: 10,
+    paddingTop: 10,
+    paddingBottom: 15,
+  },
   address: {
     fontSize: 16,
     marginVertical: 4,
   },
   placeItem: {
-    marginBottom: 16,
-    padding: 12,
+    marginBottom: 15,
     backgroundColor: "#f9f9f9",
-    borderRadius: 8,
+    borderRadius: 10,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.3,
     shadowRadius: 1,
     minWidth: "100%",
   },
+
   placeName: {
     fontSize: 16,
     fontWeight: "bold",
   },
   image: {
-    width: 100,
-    height: 100,
-    borderRadius: 5,
+    width: "100%",
+    height: "100%",
   },
   scrollView: {
     marginBottom: 10,
