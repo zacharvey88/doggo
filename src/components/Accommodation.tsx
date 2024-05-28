@@ -72,6 +72,7 @@ const AccommodationTab: React.FC<AccommodationTabProps> = ({ searchTerm }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+
     backgroundColor: "white",
     alignItems: "center",
   },
@@ -83,6 +84,7 @@ const styles = StyleSheet.create({
   list: {
     flex: 1,
     width: '100%',
+    
   },
 });
 
