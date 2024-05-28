@@ -80,11 +80,18 @@ export default function TripListSmall({user_id, setModalVisible, table} : {user_
           )}
         />
       )}
-      <Button
-        title={"Create New Trip"}
-        style={styles.button}
-        onPress={() => router.push('/add-trip')}
-      />
+      <View style={styles.buttonContainer}>
+        <Button
+          title={"Create New Trip"}
+          style={styles.button}
+          onPress={() => router.push('/add-trip')}
+        />
+        <Button
+          title={"Cancel"}
+          style={styles.button}
+          onPress={() => setModalVisible(false)}
+        />
+        </View>
     </View>
   );
 }
@@ -92,7 +99,7 @@ export default function TripListSmall({user_id, setModalVisible, table} : {user_
 const styles = StyleSheet.create({
   container: {
     padding: 20,
-    width: "90%",
+    width: "100%",
     borderRadius: 15,
   },
   loadingContainer: {
@@ -128,15 +135,23 @@ const styles = StyleSheet.create({
     color: "#3A90CD",
   },
   button: {
-    marginTop: 20,
-    height: 40,
-    fontSize: 16,
-    width: "100%",
+    alignItems:"center",
+    alignContent:"center",
+    padding:10,
+    width:"100%",
+    height: "100%",
+    backgroundColor:"rgb(1,140,220)",
+    borderRadius:20,
   },
   noTrips: {
     fontSize: 18,
     fontWeight: "bold",
     color: "#3A90CD",
     textAlign: "center",
+  },  
+  buttonContainer: {
+    flex:1,
+    flexDirection:"row",
+    alignItems:"center",
   },
 });

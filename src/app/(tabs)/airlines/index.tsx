@@ -5,13 +5,14 @@ import {
   ActivityIndicator,
   Pressable,
 } from "react-native";
-import { Text, View } from "@/src/components/Themed";
+import { View } from "@/src/components/Themed";
 import { supabase } from "@/src/lib/supabase";
 import { useEffect, useState } from "react";
 import { Database } from "@/src/lib/database.types";
 import { SearchBar } from "react-native-elements";
-import { Link, Stack } from "expo-router";
+import { Link } from "expo-router";
 import { SafeAreaView } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
 
 export default function TabAirlines() {
   const [airlines, setAirlines] = useState<
@@ -60,15 +61,20 @@ export default function TabAirlines() {
           </View>
         ) : (
           <>
-            <SearchBar
-              placeholder="Search airline pet policies"
-              onChangeText={(value) => setSearchTerm(value)}
-              value={searchTerm}
-              lightTheme
-              round
-              containerStyle={styles.searchContainer}
-              inputContainerStyle={styles.searchInput}
-            />
+              <SearchBar
+                placeholder="Search airline pet policies"
+                placeholderTextColor
+                onChangeText={(value) => setSearchTerm(value)}
+                value={searchTerm}
+                inputStyle={styles.inputText}
+                lightTheme
+                round
+                containerStyle={styles.searchContainer}
+                inputContainerStyle={styles.searchInput}
+                searchIcon={
+                  <Ionicons name="search-outline" style={styles.searchIcon} />
+                }
+              />
             <FlatList
               data={filteredAirlines}
               keyExtractor={(item) => item.airline_id.toString()}
@@ -95,7 +101,7 @@ export default function TabAirlines() {
                   }}
                   asChild
                 >
-                  <Pressable>
+                  <Pressable style={styles.itemContainer}>
                     <Image
                       source={{ uri: item.airline_logo_url }}
                       style={styles.image}
@@ -119,10 +125,8 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    width: '100%',
-    alignItems: "center",
-    justifyContent: "center",
-    padding: 10,
+    padding: 5,
+    paddingTop: 12,
   },
   loadingContainer: {
     flex: 1,
@@ -130,35 +134,49 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   image: {
-    width: 170,
     height: 100,
+    width: "100%",
     borderWidth: 1,
     borderColor: "#e0e0e0",
-    margin: 5,
   },
   searchContainer: {
     width: "100%",
     backgroundColor: "transparent",
     borderBottomColor: "transparent",
     borderTopColor: "transparent",
+    marginBottom: 10,
     shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
+    shadowOffset: { width: 0, height: 0 },
     shadowOpacity: 0.2,
     shadowRadius: 2,
-    marginBottom: 10,
+    marginHorizontal:3
   },
   searchInput: {
-    backgroundColor: "#e0e0e0",
+    backgroundColor: "#eee",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0.2,
+    shadowRadius: 2,
   },
-  loading: {
-    marginBottom: 30,
+  searchIcon: {
+    fontSize: 18,
+    color: "#5d5d5d",
+  },
+  inputText: {
+    color: "#5d5d5d",
   },
   flatListContent: {
-    justifyContent: "center",
-    alignItems: "center",
     paddingBottom: 20,
   },
   columnWrapper: {
-    justifyContent: "space-between",
+    justifyContent: "space-evenly",
+    gap: 5,
+  },
+  itemContainer: {
+    width: "45%",
+    marginBottom: 16,
+    alignItems: "center",
   },
 });
+
+export default TabAirlines;
