@@ -111,7 +111,7 @@ export default function TabTrips() {
           <TouchableOpacity
             // onPress={() => setLoginModalVisible(true)}
             style={styles.signInButton}
-            onPress={() => router.back()}
+            onPress={()=>router.push('/sign-in')}
           >
             <Text style={styles.btnTitle}>Sign in</Text>
           </TouchableOpacity>
