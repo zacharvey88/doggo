@@ -61,7 +61,8 @@ export default function TabAirlines() {
         ) : (
           <>
             <SearchBar
-              placeholder="Search airline pet policies"
+                placeholder="Search airline pet policies"
+                
               onChangeText={(value) => setSearchTerm(value)}
               value={searchTerm}
               lightTheme
@@ -119,7 +120,7 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    padding: 10,
+    padding: 15,
   },
   loadingContainer: {
     flex: 1,
@@ -128,7 +129,7 @@ const styles = StyleSheet.create({
   },
   image: {
     height: 100,
-    width: "100%", 
+    width: "100%",
     borderWidth: 1,
     borderColor: "#e0e0e0",
   },
@@ -144,7 +145,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   searchInput: {
-    backgroundColor: "#e0e0e0",
+    backgroundColor: "#eee",
   },
   flatListContent: {
     paddingBottom: 20,
@@ -153,7 +154,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   itemContainer: {
-    width: "48%", 
+    width: "48%",
     marginBottom: 16,
     alignItems: "center",
   },

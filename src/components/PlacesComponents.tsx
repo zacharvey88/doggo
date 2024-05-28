@@ -17,6 +17,7 @@ import vets from "@/data/vets.json";
 import parks from "@/data/parks.json";
 import shops from "@/data/shops.json";
 import { restaurantImages } from "@/data/restaurantImages";
+import { fetchPlaces } from "../api/googlePlacesApi";
 
 const PlacesComponent = ({ location, category }) => {
   const [places, setPlaces] = useState([]);
@@ -59,11 +60,45 @@ const PlacesComponent = ({ location, category }) => {
     fetchPlacesData();
   }, [location, category]);
 
+  //   useEffect(() => {
+  //     const fetchPlacesData = async () => {
+  //       setLoading(true);
+  //       let searchString = "";
+  //       switch (category) {
+  //         case "Restaurants":
+  //           searchString = `Pet-friendly restaurants in ${location}`;
+  //           break;
+  //         case "Vets":
+  //           searchString = `vets in ${location}`;
+  //           break;
+  //         case "Parks":
+  //           searchString = `Dog-friendly parks in ${location}`;
+  //           break;
+  //         case "Beaches":
+  //           searchString = `Dog-friendly beaches in ${location}`;
+  //           break;
+  //         case "Shops":
+  //           searchString = `Pet shops in ${location}`;
+  //           break;
+  //       }
+
+  //       try {
+  //         const data = await fetchPlaces(searchString);
+  // setPlaces(data.places || []);
+  //       } catch (error) {
+  //         console.error("Error fetching places data:", error);
+  //       } finally {
+  //         setLoading(false);
+  //       }
+  //     };
+
+  //     fetchPlacesData();
+  //   }, [location, category]);
+
   if (loading) {
     return (
       <View style={styles.loadingContainer}>
-          <ActivityIndicator size="large" color="gray" />
-    
+        <ActivityIndicator size="large" color="gray" />
       </View>
     );
   }
@@ -97,6 +132,8 @@ const PlacesComponent = ({ location, category }) => {
                   <Image
                     key={index}
                     source={{
+                      // uri: `https://places.googleapis.com/v1/${photo.name}/media?key=${process.env.EXPO_PUBLIC_API_KEY}&maxWidthPx=400`,
+
                       uri: restaurantImages[index],
                     }}
                     style={styles.image}
@@ -137,6 +174,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: "center",
+    padding: 5,
   },
   loadingContainer: {
     flex: 1,
@@ -156,7 +194,7 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.3,
     shadowRadius: 1,
-    minWidth:"100%"
+    minWidth: "100%",
   },
   placeName: {
     fontSize: 16,
@@ -177,7 +215,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   listContent: {
-    padding: 16,
     flexGrow: 1,
   },
 });
