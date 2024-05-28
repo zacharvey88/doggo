@@ -130,8 +130,7 @@ export default function TabTrips() {
           <Text style={styles.signInTitle}>Sign in to view your trips</Text>
 
           <TouchableOpacity
-            // onPress={() => setLoginModalVisible(true)}
-            style={styles.signInButton}
+            style={styles.button}
             onPress={()=>router.push('/sign-in')}
           >
             <Text style={styles.btnTitle}>Sign in</Text>
@@ -149,14 +148,25 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: "white",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  button: {
+    alignItems: "center",
+    paddingVertical: 12,
+    paddingHorizontal: 32,
+    borderRadius: 10,
+    backgroundColor: "#3990CD",
+    marginTop: 15,
+    width: "45%",
   },
   title: {
     fontSize: 18,
     fontWeight: "bold",
-    textAlign: 'center',
-    fontFamily: 'Futura',
-    color: '#3990CD'
+    textAlign: "center",
+    fontFamily: "Futura",
+    color: "#3990CD",
   },
   addTripButton: {
     position: "absolute",
@@ -214,14 +224,5 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontSize: 16,
     color: "white",
-  },
-  signInButton: {
-    alignItems: "center",
-    paddingVertical: 12,
-    paddingHorizontal: 32,
-    borderRadius: 10,
-    backgroundColor: "#3990CD",
-    marginTop: 15,
-    width: "45%",
   },
 });
