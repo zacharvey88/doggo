@@ -24,7 +24,7 @@ export default function TripCard({trip, setDeleteModalVisible, isDeleteModalVisi
 
   return (
     <View>
-      <Image source={{ uri: photos[0] }} style={styles.photo}></Image>
+      {/* <Image source={{ uri: photos[0] }} style={styles.photo}></Image> */}
       <View style={styles.trip}>
         <View style={{ backgroundColor: "#f9f9f9" }}>
           <Text style={styles.tripName}>{trip.title}</Text>

@@ -7,16 +7,16 @@ import {
   SafeAreaView,
   TextInput,
   TouchableOpacity,
+  Modal,
 } from "react-native";
 import { Button } from "react-native-elements";
 import { Pressable, Platform, Alert } from "react-native";
-import DateTimePicker from "@react-native-community/datetimepicker";
-import { Session } from "@supabase/supabase-js";
 import { supabase } from "../lib/supabase";
 import { useAuth } from "@/src/providers/AuthProvider";
+import DatePicker from "react-native-modern-datepicker"
+import { getToday, getFormatedDate } from "react-native-modern-datepicker";
 
 export default function TripForm({toggleCreateModal, onTripAdded}: {toggleCreateModal: any, onTripAdded: () => void}) {
-
   //form state
   const [accommodation, setAccommodation] = useState("");
   const [airline, setAirline] = useState("");
@@ -27,57 +27,38 @@ export default function TripForm({toggleCreateModal, onTripAdded}: {toggleCreate
   const [endDate, setEndDate] = useState("");
 
   //date picker state
-  const [showStartPicker, setShowStartPicker] = useState(false);
-  const [showEndPicker, setShowEndPicker] = useState(false);
+  const [startOpen, setStartOpen] = useState(false); // open and close the modal
+  const [endOpen, setEndOpen] = useState(false);
   const [errors, setErrors] = useState({});
+  const [date, setDate] = useState("");
   const [validForm, setValidForm] = useState(false);
-  const {session, loading, profile} = useAuth()
+  const { session, loading, profile } = useAuth();
 
   //date picker toggle
   const toggleStartDatePicker = () => {
-    setShowStartPicker(!showStartPicker);
+    setStartOpen(!startOpen);
   };
 
   const toggleEndDatePicker = () => {
-    setShowEndPicker(!showEndPicker);
+    setEndOpen(!endOpen);
   };
 
-  const onChangeStartDate = ({ type }, selectedDate) => {
-    if (type === "set") {
-      const currentStartDate = selectedDate || new Date();
-      setStartDate(currentStartDate);
+  const today = new Date();
+  const minDate = getFormatedDate(
+    today.setDate(today.getDate() + 1),
+    "YYYY/MM/DD"
+  );
+  const minDateForEndDate = minDate + 1;
 
-      if (Platform.OS === "android") {
-        toggleStartDatePicker();
-        setStartDate(currentStartDate.toDateString());
-      }
-    } else {
-      toggleStartDatePicker();
-    }
+
+  const onChangeStartDate = (propDate) => {
+
+    setStartDate(propDate);
   };
 
-  const onChangeEndDate = ({ type }, selectedDate) => {
-    if (type === "set") {
-      const currentEndDate = selectedDate || new Date();
-      setEndDate(currentEndDate);
-
-      if (Platform.OS === "android") {
-        toggleEndDatePicker();
-        setEndDate(currentEndDate.toDateString());
-      }
-    } else {
-      toggleEndDatePicker();
-    }
-  };
-
-  const confirmIOSStartDate = () => {
-    setStartDate(new Date().toDateString());
-    toggleStartDatePicker();
-  };
-
-  const confirmIOSEndDate = () => {
-    setEndDate(new Date().toDateString());
-    toggleEndDatePicker();
+  const onChangeEndDate = (propDate) => {
+ 
+    setEndDate(propDate);
   };
 
   // validate form
@@ -124,36 +105,15 @@ export default function TripForm({toggleCreateModal, onTripAdded}: {toggleCreate
       end_date: endDate,
       title: title,
     });
+
+    
     if (!error) {
       onTripAdded();
       toggleCreateModal();
     }
   };
 
-  // const submitForm = async () => {
-  //   const { data, error } = await supabase.from("trips").insert({
-  //     user_id: session?.user.id,
-  //     airline_id: airlineId, // sort this Sun Express 169
-  //     accommodation_id: accommodationId, //id Seaside Villa
-  //     start_date: startDate,
-  //     end_date: endDate,
-  //     title: title,
-  //   });
-  //   if (error && error.code === "42501") {
-  //     Alert.alert("Error", "You must be logged in to submit a review");
-  //   } else {
-  //     Alert.alert("Success!", "Review submitted.");
-  //   }
-  //     setAccommodation("");
-  //     setAirline("");
-  //     setStartDate("");
-  //     setEndDate("");
-  //     setTitle("");
-  //     setErrors({});
-  //     toggleCreateModal()
-  // };
-
-  const handleSubmit = () => {
+  const handleSubmit = () => {    
     if (validateForm()) {
       getAirlinesId();
       getAccommodationId();
@@ -161,149 +121,107 @@ export default function TripForm({toggleCreateModal, onTripAdded}: {toggleCreate
     }
   };
 
-  // return
-
   return (
     <SafeAreaView style={styles.container}>
       <Text style={styles.formTitle}>Create Your Trip</Text>
       <View>
-      <TextInput
-        style={styles.input}
-        placeholder="Enter Trip Title"
-        value={title}
-        onChangeText={setTitle}
-        autoCorrect={false}
-        autoCapitalize="words"
-      />
-      {errors.title ? (
-        <Text style={styles.errorstext}>{errors.title}</Text>
-      ) : null}
-      <TextInput
-        style={styles.input}
-        placeholder="Enter Accommodation Name"
-        value={accommodation}
-        onChangeText={setAccommodation}
-        autoCorrect={false}
-        autoCapitalize="none"
-      />
-      {errors.accommodation ? (
-        <Text style={styles.errorstext}>{errors.accommodation}</Text>
-      ) : null}
-
-      {showStartPicker && (
-        <DateTimePicker
-          mode="date"
-          display="spinner"
-          value={new Date()}
-          onChange={onChangeStartDate}
-          style={styles.datePicker}
-        />
-      )}
-
-      {showStartPicker && Platform.OS === "ios" && (
-        <View
-          style={{
-            flexDirection: "row",
-            justifyContent: "space-around",
-          }}
-        >
-          <TouchableOpacity
-            style={[
-              styles.button,
-              styles.pickerButton,
-              { backgroundColor: "#11182711" },
-            ]}
-            onPress={toggleStartDatePicker}
-          >
-            <Text style={[styles.buttonText, { color: "#075985" }]}>
-              Cancel
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[styles.button, styles.pickerButton]}
-            onPress={confirmIOSStartDate}
-          >
-            <Text style={[styles.buttonText]}>Confirm</Text>
-          </TouchableOpacity>
-        </View>
-      )}
-
-      <Pressable onPress={toggleStartDatePicker}>
         <TextInput
           style={styles.input}
-          placeholder="Enter Start Date"
-          value={startDate}
-          onChangeText={setStartDate}
-          editable={false}
+          placeholder="Enter Trip Title"
+          value={title}
+          onChangeText={setTitle}
+          autoCorrect={false}
+          autoCapitalize="words"
         />
-      </Pressable>
-
-      {errors.startDate ? (
-        <Text style={styles.errorstext}>{errors.startDate}</Text>
-      ) : null}
-
-      {showEndPicker && (
-        <DateTimePicker
-          mode="date"
-          display="spinner"
-          value={new Date()}
-          onChange={onChangeEndDate}
-          style={styles.datePicker}
-        />
-      )}
-
-      {showEndPicker && Platform.OS === "ios" && (
-        <View
-          style={{
-            flexDirection: "row",
-            justifyContent: "space-around",
-          }}
-        >
-          <TouchableOpacity
-            style={[
-              styles.button,
-              styles.pickerButton,
-              { backgroundColor: "#11182711" },
-            ]}
-            onPress={toggleEndDatePicker}
-          >
-            <Text style={[styles.buttonText, { color: "#075985" }]}>
-              Cancel
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[styles.button, styles.pickerButton]}
-            onPress={confirmIOSEndDate}
-          >
-            <Text style={[styles.buttonText]}>Confirm</Text>
-          </TouchableOpacity>
-        </View>
-      )}
-
-      <Pressable onPress={toggleEndDatePicker}>
+        {errors.title ? (
+          <Text style={styles.errorstext}>{errors.title}</Text>
+        ) : null}
         <TextInput
           style={styles.input}
-          placeholder="Enter End Date"
-          value={endDate}
-          onChangeText={setEndDate}
-          editable={false}
+          placeholder="Enter Accommodation Name"
+          value={accommodation}
+          onChangeText={setAccommodation}
+          autoCorrect={false}
+          autoCapitalize="none"
         />
-      </Pressable>
+        {errors.accommodation ? (
+          <Text style={styles.errorstext}>{errors.accommodation}</Text>
+        ) : null}
 
-      {errors.endDate ? (
-        <Text style={styles.errorstext}>{errors.endDate}</Text>
-      ) : null}
-      <TextInput
-        style={styles.input}
-        placeholder="Enter Airline Name"
-        value={airline}
-        onChangeText={setAirline}
-        autoCorrect={false}
-        autoCapitalize="none"
-      />
-      {errors.airline ? (
-        <Text style={styles.errorstext}>{errors.airline}</Text>
-      ) : null}
+        <Pressable onPress={toggleStartDatePicker}>
+          <TextInput
+            style={styles.input}
+            placeholder="Enter Start Date"
+            value={startDate}
+            onChangeText={setStartDate}
+            editable={false}
+          />
+        </Pressable>
+
+        <Modal animationType="slide" transparent={true} visible={startOpen}>
+          <View style={styles.centeredView}>
+            <View style={styles.modalView}>
+              <DatePicker
+                mode="calendar"
+                minimumDate={minDate}
+                selected={startDate}
+                onDateChange={onChangeStartDate}
+                style={styles.datePicker}
+              />
+
+              <Pressable onPress={toggleStartDatePicker}>
+                <Text>Close</Text>
+              </Pressable>
+            </View>
+          </View>
+        </Modal>
+
+        {errors.startDate ? (
+          <Text style={styles.errorstext}>{errors.startDate}</Text>
+        ) : null}
+
+        <Pressable onPress={toggleEndDatePicker}>
+          <TextInput
+            style={styles.input}
+            placeholder="Enter End Date"
+            value={endDate}
+            onChangeText={setEndDate}
+            editable={false}
+          />
+        </Pressable>
+
+        <Modal animationType="slide" transparent={true} visible={endOpen}>
+          <View style={styles.centeredView}>
+            <View style={styles.modalView}>
+              <DatePicker
+                mode="calendar"
+                selected={minDateForEndDate}
+                minimumDate={minDateForEndDate}
+                onDateChange={onChangeEndDate}
+                style={styles.datePicker}
+              />
+
+              <Pressable onPress={toggleEndDatePicker}>
+                <Text>Close</Text>
+              </Pressable>
+            </View>
+          </View>
+        </Modal>
+
+        {errors.endDate ? (
+          <Text style={styles.errorstext}>{errors.endDate}</Text>
+        ) : null}
+        <TextInput
+          style={styles.input}
+          placeholder="Enter Airline Name"
+          value={airline}
+          onChangeText={setAirline}
+          autoCorrect={false}
+          autoCapitalize="none"
+        />
+        {errors.airline ? (
+          <Text style={styles.errorstext}>{errors.airline}</Text>
+        ) : null}
       </View>
       <View style={styles.buttonContainer}>
         <Button title="Save" onPress={handleSubmit} />
@@ -313,7 +231,30 @@ export default function TripForm({toggleCreateModal, onTripAdded}: {toggleCreate
   );
 };
 
-  const styles = StyleSheet.create({
+const styles = StyleSheet.create({
+  centeredView: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 22,
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: 'white',
+    borderRadius: 20,
+    width: '90%',
+    height: '50%',
+    padding: 35,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5
+  },
     container: {
       backgroundColor: "#fff",
       justifyContent: 'space-between',
