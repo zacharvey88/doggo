@@ -54,9 +54,10 @@ export default function TabTrips() {
       {session && session.user ? (
         <>
           <View style={styles.container}>
-            <Pressable style={styles.addTripButton} onPress={toggleCreateModal}>
-              <AntDesign name="pluscircle" size={40} color="rgb(1,140,220)" />
-            </Pressable>
+              <Pressable style={styles.addTripButton} onPress={()=>{router.push('/add-trip')}} >
+                <AntDesign name="pluscircle" size={40} color="rgb(1,140,220)" />
+              </Pressable>
+            <Text style={styles.title}>Your Saved Trips</Text>
             <TripList
               user_id={session.user.id}
               setDeleteModalVisible={setDeleteModalVisible}
@@ -110,7 +111,7 @@ export default function TabTrips() {
           <TouchableOpacity
             // onPress={() => setLoginModalVisible(true)}
             style={styles.signInButton}
-            onPress={() => router.push("/sign-in")}
+            onPress={() => router.back()}
           >
             <Text style={styles.btnTitle}>Sign in</Text>
           </TouchableOpacity>
@@ -133,6 +134,9 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 18,
     fontWeight: "bold",
+    textAlign: 'center',
+    fontFamily: 'Futura',
+    color: '#3990CD'
   },
   addTripButton: {
     position: "absolute",

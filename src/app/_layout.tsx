@@ -77,7 +77,18 @@ function RootLayoutNav() {
               headerShown: false,
             }}
           />
+
+          <Stack.Screen
+            name="add-trip"
+            options={{
+              headerTitle: "",
+              headerBackTitle: "Back",
+              presentation: "modal",
+              headerShown: false,
+            }}
+          />
         </Stack>
+        
       </AuthProvider>
     </ThemeProvider>
   );
