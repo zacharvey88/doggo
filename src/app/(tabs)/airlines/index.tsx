@@ -5,12 +5,12 @@ import {
   ActivityIndicator,
   Pressable,
 } from "react-native";
-import { Text, View } from "@/src/components/Themed";
+import { View } from "@/src/components/Themed";
 import { supabase } from "@/src/lib/supabase";
 import { useEffect, useState } from "react";
 import { Database } from "@/src/lib/database.types";
 import { SearchBar } from "react-native-elements";
-import { Link, Stack } from "expo-router";
+import { Link } from "expo-router";
 import { SafeAreaView } from "react-native";
 
 export default function TabAirlines() {
@@ -95,7 +95,7 @@ export default function TabAirlines() {
                   }}
                   asChild
                 >
-                  <Pressable>
+                  <Pressable style={styles.itemContainer}>
                     <Image
                       source={{ uri: item.airline_logo_url }}
                       style={styles.image}
@@ -119,8 +119,6 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
     padding: 10,
   },
   loadingContainer: {
@@ -129,11 +127,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   image: {
-    width: 170,
     height: 100,
+    width: "100%", 
     borderWidth: 1,
     borderColor: "#e0e0e0",
-    margin: 5,
   },
   searchContainer: {
     width: "100%",
@@ -149,15 +146,17 @@ const styles = StyleSheet.create({
   searchInput: {
     backgroundColor: "#e0e0e0",
   },
-  loading: {
-    marginBottom: 30,
-  },
   flatListContent: {
-    justifyContent: "center",
-    alignItems: "center",
     paddingBottom: 20,
   },
   columnWrapper: {
     justifyContent: "space-between",
   },
+  itemContainer: {
+    width: "48%", 
+    marginBottom: 16,
+    alignItems: "center",
+  },
 });
+
+export default TabAirlines;
