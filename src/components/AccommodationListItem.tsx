@@ -64,6 +64,7 @@ const AccommodationListItem: React.FC<AccommodationListItemProps> = ({accommodat
             })
           }
         >
+
       <View style={styles.imageContainer}>
         {accommodation.photos ? (
           <Image
