@@ -89,7 +89,7 @@ export default function UserReviewsList({
           </Modal>
           <FlatList
             data={filteredReviews}
-            scrollEnabled={false}
+            // scrollEnabled={false}
             renderItem={({ item }) => (
               <UserReviewCard
                 review={item}
