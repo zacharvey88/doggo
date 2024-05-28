@@ -54,7 +54,7 @@ export default function UserReviewCard({ review, reviews, setFilteredReviews, fi
 
 const styles = StyleSheet.create({
   container: {  
-    marginBottom: 16,
+    marginBottom: 14,
     padding: 16,
     backgroundColor: '#F9F9F9',
     shadowColor: '#000',

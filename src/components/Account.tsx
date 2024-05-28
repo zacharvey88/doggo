@@ -9,7 +9,7 @@ import {
   TouchableOpacity,
   ActivityIndicator,
   ScrollView,
-  Pressable
+  Pressable,
 } from "react-native";
 import { Session } from "@supabase/supabase-js";
 import { Link, useNavigation } from "expo-router";
@@ -27,11 +27,9 @@ export default function Account({ session }: { session: Session }) {
   const [email, setEmail] = useState("");
   const navigation = useNavigation();
   const defaultImage = "https://i.sstatic.net/l60Hf.png";
-  const [table, setTable] = useState('reviews_airlines')
-  
+  const [table, setTable] = useState("reviews_airlines");
 
   const router = useRouter();
-
 
   const fetchProfile = async () => {
     try {
@@ -101,8 +99,8 @@ export default function Account({ session }: { session: Session }) {
   };
 
   return (
-    <SafeAreaView style={styles.safeArea}>
-      <View style={styles.container}>
+    <SafeAreaView style={styles.safeArea} edges={["right", "left", "top"]}>
+      <ScrollView style={styles.container}>
         {loading ? (
           <View style={styles.loadingContainer}>
             <ActivityIndicator size="large" color="gray" />
@@ -111,10 +109,13 @@ export default function Account({ session }: { session: Session }) {
           <>
             <View style={styles.badge}>
               <TouchableOpacity
-                  style={styles.signOutButton}
-                  onPress={handleSignOut}
-                >
-                  <MaterialCommunityIcons style={styles.icon} name="logout"></MaterialCommunityIcons>
+                style={styles.signOutButton}
+                onPress={handleSignOut}
+              >
+                <MaterialCommunityIcons
+                  style={styles.icon}
+                  name="logout"
+                ></MaterialCommunityIcons>
               </TouchableOpacity>
               <Image
                 source={{
@@ -136,12 +137,12 @@ export default function Account({ session }: { session: Session }) {
                 >
                   Edit Profile
                 </Link>
-                  <Pressable
-                  onPress={() => {router.push('/my-accommodation')}}>
-                    <Text>
-                      Manage Properties
-                      
-                  </Text>
+                <Pressable
+                  onPress={() => {
+                    router.push("/my-accommodation");
+                  }}
+                >
+                  <Text style={styles.textButton}>Manage Properties</Text>
                 </Pressable>
               </View>
             </View>
@@ -167,16 +168,9 @@ export default function Account({ session }: { session: Session }) {
             <View style={styles.listArea}>
               <UserReviewsList id={session?.user.id} table={table} />
             </View>
-
-            {/* <TouchableOpacity
-              style={styles.signOutButton}
-              onPress={handleSignOut}
-            >
-              <Text style={styles.signOutButtonText}>Sign Out</Text>
-            </TouchableOpacity> */}
           </>
         )}
-      </View>
+      </ScrollView>
     </SafeAreaView>
   );
 }
@@ -185,8 +179,12 @@ const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
     backgroundColor: "white",
-    justifyContent:"space-between",
+    justifyContent: "space-between",
     alignItems: "center",
+  },
+  container: {
+    flex: 1,
+    width: "100%",
   },
   loadingContainer: {
     flex: 1,
@@ -196,7 +194,7 @@ const styles = StyleSheet.create({
   badge: {
     alignItems: "center",
     gap: 5,
-    marginTop:10,
+    marginTop: 10,
   },
   image: {
     width: 150,
@@ -216,7 +214,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontSize: 22,
     marginBottom: 5,
-    marginTop:10,
+    marginTop: 10,
     color: "#333",
   },
   username: {
@@ -230,40 +228,40 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   signOutButton: {
-    position: 'absolute',
+    position: "absolute",
     top: 15,
     right: 25,
     zIndex: 1,
   },
   icon: {
-    color: '#636363',
-    fontSize: 30
+    color: "#636363",
+    fontSize: 30,
   },
   signOutButtonText: {
     fontSize: 50,
   },
   tabs: {
     flexDirection: "row",
-    alignSelf: 'center',
+    alignSelf: "center",
     gap: 10,
     padding: 10,
-    width: '95%'
+    width: "95%",
   },
   tab: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#3A90CD',
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#3A90CD",
     padding: 5,
-    borderRadius: 5
+    borderRadius: 5,
   },
   tabText: {
-    color: 'white',
-    textAlign: 'center',
-    fontWeight: '600'
+    color: "white",
+    textAlign: "center",
+    fontWeight: "600",
   },
   links: {
-    flexDirection: 'row',
-    gap: 10
-  }
+    flexDirection: "row",
+    gap: 10,
+  },
 });

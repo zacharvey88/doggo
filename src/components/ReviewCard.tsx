@@ -78,6 +78,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.3,
     shadowRadius: 1,
     borderRadius: 10,
+    width:"100%"
   },
   title: {
     fontSize: 20,
