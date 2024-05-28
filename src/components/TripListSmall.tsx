@@ -6,15 +6,16 @@ import { StyleSheet, FlatList, Pressable, Alert } from "react-native";
 import dateFormat from "dateformat";
 import { FontAwesome6} from "@expo/vector-icons";
 import { Button } from "react-native-elements";
-import { Navigator } from "expo-router";
+import { useRouter } from "expo-router";
 import { ActivityIndicator } from "react-native";
-import { useLocalSearchParams } from "expo-router";
+import { useLocalSearchParams,  } from "expo-router";
 
 export default function TripListSmall({user_id, setModalVisible, table} : {user_id: string, setModalVisible: any, table: string}) {
 
   const [trips, setTrips] = useState<Database['public']['Tables']['trips']['Row'][]>([]);
   const [loading, setLoading] = useState(false)
   const { id } = useLocalSearchParams();
+  const router = useRouter();
 
   useEffect(()=>{
     getTrips()
@@ -79,11 +80,18 @@ export default function TripListSmall({user_id, setModalVisible, table} : {user_
           )}
         />
       )}
-      <Button
-        title={"Create New Trip"}
-        style={styles.button}
-        onPress={() => Navigator.push("trips")}
-      />
+      <View style={styles.buttonContainer}>
+        <Button
+          title={"Create New Trip"}
+          style={styles.button}
+          onPress={() => router.push('/add-trip')}
+        />
+        <Button
+          title={"Cancel"}
+          style={styles.button}
+          onPress={() => setModalVisible(false)}
+        />
+        </View>
     </View>
   );
 }
@@ -91,7 +99,7 @@ export default function TripListSmall({user_id, setModalVisible, table} : {user_
 const styles = StyleSheet.create({
   container: {
     padding: 20,
-    width: "90%",
+    width: "100%",
     borderRadius: 15,
   },
   loadingContainer: {
@@ -127,15 +135,23 @@ const styles = StyleSheet.create({
     color: "#3A90CD",
   },
   button: {
-    marginTop: 20,
-    height: 40,
-    fontSize: 16,
-    width: "100%",
+    alignItems:"center",
+    alignContent:"center",
+    padding:10,
+    width:"100%",
+    height: "100%",
+    backgroundColor:"rgb(1,140,220)",
+    borderRadius:20,
   },
   noTrips: {
     fontSize: 18,
     fontWeight: "bold",
     color: "#3A90CD",
     textAlign: "center",
+  },  
+  buttonContainer: {
+    flex:1,
+    flexDirection:"row",
+    alignItems:"center",
   },
 });

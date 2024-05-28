@@ -74,8 +74,6 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "white",
     alignItems: "center",
-    paddingTop: 20,
-    paddingHorizontal: 10,
   },
   loadingContainer: {
     flex: 1,

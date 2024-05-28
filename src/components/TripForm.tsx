@@ -15,6 +15,7 @@ import { supabase } from "../lib/supabase";
 import { useAuth } from "@/src/providers/AuthProvider";
 import DatePicker from "react-native-modern-datepicker"
 import { getToday, getFormatedDate } from "react-native-modern-datepicker";
+import { useRouter } from "expo-router";
 
 export default function TripForm({toggleCreateModal, onTripAdded}: {toggleCreateModal: any, onTripAdded: () => void}) {
   //form state
@@ -33,6 +34,7 @@ export default function TripForm({toggleCreateModal, onTripAdded}: {toggleCreate
   const [date, setDate] = useState("");
   const [validForm, setValidForm] = useState(false);
   const { session, loading, profile } = useAuth();
+  const router = useRouter();
 
   //date picker toggle
   const toggleStartDatePicker = () => {
@@ -98,11 +100,11 @@ export default function TripForm({toggleCreateModal, onTripAdded}: {toggleCreate
 
       
       }
+
     }
 
   return (
     <SafeAreaView style={styles.container}>
-      <Text style={styles.formTitle}>Create Your Trip</Text>
       <View>
         <TextInput
           style={styles.input}
@@ -182,8 +184,8 @@ export default function TripForm({toggleCreateModal, onTripAdded}: {toggleCreate
 
       </View>
       <View style={styles.buttonContainer}>
-        <Button title="Save" onPress={handleSubmit} />
-        <Button title="Cancel" onPress={toggleCreateModal} />
+        <Button style={styles.button} title="Create Your Trip" onPress={handleSubmit} />
+        {/* <Button style={styles.button} title="Cancel" onPress={() => router.push("/trips")} /> */}
       </View>
     </SafeAreaView>
   );
@@ -224,6 +226,7 @@ const styles = StyleSheet.create({
       marginVertical: 20
     },
     input: {
+      width: 300,
       marginHorizontal: 15,
       marginTop: 15,
       height: 35,
@@ -240,15 +243,7 @@ const styles = StyleSheet.create({
       marginVertical: 5,
       marginLeft: 20
     },
-    button: {
-      height: 50,
-      justifyContent: "center",
-      alignItems: "center",
-      borderRadius: 50,
-      marginTop: 30,
-      marginBottom: 15,
-      backgroundColor: "#075985",
-    },
+
     buttonText: {
       fontSize: 14,
       fontWeight: "500",
@@ -262,9 +257,11 @@ const styles = StyleSheet.create({
       paddingHorizontal: 20,
     },
     formTitle: {
-      fontSize: 16,
+      fontSize: 20,
       textAlign: 'center',
       marginTop: 10,
+      fontFamily: 'Futura',
+      marginBottom: 20
     }
   });
 
