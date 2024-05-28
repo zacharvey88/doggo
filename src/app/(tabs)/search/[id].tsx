@@ -10,6 +10,7 @@ import { useAuth } from "@/src/providers/AuthProvider";
 import ReviewForm from "@/src/components/ReviewForm";
 import { FontAwesome } from "@expo/vector-icons";
 import Colors from "@/src/constants/Colors";
+import ReviewsList from "@/src/components/ReviewsList";
 
 export default function Accommodation() {
 
@@ -141,13 +142,6 @@ export default function Accommodation() {
               }}
             />
 
-            <Button
-              title="See Reviews"
-              titleStyle={{ fontSize: 14 }}
-              style={styles.button}
-              onPress={() => router.push(`/search/${id}/reviews`)}
-            />
-
             <Button 
               title="Add Review" 
               titleStyle={{ fontSize: 14 }}
@@ -162,8 +156,8 @@ export default function Accommodation() {
               onPress={toggleTripModal}
             />
           </View>
-
-          
+          <Text style={styles.title}>Reviews</Text>
+          <ReviewsList id={id} table='reviews_accommodation'/>
           </View>
           </ScrollView>
       </View>
@@ -195,7 +189,9 @@ const styles = StyleSheet.create({
     buttonContainer: {
       flexDirection: 'row',
       marginTop: 5,
-      gap: 2.5
+      gap: 5,
+      marginBottom: 15,
+      justifyContent: 'center',
     },
     header: {
       fontSize: 18,
@@ -231,12 +227,12 @@ const styles = StyleSheet.create({
       margin: 0,
     },
     modalReview: {
-      flex: 1,
       justifyContent: 'center',
       alignItems: 'center',
       color: '#000',
       margin: 0,
       borderRadius: 40,
+      height: '43%',
     },
     container: {
       flex: 1,
