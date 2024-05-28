@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
   ActivityIndicator,
   ScrollView,
+  Pressable
 } from "react-native";
 import { Session } from "@supabase/supabase-js";
 import { Link, useNavigation } from "expo-router";
@@ -24,6 +25,8 @@ export default function Account({ session }: { session: Session }) {
   const [email, setEmail] = useState("");
   const navigation = useNavigation();
   const defaultImage = "https://i.sstatic.net/l60Hf.png";
+  const [table, setTable] = useState('reviews_airlines')
+
 
   const fetchProfile = async () => {
     try {
@@ -94,7 +97,7 @@ export default function Account({ session }: { session: Session }) {
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <ScrollView contentContainerStyle={styles.scrollViewContent}>
+      <View style={styles.container}>
         {loading ? (
           <View style={styles.loadingContainer}>
             <ActivityIndicator size="large" color="gray" />
@@ -112,20 +115,30 @@ export default function Account({ session }: { session: Session }) {
               />
               <Text style={styles.fullName}>{fullName}</Text>
               <Text style={styles.username}>{username}</Text>
-
-              <Link
-                style={styles.textButton}
-                href={{
-                  pathname: "/profile/update",
-                  params: { username, avatarUrl, fullName, email },
-                }}
-              >
-                Edit Profile
-              </Link>
+              <View style={styles.links}>
+                <Link
+                  style={styles.textButton}
+                  href={{
+                    pathname: "/profile/update",
+                    params: { username, avatarUrl, fullName, email },
+                  }}
+                >
+                  Edit Profile
+                </Link>
+                <Link
+                  style={styles.textButton} 
+                  href={{pathname: "/profile/accommodation"}}>
+                  Manage Properties
+                </Link>
+              </View>
             </View>
-
+              <View style={styles.tabs}>
+                <Pressable onPress={()=>{setTable('reviews_airlines')}} style={styles.tab}><Text style={styles.tabText}>Airline Reviews</Text></Pressable>
+                <Pressable onPress={()=>{setTable('reviews_accommodation')}} style={styles.tab}><Text style={styles.tabText}>Property Reviews</Text></Pressable>
+                {/* <Pressable onPress={()=>{setTable('reviews_airlines')}} style={styles.tab}><Text style={styles.tabText}>Property Listings</Text></Pressable> */}
+              </View>
             <View style={styles.listArea}>
-              <UserReviewsList id={session?.user.id} table="reviews_airlines" />
+              <UserReviewsList id={session?.user.id} table={table} />
             </View>
 
             <TouchableOpacity
@@ -136,7 +149,7 @@ export default function Account({ session }: { session: Session }) {
             </TouchableOpacity>
           </>
         )}
-      </ScrollView>
+      </View>
     </SafeAreaView>
   );
 }
@@ -145,18 +158,13 @@ const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
     backgroundColor: "white",
-    justifyContent:"space-between"
+    justifyContent:"space-between",
+    alignItems: "center",
   },
   loadingContainer: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-  },
-  scrollViewContent: {
-    flexGrow: 1,
-    justifyContent: "space-between",
-    alignItems: "center",
-    padding: 20,
   },
   badge: {
     alignItems: "center",
@@ -187,14 +195,15 @@ const styles = StyleSheet.create({
   username: {
     color: "gray",
     fontSize: 18,
-    marginBottom: 20,
   },
   listArea: {
-    width: "100%",
+    flexGrow: 1,
+    flexShrink: 1,
     marginBottom: 20,
     paddingHorizontal: 20,
   },
   signOutButton: {
+    alignSelf: 'center',
     borderColor: "gray",
     borderWidth: 1,
     paddingHorizontal: 15,
@@ -202,10 +211,34 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     alignItems: "center",
     justifyContent: "center",
-    marginBottom: 20,
+    width: 100,
   },
   signOutButtonText: {
     fontSize: 16,
     color: "gray",
   },
+  tabs: {
+    flexDirection: "row",
+    alignSelf: 'center',
+    gap: 10,
+    padding: 10,
+    width: '95%'
+  },
+  tab: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#3A90CD',
+    padding: 5,
+    borderRadius: 5
+  },
+  tabText: {
+    color: 'white',
+    textAlign: 'center',
+    fontWeight: '600'
+  },
+  links: {
+    flexDirection: 'row',
+    gap: 10
+  }
 });

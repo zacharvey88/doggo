@@ -33,7 +33,7 @@ const router = useRouter()
           </TouchableOpacity>
         </View>
       )}
-   
+  
     </>
   );
 };
@@ -43,7 +43,6 @@ export default ProfileScreen;
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: "white",
   },
   container: {
     justifyContent: "center",

@@ -7,7 +7,7 @@ import ReviewForm from "@/src/components/ReviewForm";
 import { useAuth } from "@/src/providers/AuthProvider";
 import UserReviewCard from './UserReviewCard'
 
-export default function UserReviewsList({ id}: { id: number}) {
+export default function UserReviewsList({ id, table}: { id: number, table: string}) {
   const [reviews, setReviews] = useState([]);
   const [filteredReviews, setFilteredReviews] = useState(reviews);
   const [loading, setLoading] = useState(false);
@@ -15,7 +15,6 @@ export default function UserReviewsList({ id}: { id: number}) {
   const [existingReviewText, setExistingReviewText] = useState('')
   const [existingRating, setExistingRating] = useState(0)
   const {session, profile} = useAuth()
-  const [table, setTable] = useState('reviews_airlines')
 
   useEffect(() => {
     getReviews();   
@@ -69,11 +68,6 @@ export default function UserReviewsList({ id}: { id: number}) {
               />
             </View>
             </Modal>
-        <View style={styles.tabs}>
-          <Pressable onPress={()=>{setTable('reviews_airlines')}} style={styles.tab}><Text style={styles.tabText}>Airline Reviews</Text></Pressable>
-          <Pressable onPress={()=>{setTable('reviews_accommodation')}} style={styles.tab}><Text style={styles.tabText}>Property Reviews</Text></Pressable>
-          <Pressable onPress={()=>{setTable('reviews_airlines')}} style={styles.tab}><Text style={styles.tabText}>Property Listings</Text></Pressable>
-        </View>
         <FlatList 
           data={filteredReviews} 
           renderItem={({ item }) => <UserReviewCard 
@@ -123,84 +117,4 @@ const styles = StyleSheet.create({
     margin: 0,
     borderRadius: 40,
   },
-  tabs: {
-    flexDirection: "row",
-    gap: 10,
-    padding: 10,
-  },
-  tab: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#3A90CD',
-    padding: 5,
-    borderTopLeftRadius: 10,
-    borderTopRightRadius: 10,
-  },
-  tabText: {
-    color: 'white',
-    textAlign: 'center',
-    fontWeight: '600'
-  }
 })
-
-
-
-// import { useEffect, useState } from "react"
-// import { View, Text, StyleSheet, FlatList } from "react-native"
-// import { supabase } from "../lib/supabase"
-// import { Database } from "../lib/database.types"
-// import { ActivityIndicator } from "react-native"
-// import ReviewCard from "./ReviewCard"
-
-// export default function UserReviewsList({id}) {
-
-//   const [loading, setLoading] = useState(false)
-//   const [userReviews, setUserReviews] = useState<Database['public']['Tables']['reviews_airlines']['Row'][]>([]);
-
-//   useEffect(()=>{
-//     getUserReviews()
-//   },[])
-
-//   async function getUserReviews() {
-//     setLoading(true);
-//     const { data, error } = await supabase
-//       .from('reviews_airlines')
-//       .select('*')
-//       .eq('user_id', id)
-//       .order('created_at', { ascending: false });
-//     if (data) {
-//       setUserReviews(data); 
-//       console.log(data);
-//     }
-//     setLoading(false);    
-//   }
-
-//   return (
-//     <View style={styles.container}>
-//       {loading ? (
-//         <>
-//           <ActivityIndicator style={styles.loading} />
-//           <Text>Loading</Text>
-//         </>
-//       ) : (
-//         <FlatList 
-//           data={userReviews} 
-//           // renderItem={({ item }) => <ReviewCard review={item}/>} 
-//           contentContainerStyle={{ padding: 10 }}
-//           showsVerticalScrollIndicator={false}
-//         />
-//       )}
-//     </View>
-//   )
-// }
-
-// const styles = StyleSheet.create({
-//   container: {
-//     flex : 1,
-//     alignItems: 'center',
-//   },
-//   loading: {
-//     marginBottom: 30
-//   }
-// })
