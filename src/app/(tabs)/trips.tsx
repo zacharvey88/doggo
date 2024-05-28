@@ -147,7 +147,7 @@ export default function TabTrips() {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: "white",
+    backgroundColor: "#fff",
   },
   container: {
     flex: 1,
@@ -156,9 +156,9 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 18,
     fontWeight: "bold",
-    textAlign: 'center',
-    fontFamily: 'Futura',
-    color: '#3990CD'
+    textAlign: "center",
+    fontFamily: "Futura",
+    color: "#3990CD",
   },
   addTripButton: {
     position: "absolute",
