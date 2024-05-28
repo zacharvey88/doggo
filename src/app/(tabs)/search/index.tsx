@@ -13,7 +13,7 @@ import { FontAwesome6 } from "@expo/vector-icons";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 import AccommodationTab from "@/src/components/Accommodation";
 import PlacesComponent from "@/src/components/PlacesComponents";
-
+import { Ionicons } from "@expo/vector-icons";
 export default function TabSearch() {
   const [loading, setLoading] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
@@ -38,7 +38,7 @@ export default function TabSearch() {
             <View style={styles.searchContainer}>
               <GooglePlacesAutocomplete
                 fetchDetails={true}
-                placeholder="Where do you want to go?"
+                placeholder="Enter a city"
                 onPress={(data, details = null) => {
                   setSearchTerm(data.description);
                 }}
@@ -52,7 +52,13 @@ export default function TabSearch() {
                   listView: styles.listView,
                   textInputContainer: styles.textInputContainer,
                   textInput: styles.textInput,
+                  
                 }}
+                renderLeftButton={() => (
+                  <View style={styles.leftIconContainer}>
+                    <Ionicons name="search-outline" style={styles.searchIcon} />
+                  </View>
+                )}
               />
             </View>
             <ScrollView
@@ -114,7 +120,7 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     alignItems: "center",
     paddingTop: 20,
-    paddingHorizontal: 10,
+    paddingHorizontal: 15,
   },
   loadingContainer: {
     flex: 1,
@@ -122,16 +128,33 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   searchContainer: {
-    width: "95%",
-    marginBottom: 20,
+    width: "100%",
+    backgroundColor: "transparent",
+    borderBottomColor: "transparent",
+    borderTopColor: "transparent",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 2,
+    marginBottom: 15,
     zIndex: 2,
+    paddingHorizontal: 5,
+  
+  },
+  leftIconContainer: {
+    position: "absolute",
+    top:17,
+    left: 10,
+    zIndex: 1,
   },
   autocompleteContainer: {
     width: "100%",
+    zIndex: 2,
+    alignSelf: "center",
   },
   listView: {
     position: "absolute",
-    top: 40,
+    top: 50,
     backgroundColor: "white",
     borderRadius: 5,
     elevation: 5,
@@ -143,29 +166,30 @@ const styles = StyleSheet.create({
     backgroundColor: "transparent",
     padding: 0,
     margin: 0,
+    flexDirection: "row",
   },
   textInput: {
-    marginLeft: 0,
-    marginRight: 0,
-    height: 50,
+    height: 48,
     color: "#5d5d5d",
     fontSize: 18,
-    backgroundColor: "#FFFFFF",
-    borderRadius: 5,
-    borderColor: "#dcdcdc",
-    borderWidth: 1,
-    paddingHorizontal: 10,
+    backgroundColor: "#eee",
+    borderRadius: 15,
+    paddingHorizontal: 15,
+    paddingLeft: 40,
+    alignContent: "center",
+    justifyContent:"center",
     shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
+    shadowOffset: { width: 0, height: 0 },
     shadowOpacity: 0.2,
-    shadowRadius: 2,
+    shadowRadius: 0,
   },
   scrollView: {
-    padding: 10,
+    padding: 8,
     maxHeight: 100,
   },
   scrollViewContent: {
     gap: 10,
+    zIndex: 1,
   },
   iconContainer: {
     flexDirection: "row",
@@ -180,6 +204,7 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
+    zIndex: 1,
   },
   icon: {
     fontSize: 20,
@@ -192,9 +217,14 @@ const styles = StyleSheet.create({
     shadowColor: "#2A99D0",
     borderWidth: 2,
     borderColor: "#2A99D0",
+    zIndex: 1,
   },
   selectedIcon: {
     color: "#FFFFFF",
+  },
+  searchIcon: {
+    fontSize: 15,
+    color: "#5d5d5d",
   },
   selectedText: {
     color: "#FFFFFF",
@@ -206,3 +236,4 @@ const styles = StyleSheet.create({
   },
 });
 
+export default TabSearch;

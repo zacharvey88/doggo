@@ -49,6 +49,7 @@ const PlaceDetailsScreen = () => {
                 key={index}
                 source={{
                   uri: restaurantImages[index],
+                  // uri: `https://places.googleapis.com/v1/${photo.name}/media?key=${process.env.EXPO_PUBLIC_API_KEY}&maxWidthPx=400`,
                 }}
                 style={styles.image}
               />
