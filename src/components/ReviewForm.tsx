@@ -88,12 +88,20 @@ export default function ReviewForm({id, setModalVisible, session, edit, existing
 
     >
     </TextInput>
-      <Button 
-        style={styles.btn}
-        title="Submit"  
-        titleStyle={styles.buttonTitle}
-        onPress={edit ? handleEditReview : handleAddReview}
-      />
+      <View style={styles.buttonContainer}>
+        <Button 
+          style={styles.btn}
+          title="Submit"  
+          titleStyle={styles.buttonTitle}
+          onPress={edit ? handleEditReview : handleAddReview}
+          />
+        <Button
+          style={styles.btn}
+          title="Cancel"  
+          titleStyle={styles.buttonTitle}
+          onPress={()=>{setModalVisible(false)}}
+          />
+      </View>
     </View>
   )
 }
@@ -122,9 +130,13 @@ const styles = StyleSheet.create({
   btn: {
     margin: 10,
     width:  80,
-    height: 40
+    height: 40,
   },
   buttonTitle: {
     fontSize: 14
-  }
+  },
+  buttonContainer: {
+    flex:1,
+    flexDirection:"row",
+  },
 })
