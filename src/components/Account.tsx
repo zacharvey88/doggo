@@ -17,6 +17,7 @@ import Colors from "../constants/Colors";
 import UserReviewsList from "./UserReviewsList";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { useRouter } from "expo-router";
 
 export default function Account({ session }: { session: Session }) {
   const [loading, setLoading] = useState(true);
@@ -28,6 +29,8 @@ export default function Account({ session }: { session: Session }) {
   const defaultImage = "https://i.sstatic.net/l60Hf.png";
   const [table, setTable] = useState('reviews_airlines')
   
+
+  const router = useRouter();
 
 
   const fetchProfile = async () => {
@@ -133,18 +136,34 @@ export default function Account({ session }: { session: Session }) {
                 >
                   Edit Profile
                 </Link>
-                <Link
-                  style={styles.textButton} 
-                  href={{pathname: "/profile/accommodation"}}>
-                  Manage Properties
-                </Link>
+                  <Pressable
+                  onPress={() => {router.push('/my-accommodation')}}>
+                    <Text>
+                      Manage Properties
+                      
+                  </Text>
+                </Pressable>
               </View>
             </View>
-              <View style={styles.tabs}>
-                <Pressable onPress={()=>{setTable('reviews_airlines')}} style={styles.tab}><Text style={styles.tabText}>Airline Reviews</Text></Pressable>
-                <Pressable onPress={()=>{setTable('reviews_accommodation')}} style={styles.tab}><Text style={styles.tabText}>Property Reviews</Text></Pressable>
-                {/* <Pressable onPress={()=>{setTable('reviews_airlines')}} style={styles.tab}><Text style={styles.tabText}>Property Listings</Text></Pressable> */}
-              </View>
+            <View style={styles.tabs}>
+              <Pressable
+                onPress={() => {
+                  setTable("reviews_airlines");
+                }}
+                style={styles.tab}
+              >
+                <Text style={styles.tabText}>Airline Reviews</Text>
+              </Pressable>
+              <Pressable
+                onPress={() => {
+                  setTable("reviews_accommodation");
+                }}
+                style={styles.tab}
+              >
+                <Text style={styles.tabText}>Property Reviews</Text>
+              </Pressable>
+              {/* <Pressable onPress={()=>{setTable('reviews_airlines')}} style={styles.tab}><Text style={styles.tabText}>Property Listings</Text></Pressable> */}
+            </View>
             <View style={styles.listArea}>
               <UserReviewsList id={session?.user.id} table={table} />
             </View>

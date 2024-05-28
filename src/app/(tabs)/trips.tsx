@@ -17,6 +17,7 @@ export default function TabTrips() {
   const [isDeleteModalVisible, setDeleteModalVisible] = useState(false);
   const [isCreateModalVisible, setCreateModalVisible] = useState(false);
   const [isEditModalVisible, setEditModalVisible] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [tripId, setTripId] = useState(null);
   const [trips, setTrips] = useState<
     Database["public"]["Tables"]["trips"]["Row"][]
@@ -32,22 +33,42 @@ export default function TabTrips() {
     setCreateModalVisible(!isCreateModalVisible);
   };
 
-  useEffect(() => {
-    fetchTrips();
-  }, []);
+  useEffect(()=>{
+    getTrips()
+  },[])
 
-
-  const fetchTrips = async () => {
-    const { data, error } = await supabase
-      .from("trips")
-      .select("*")
-      .eq("user_id", session?.user.id);
-
-    if (!error && data) {
-      setTrips(data);
-      setFilteredTrips(data);
+  async function getTrips () {
+    setLoading(true)
+    const {data, error} = await supabase
+    .from('trips')
+    .select('*, accommodation(title, photos), airlines(airline_name)')
+    .eq("user_id", session.user.id)
+    .order('start_date', { ascending: false });
+    if (error) {
+      console.log(error);
     }
-  };
+    if(data){
+      setTrips(data)
+      setFilteredTrips(data)
+    }
+      setLoading(false)
+  }
+
+  // useEffect(() => {
+  //   fetchTrips();
+  // }, []);
+
+  // const fetchTrips = async () => {
+  //   const { data, error } = await supabase
+  //     .from("trips")
+  //     .select("*")
+  //     .eq("user_id", session?.user.id);
+
+  //   if (!error && data) {
+  //     setTrips(data);
+  //     setFilteredTrips(data);
+  //   }
+  // };
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -98,7 +119,7 @@ export default function TabTrips() {
             <View style={styles.modalCreate}>
               <TripForm
                 toggleCreateModal={toggleCreateModal}
-                onTripAdded={fetchTrips}
+                onTripAdded={getTrips}
               />
             </View>
           </Modal>
@@ -117,7 +138,6 @@ export default function TabTrips() {
           </TouchableOpacity>
         </View>
       )}
- 
     </SafeAreaView>
   );
 }
