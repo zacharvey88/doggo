@@ -16,6 +16,7 @@ import { Link, useNavigation } from "expo-router";
 import Colors from "../constants/Colors";
 import UserReviewsList from "./UserReviewsList";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 
 export default function Account({ session }: { session: Session }) {
@@ -27,6 +28,7 @@ export default function Account({ session }: { session: Session }) {
   const navigation = useNavigation();
   const defaultImage = "https://i.sstatic.net/l60Hf.png";
   const [table, setTable] = useState('reviews_airlines')
+  
 
   const router = useRouter();
 
@@ -108,6 +110,12 @@ export default function Account({ session }: { session: Session }) {
         ) : (
           <>
             <View style={styles.badge}>
+              <TouchableOpacity
+                  style={styles.signOutButton}
+                  onPress={handleSignOut}
+                >
+                  <MaterialCommunityIcons style={styles.icon} name="logout"></MaterialCommunityIcons>
+              </TouchableOpacity>
               <Image
                 source={{
                   uri: avatarUrl
@@ -160,12 +168,12 @@ export default function Account({ session }: { session: Session }) {
               <UserReviewsList id={session?.user.id} table={table} />
             </View>
 
-            <TouchableOpacity
+            {/* <TouchableOpacity
               style={styles.signOutButton}
               onPress={handleSignOut}
             >
               <Text style={styles.signOutButtonText}>Sign Out</Text>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
           </>
         )}
       </View>
@@ -217,24 +225,22 @@ const styles = StyleSheet.create({
   },
   listArea: {
     flexGrow: 1,
-    flexShrink: 1,
+    // flexShrink: 1,
     marginBottom: 20,
     paddingHorizontal: 20,
   },
   signOutButton: {
-    alignSelf: 'center',
-    borderColor: "gray",
-    borderWidth: 1,
-    paddingHorizontal: 15,
-    paddingVertical: 10,
-    borderRadius: 10,
-    alignItems: "center",
-    justifyContent: "center",
-    width: 100,
+    position: 'absolute',
+    top: 15,
+    right: 25,
+    zIndex: 1,
+  },
+  icon: {
+    color: '#636363',
+    fontSize: 30
   },
   signOutButtonText: {
-    fontSize: 16,
-    color: "gray",
+    fontSize: 50,
   },
   tabs: {
     flexDirection: "row",
