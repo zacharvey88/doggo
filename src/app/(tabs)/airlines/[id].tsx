@@ -1,6 +1,6 @@
 import { Stack, useLocalSearchParams, useRouter } from "expo-router";
 import { useState, useEffect } from "react";
-import { View, Text, StyleSheet, Linking, ScrollView} from "react-native";
+import { View, Text, StyleSheet, Linking, ScrollView, Alert} from "react-native";
 import { Button } from "react-native-elements";
 import {StarRatingDisplay} from "react-native-star-rating-widget";
 import Modal from "react-native-modal"
@@ -54,6 +54,31 @@ export default function Airline() {
     setTripModalVisible(!isTripModalVisible);
   };
 
+  const handleAddReview = () => { 
+    
+    if (session && session.user) {  
+      toggleReviewModal()
+    } else {
+    
+      Alert.alert(
+        "Not Logged In",
+        "You must be logged in to add a review",
+        [
+          {
+            text: "Okay",
+            style: "default",
+          },
+          {
+            text: "Login",
+            onPress: ()=>router.push('/sign-in'),
+            style: "cancel",
+          },
+        ],
+        { cancelable: false }
+      );
+    }
+  }
+
   const goToReviews = () => {
     router.push({
       pathname: `/airlines/${id}/reviews`,
@@ -62,6 +87,7 @@ export default function Airline() {
       }
     });
   };
+
 
   return (
     <>
@@ -121,7 +147,7 @@ export default function Airline() {
             title="Add Review" 
             titleStyle={{ fontSize: 14 }}
             style={styles.button}
-            onPress={toggleReviewModal}
+            onPress={handleAddReview}
             
           />
           <Button 

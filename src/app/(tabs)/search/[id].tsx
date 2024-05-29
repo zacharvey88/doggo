@@ -8,6 +8,7 @@ import {
   Linking,
   ScrollView,
   TouchableOpacity,
+  Alert
 } from "react-native";
 import { Button } from "react-native-elements";
 import { StarRatingDisplay } from "react-native-star-rating-widget";
@@ -50,6 +51,31 @@ export default function Accommodation() {
 
   const images = photos.split(",");
 
+  const handleAddReview = () => { 
+    
+    if (session && session.user) {  
+      toggleReviewModal()
+    } else {
+    
+      Alert.alert(
+        "Not Logged In",
+        "You must be logged in to add a review",
+        [
+          {
+            text: "Okay",
+            style: "default",
+          },
+          {
+            text: "Login",
+            onPress: ()=>router.push('/sign-in'),
+            style: "cancel",
+          },
+        ],
+        { cancelable: false }
+      );
+    }
+  }
+
   return (
     <>
       <Modal
@@ -90,7 +116,6 @@ export default function Accommodation() {
         <ScrollView>
           <View style={styles.card}>
             <Stack.Screen options={{ title: "", headerBackTitle: "Back" }} />
-            <Text style={styles.title}>{title}</Text>
             {photos ? (
               <ScrollView
                 horizontal
@@ -109,7 +134,7 @@ export default function Accommodation() {
             ) : (
               <Text>No Image Available</Text>
             )}
-
+            <Text style={styles.title}>{title}</Text>
             <StarRatingDisplay style={styles.rating} rating={rating} />
 
             {description && (
@@ -148,7 +173,7 @@ export default function Accommodation() {
                 title="Add Review"
                 titleStyle={{ fontSize: 14 }}
                 style={styles.button}
-                onPress={toggleReviewModal}
+                onPress={handleAddReview}
               />
 
               <Button
@@ -158,7 +183,7 @@ export default function Accommodation() {
                 onPress={toggleTripModal}
               />
             </View>
-            <Text style={styles.title}>Reviews</Text>
+            <Text style={styles.reviewTitle}>Customer Reviews</Text>
             <ReviewsList id={id} table="reviews_accommodation" />
           </View>
         </ScrollView>
@@ -175,7 +200,7 @@ const styles = StyleSheet.create({
   rating: {
     alignItems: "center",
     justifyContent: "center",
-    marginBottom: 2,
+    marginBottom: 10,
   },
   reviewText: {
     fontSize: 16,
@@ -190,7 +215,7 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     flexDirection: "row",
-    marginTop: 5,
+    marginTop: 10,
     gap: 5,
     marginBottom: 15,
     justifyContent: "center",
@@ -259,6 +284,13 @@ const styles = StyleSheet.create({
     marginBottom: 12,
     textAlign: "center",
     color: "#3A90CD",
+  },
+  reviewTitle:{
+  fontSize: 20,
+  textAlign: 'center',
+  marginBottom: 5,
+  marginTop: 10,
+  color: "#3A90CD",
   },
   noImagesText: {
     fontSize: 14,
