@@ -111,15 +111,14 @@ export default function TripForm() {
         ) : null}
 
         <Text style={styles.label}>Start Date</Text>
-        <Pressable onPress={toggleStartDatePicker}>
           <TextInput
             style={styles.input}
             placeholder="Enter Start Date"
             value={startDate}
             onChangeText={setStartDate}
             editable={false}
+            onPress={toggleStartDatePicker}
           />
-        </Pressable>
 
         <Modal animationType="slide" transparent={true} visible={startOpen}>
           <View style={styles.centeredView}>
@@ -144,15 +143,14 @@ export default function TripForm() {
         ) : null}
 
         <Text style={styles.label}>End Date</Text>
-        <Pressable onPress={toggleEndDatePicker}>
-          <TextInput
-            style={styles.input}
-            placeholder="Enter End Date"
-            value={endDate}
-            onChangeText={setEndDate}
-            editable={false}
-          />
-        </Pressable>
+        <TextInput
+          style={styles.input}
+          placeholder="Enter End Date"
+          value={endDate}
+          onChangeText={setEndDate}
+          editable={false}
+          onPress={toggleEndDatePicker}
+        />
 
         <Modal animationType="slide" transparent={true} visible={endOpen}>
           <View style={styles.centeredView}>
