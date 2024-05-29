@@ -4,7 +4,6 @@ import {
   Pressable,
   StyleSheet,
   TouchableOpacity,
-  SafeAreaView,
 } from "react-native";
 import { useEffect, useState } from "react";
 import Account from "@/src/components/Account";
