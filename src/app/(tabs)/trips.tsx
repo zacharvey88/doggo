@@ -34,12 +34,19 @@ export default function TabTrips() {
     setDeleteModalVisible(!isDeleteModalVisible);
   };
 
-
   useEffect(() => {
-    getTrips();
-  }, []);
+    if (session) {
+      getTrips();
+    }
+  }, [session]);
 
   async function getTrips() {
+    if (!session?.user?.id) {
+      console.log("User not logged in");
+      setLoading(false);
+      return;
+    }
+
     setLoading(true);
     const { data, error } = await supabase
       .from("trips")
@@ -56,22 +63,6 @@ export default function TabTrips() {
     setLoading(false);
   }
 
-  // useEffect(() => {
-  //   fetchTrips();
-  // }, []);
-
-  // const fetchTrips = async () => {
-  //   const { data, error } = await supabase
-  //     .from("trips")
-  //     .select("*")
-  //     .eq("user_id", session?.user.id);
-
-  //   if (!error && data) {
-  //     setTrips(data);
-  //     setFilteredTrips(data);
-  //   }
-  // };
-
   return (
     <SafeAreaView style={styles.safeArea}>
       {session && session.user ? (
@@ -85,7 +76,6 @@ export default function TabTrips() {
             >
               <AntDesign name="pluscircle" size={40} color="rgb(1,140,220)" />
             </Pressable>
-            {/* <Text style={styles.title}>Your Saved Trips</Text> */}
             <TripList
               user_id={session.user.id}
               setDeleteModalVisible={setDeleteModalVisible}
@@ -98,7 +88,6 @@ export default function TabTrips() {
               trips={trips}
             />
           </View>
-          {/* Delete Trip Modal */}
           <Modal
             isVisible={isDeleteModalVisible}
             animationIn="slideInUp"
@@ -110,27 +99,12 @@ export default function TabTrips() {
               <DeleteTripModal
                 trip_id={tripId}
                 setDeleteModalVisible={setDeleteModalVisible}
-                filteredTrips={filteredTrips}
+                filteredTrips={setFilteredTrips}
                 setFilteredTrips={setFilteredTrips}
                 trips={trips}
               />
             </View>
           </Modal>
-          {/* Add trip modal */}
-          {/* <Modal
-            isVisible={isCreateModalVisible}
-            animationIn="slideInUp"
-            onBackdropPress={toggleCreateModal}
-            backdropOpacity={0.8}
-            backdropColor="black"
-          >
-            <View style={styles.modalCreate}>
-              <TripForm
-                toggleCreateModal={toggleCreateModal}
-                onTripAdded={getTrips}
-              />
-            </View>
-          </Modal> */}
         </>
       ) : (
         <View style={styles.signInContainer}>

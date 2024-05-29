@@ -1,40 +1,44 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import {
   StyleSheet,
   Text,
   View,
-  StatusBar,
   SafeAreaView,
   TextInput,
-  TouchableOpacity,
   Modal,
+  Pressable,
+  Alert,
 } from "react-native";
-import { Pressable, Platform, Alert } from "react-native";
 import { supabase } from "../lib/supabase";
 import { useAuth } from "@/src/providers/AuthProvider";
 import DatePicker from "react-native-modern-datepicker";
-import { getToday, getFormatedDate } from "react-native-modern-datepicker";
+import { getFormatedDate } from "react-native-modern-datepicker";
 import { useRouter, useNavigation } from "expo-router";
 import { Dropdown } from "react-native-element-dropdown";
 import Accommodation from "../app/(tabs)/search/[id]";
 import { FontAwesome, MaterialCommunityIcons } from "@expo/vector-icons";
+import { LogBox } from "react-native";
+
+LogBox.ignoreLogs([
+  "Warning: DatePicker: Support for defaultProps will be removed from function components in a future major release. Use JavaScript default parameters instead.",
+]);
 
 export default function TripForm({ airline_id, accommodation_id }: { airline_id?: number; accommodation_id?: number }) {
-  //form state
+  
+  // form state
   const [title, setTitle] = useState("");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
+  const [tempStartDate, setTempStartDate] = useState(""); // temporary state for start date
+  const [tempEndDate, setTempEndDate] = useState(""); // temporary state for end date
   const [isFocus, setIsFocus] = useState(false);
   const navigation = useNavigation();
   const [destination, setDestination] = useState("");
   const [airline, setAirline] = useState("Not selected")
   const [accommodation, setAccommodation] = useState("Not selected")
-
-  //date picker state
   const [startOpen, setStartOpen] = useState(false); // open and close the modal
   const [endOpen, setEndOpen] = useState(false);
   const [errors, setErrors] = useState({});
-  const [validForm, setValidForm] = useState(false);
   const { session, loading, profile } = useAuth();
   const router = useRouter();
 
@@ -81,7 +85,6 @@ export default function TripForm({ airline_id, accommodation_id }: { airline_id?
       setAccommodation(data[0].title);
     }
   }
-
   const today = new Date();
   const minDate = getFormatedDate(
     today.setDate(today.getDate() + 1),
@@ -89,16 +92,16 @@ export default function TripForm({ airline_id, accommodation_id }: { airline_id?
   );
   const minDateForEndDate = minDate + 1;
 
-  const onChangeStartDate = (propDate) => {
-    setStartDate(propDate);
+  // event handlers
+  const onChangeTempStartDate = (propDate) => {
+    setTempStartDate(propDate);
   };
 
-  const onChangeEndDate = (propDate) => {
-    setEndDate(propDate);
+  const onChangeTempEndDate = (propDate) => {
+    setTempEndDate(propDate);
   };
 
   // validate form
-
   const validateForm = () => {
     let errors = {};
 
@@ -143,6 +146,16 @@ export default function TripForm({ airline_id, accommodation_id }: { airline_id?
     navigation.goBack();
   };
 
+  const confirmStartDate = () => {
+    setStartDate(tempStartDate);
+    setStartOpen(false);
+  };
+
+  const confirmEndDate = () => {
+    setEndDate(tempEndDate);
+    setEndOpen(false);
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <View>
@@ -176,7 +189,7 @@ export default function TripForm({ airline_id, accommodation_id }: { airline_id?
             value={startDate}
             onChangeText={setStartDate}
             editable={false}
-            onPress={toggleStartDatePicker}
+            onPress={() => setStartOpen(true)}
           />
 
         <Modal animationType="slide" transparent={true} visible={startOpen}>
@@ -185,14 +198,24 @@ export default function TripForm({ airline_id, accommodation_id }: { airline_id?
               <DatePicker
                 mode="calendar"
                 minimumDate={minDate}
-                selected={startDate}
-                onDateChange={onChangeStartDate}
+                selected={tempStartDate || startDate}
+                onDateChange={onChangeTempStartDate}
                 style={styles.datePicker}
               />
-
-              <Pressable onPress={toggleStartDatePicker}>
-                <Text>Close</Text>
-              </Pressable>
+              <View style={styles.modalButtonContainer}>
+                <Pressable
+                  style={[styles.modalButton, styles.cancelButton]}
+                  onPress={() => setStartOpen(false)}
+                >
+                  <Text style={styles.buttonText}>Cancel</Text>
+                </Pressable>
+                <Pressable
+                  style={[styles.modalButton, styles.confirmButton]}
+                  onPress={confirmStartDate}
+                >
+                  <Text style={styles.buttonText}>Confirm</Text>
+                </Pressable>
+              </View>
             </View>
           </View>
         </Modal>
@@ -202,13 +225,14 @@ export default function TripForm({ airline_id, accommodation_id }: { airline_id?
         ) : null}
 
         <Text style={styles.label}>End Date</Text>
+
         <TextInput
           style={styles.input}
           placeholder="Enter End Date"
           value={endDate}
           onChangeText={setEndDate}
           editable={false}
-          onPress={toggleEndDatePicker}
+          onPress={() => setEndOpen(true)}
         />
 
         <Text style={styles.label}>Airline</Text>
@@ -230,15 +254,25 @@ export default function TripForm({ airline_id, accommodation_id }: { airline_id?
             <View style={styles.modalView}>
               <DatePicker
                 mode="calendar"
-                selected={minDateForEndDate}
+                selected={tempEndDate || endDate}
                 minimumDate={minDateForEndDate}
-                onDateChange={onChangeEndDate}
+                onDateChange={onChangeTempEndDate}
                 style={styles.datePicker}
               />
-
-              <Pressable onPress={toggleEndDatePicker}>
-                <Text>Close</Text>
-              </Pressable>
+              <View style={styles.modalButtonContainer}>
+                <Pressable
+                  style={[styles.modalButton, styles.cancelButton]}
+                  onPress={() => setEndOpen(false)}
+                >
+                  <Text style={styles.buttonText}>Cancel</Text>
+                </Pressable>
+                <Pressable
+                  style={[styles.modalButton, styles.confirmButton]}
+                  onPress={confirmEndDate}
+                >
+                  <Text style={styles.buttonText}>Confirm</Text>
+                </Pressable>
+              </View>
             </View>
           </View>
         </Modal>
@@ -257,7 +291,6 @@ export default function TripForm({ airline_id, accommodation_id }: { airline_id?
         {/* <MaterialCommunityIcons name="cancel" size={16} color={'white'}></MaterialCommunityIcons> */}
           <Text style={styles.buttonText}>Cancel</Text>
         </Pressable>
-        {/* <Button style={styles.button} title="Cancel" onPress={() => router.push("/trips")} /> */}
       </View>
     </SafeAreaView>
   );
@@ -275,8 +308,8 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     borderRadius: 20,
     width: "90%",
-    height: "50%",
-    padding: 35,
+    height: "50%", // Adjust the height as necessary
+    padding: 20,
     alignItems: "center",
     shadowColor: "#000",
     shadowOffset: {
@@ -382,5 +415,21 @@ const styles = StyleSheet.create({
   readonlyInput: {
     backgroundColor: '#f0f0f0', 
     color: '#a0a0a0', 
+  },
+  modalButtonContainer: {
+    flexDirection: "row",
+    marginTop: 20,
+  },
+  modalButton: {
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    borderRadius: 5,
+    marginHorizontal: 10,
+  },
+  cancelButton: {
+    backgroundColor: "#ff5c5c",
+  },
+  confirmButton: {
+    backgroundColor: "#3A90CD",
   },
 });

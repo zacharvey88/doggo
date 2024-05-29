@@ -24,6 +24,8 @@ export default function UserReviewCard({
     username: string;
     table: string;
     setReviewId: any;
+    accommodation: string;
+    airlines: string;
   };
 }) {
   const { review_id, rating, review_text, created_at } = review;
