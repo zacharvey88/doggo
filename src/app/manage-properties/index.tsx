@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/src/lib/supabase";
 import { Database } from "@/src/lib/database.types";
-import { StyleSheet, FlatList, Pressable, Alert, TouchableOpacity, Image } from "react-native";
+import { StyleSheet, FlatList, Pressable, Alert, TouchableOpacity, Image, ScrollView } from "react-native";
 import dateFormat from "dateformat";
 import { Button } from "react-native-elements";
 import { useRouter } from "expo-router";
@@ -58,8 +58,8 @@ const ManageProperties: React.FC<AccommodationListItemProps> = () => {
     
 
     return (
-        <View>
-          <Pressable style={styles.addTripButton} onPress={(toggleCreateModal, onTripAdded)=>{router.push('/add-trip')}} >
+        <ScrollView>
+          <Pressable style={styles.addTripButton} onPress={(toggleCreateModal, onTripAdded)=>{router.push('/add-accommodation')}} >
                 <AntDesign name="pluscircle" size={40} color="rgb(1,140,220)" />
               </Pressable>
             <FlatList
@@ -118,7 +118,7 @@ const ManageProperties: React.FC<AccommodationListItemProps> = () => {
                 contentContainerStyle={{ gap: 10, padding: 10 }}
                 showsVerticalScrollIndicator={false}
             />
-        </View>
+        </ScrollView>
     );
 };
 
