@@ -4,6 +4,7 @@ import {
   Pressable,
   StyleSheet,
   TouchableOpacity,
+  SafeAreaView,
 } from "react-native";
 import { useEffect, useState } from "react";
 import Account from "@/src/components/Account";
@@ -42,13 +43,12 @@ export default ProfileScreen;
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: "white",
+
+    backgroundColor: "#fff",
   },
   container: {
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "white",
     flex: 1,
+    backgroundColor: "#fff",
   },
 
   button: {
@@ -82,4 +82,5 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: "white",
   },
+
 });

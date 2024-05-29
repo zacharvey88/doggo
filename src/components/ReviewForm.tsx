@@ -7,14 +7,13 @@ import { supabase } from '../lib/supabase'
 export default function ReviewForm({id, setModalVisible, session, edit, existingRating, existingReviewText, table, review_id }: {id: number, setModalVisible: any, session: Session | null, edit?: { review_id: number, rating: number, review_text: string }, existingRating?: number, existingReviewText?: string, table: string, review_id: Number}) {
   const [rating, setRating] = useState(existingRating ? existingRating : 0)
   const [reviewText, setReviewText] = useState(existingReviewText ? existingReviewText : '')
-
-  useEffect(() => {
-
-    
+  const [errorMessage, setErrorMessage] = useState('');
+  
+  // useEffect(() => {
     // if(edit) {      
     //   getExistingReview()
     // }    
-  }, [])
+  // }, [])
 
   // const  getExistingReview = async () => {
   //   const { data, error } = await supabase
@@ -31,6 +30,12 @@ export default function ReviewForm({id, setModalVisible, session, edit, existing
   // }
 
   const handleAddReview = async () => {
+
+      if (reviewText.trim() === "") {
+        setErrorMessage('Please enter your review');
+        return;
+      }
+      setErrorMessage('');
     
     const { data, error } = await supabase
       .from(`reviews_${table}`)
@@ -51,6 +56,13 @@ export default function ReviewForm({id, setModalVisible, session, edit, existing
   }
 
   const handleEditReview = async () => {
+
+    if (reviewText.trim() === "") {
+      setErrorMessage('Please enter your review');
+      return;
+    }
+    setErrorMessage('');
+
     const { data, error } = await supabase
       .from(`${table}`)
       .update(
@@ -80,21 +92,21 @@ export default function ReviewForm({id, setModalVisible, session, edit, existing
 
       /><TextInput 
       multiline={true} 
-      numberOfLines={4} 
       style={styles.input}
       onChangeText={setReviewText}
-      placeholder={edit ? '' : 'Write a review...'}
+      placeholder={edit ? '' : 'Write your review...'}
       value={reviewText}
 
     >
     </TextInput>
+    {errorMessage ? <Text style={styles.errorText}>{errorMessage}</Text> : null}
       <View style={styles.buttonContainer}>
-        <Button 
+        <Button
           style={styles.btn}
-          title="Submit"  
+          title="Submit"
           titleStyle={styles.buttonTitle}
           onPress={edit ? handleEditReview : handleAddReview}
-          />
+        />
         <Button
           style={styles.btn}
           title="Cancel"  
@@ -112,6 +124,8 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     alignItems: 'center',
     padding: 20,
+    maxHeight: 390,
+    flexGrow: 1,
   },
   input: {
     backgroundColor: '#F9F9F9',
@@ -138,5 +152,11 @@ const styles = StyleSheet.create({
   buttonContainer: {
     flex:1,
     flexDirection:"row",
+    marginTop: 10
+  },
+  errorText: {
+    color: 'red',
+    fontSize: 14,
+    marginTop: 10,
   },
 })

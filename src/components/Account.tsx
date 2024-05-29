@@ -136,7 +136,7 @@ export default function Account({ session }: { session: Session }) {
                 </Link>
                 <Pressable
                   onPress={() => {
-                    router.push("/my-accommodation");
+                    router.push("/manage-properties");
                   }}
                 >
                   <Text style={styles.textButton}>Manage Properties</Text>
@@ -226,12 +226,11 @@ const styles = StyleSheet.create({
   },
   badge: {
     alignItems: "center",
-    gap: 5,
     marginTop: 10,
   },
   image: {
-    width: 150,
-    height: 150,
+    width: 120,
+    height: 120,
     borderRadius: 75,
     marginBottom: 10,
     borderWidth: 1,
@@ -275,6 +274,7 @@ const styles = StyleSheet.create({
     gap: 10,
     padding: 10,
     width: "95%",
+    marginTop: 10,
   },
   tab: {
     marginTop: 5,

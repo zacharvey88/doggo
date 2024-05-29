@@ -8,7 +8,7 @@ import { Navigator } from "expo-router";
 import { ActivityIndicator } from "react-native";
 import TripCard from "./TripCard";
 
-export default function TripList({user_id, setDeleteModalVisible, isDeleteModalVisible, toggleDeleteModal, setTripId, setTrips, filteredTrips, setFilteredTrips} : {user_id: string, setDeleteModalVisible: any, isDeleteModalVisible: any, toggleDeleteModal: any, setTripId: any, setTrips: any, filteredTrips: any, setFilteredTrips: any}) {
+export default function TripList({user_id, setDeleteModalVisible, isDeleteModalVisible, toggleDeleteModal, setTripId, setTrips, filteredTrips, setFilteredTrips, trips} : {user_id: string, setDeleteModalVisible: any, isDeleteModalVisible: any, toggleDeleteModal: any, setTripId: any, setTrips: any, filteredTrips: any, setFilteredTrips: any, trips: any}) {
 
   const [loading, setLoading] = useState(false)
 
@@ -55,6 +55,9 @@ export default function TripList({user_id, setDeleteModalVisible, isDeleteModalV
               isDeleteModalVisible={isDeleteModalVisible}
               toggleDeleteModal={toggleDeleteModal}
               setTripId={setTripId}
+              trips={trips}
+              filteredTrips={filteredTrips}
+              setFilteredTrips={setFilteredTrips}
             ></TripCard>
           )}
         />
