@@ -4,7 +4,7 @@ import StarRating from 'react-native-star-rating-widget'
 import { Button } from 'react-native-elements'
 import { supabase } from '../lib/supabase'
 
-export default function ReviewForm({id, setModalVisible, session, edit, existingRating, existingReviewText, table, review_id }: {id: number, setModalVisible: any, session: Session | null, edit?: { review_id: number, rating: number, review_text: string }, existingRating?: number, existingReviewText?: string, table: string, review_id: Number}) {
+export default function ReviewForm({id, toggleModal, session, edit, existingRating, existingReviewText, table, review_id }: {id: number, toggleModal: any, session: Session | null, edit?: { review_id: number, rating: number, review_text: string }, existingRating?: number, existingReviewText?: string, table: string, review_id: Number}) {
   const [rating, setRating] = useState(existingRating ? existingRating : 0)
   const [reviewText, setReviewText] = useState(existingReviewText ? existingReviewText : '')
   const [errorMessage, setErrorMessage] = useState('');
@@ -50,7 +50,7 @@ export default function ReviewForm({id, setModalVisible, session, edit, existing
       if (error && error.code === '42501') {
           Alert.alert('Error', 'You must be logged in to submit a review')
       } else {
-        setModalVisible(false)
+        toggleModal()
         Alert.alert('Thanks, your review was submitted.')
       }
   }
@@ -73,11 +73,10 @@ export default function ReviewForm({id, setModalVisible, session, edit, existing
       )
       .eq('review_id', review_id)
       if (error) {
-        console.log(error);
-        
+        console.log(table);
         Alert.alert('Something went wrong. Please try again.')
       } else {
-        setModalVisible(false)
+        toggleModal()
         Alert.alert('Thanks, your review was updated.')
       }
   }
@@ -111,7 +110,7 @@ export default function ReviewForm({id, setModalVisible, session, edit, existing
           style={styles.btn}
           title="Cancel"  
           titleStyle={styles.buttonTitle}
-          onPress={()=>{setModalVisible(false)}}
+          onPress={()=>{toggleModal()}}
           />
       </View>
     </View>

@@ -88,7 +88,7 @@ export default function Accommodation() {
         <View style={styles.modalTrip}>
           <TripListSmall
             user_id={session?.user.id}
-            setModalVisible={setTripModalVisible}
+            toggleModal={toggleTripModal}
             table={"accommodation"}
           />
         </View>
@@ -105,7 +105,7 @@ export default function Accommodation() {
           <ReviewForm
             id={id}
             edit={false}
-            setModalVisible={setReviewModalVisible}
+            toggleModal={toggleReviewModal}
             session={session}
             table={"accommodation"}
           />

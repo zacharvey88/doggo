@@ -48,7 +48,6 @@ export default function TripCard({trip, setTripId, trips, filteredTrips, setFilt
       ],
       { cancelable: false }
     );
-    // toggleDeleteModal();
   }
 
 

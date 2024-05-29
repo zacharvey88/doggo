@@ -28,6 +28,7 @@ export default function UserReviewsList({
   const [existingReviewText, setExistingReviewText] = useState("");
   const [existingRating, setExistingRating] = useState(0);
   const { session, profile } = useAuth();
+  const [review_id, setReviewId] = useState(null);
 
   useEffect(() => {
     getReviews();
@@ -80,10 +81,12 @@ export default function UserReviewsList({
               <ReviewForm
                 id={id}
                 edit={true}
-                setModalVisible={setModalVisible}
+                toggleModal={toggleModal}
                 session={session}
                 existingReviewText={existingReviewText}
                 existingRating={existingRating}
+                table={table}
+                review_id={review_id}
               />
             </View>
           </Modal>
@@ -97,9 +100,10 @@ export default function UserReviewsList({
                 reviews={reviews}
                 filteredReviews={filteredReviews}
                 setFilteredReviews={setFilteredReviews}
-                setModalVisible={setModalVisible}
+                toggleModal={toggleModal}
                 setExistingRating={setExistingRating}
                 setExistingReviewText={setExistingReviewText}
+                setReviewId={setReviewId}
               />
             )}
             showsVerticalScrollIndicator={false}

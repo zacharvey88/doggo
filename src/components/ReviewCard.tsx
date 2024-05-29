@@ -5,7 +5,7 @@ import { FontAwesome } from '@expo/vector-icons';
 import { useLocalSearchParams } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { supabase } from '../lib/supabase';
-export default function ReviewCard({ review, reviews, setFilteredReviews, filteredReviews, setModalVisible, setExistingRating, setExistingReviewText, table, setReviewId }: { review: { review_id: number, rating: number, review_text: string, avatar_url: string, created_at: string, username: string, table: string, setReviewId: any } }) {
+export default function ReviewCard({ review, reviews, setFilteredReviews, filteredReviews, toggleModal, setExistingRating, setExistingReviewText, table, setReviewId }: { review: { review_id: number, rating: number, review_text: string, avatar_url: string, created_at: string, username: string, table: string, setReviewId: any } }) {
   const { review_id, rating, review_text, created_at} = review;
   const { avatar_url, username } = review.profiles  
   const session = useLocalSearchParams().session as string;
@@ -56,22 +56,12 @@ export default function ReviewCard({ review, reviews, setFilteredReviews, filter
       { cancelable: false }
     );
   }
-  //   setFilteredReviews(filteredReviews.filter((review) => review.review_id !== review_id))
-  //   const { data, error } = await supabase
-  //   .from(`${table}`)
-  //   .delete()
-  //   .eq('review_id', review_id);
-  //   if (error) {
-  //     Alert.alert('Something went wrong. Please try again.')
-  //     setFilteredReviews(reviews)
-  //   }
-  // }
 
   const handleEditReview = async () => {
     setReviewId(review_id)
     setExistingRating(rating)
     setExistingReviewText(review_text)
-    setModalVisible(true)
+    toggleModal()
   }
 
   return (
