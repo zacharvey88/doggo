@@ -1,4 +1,9 @@
-import { StyleSheet, Pressable, TouchableOpacity, SafeAreaView } from "react-native";
+import {
+  StyleSheet,
+  Pressable,
+  TouchableOpacity,
+  SafeAreaView,
+} from "react-native";
 import { Text, View } from "@/src/components/Themed";
 import { useEffect, useState } from "react";
 import { supabase } from "@/src/lib/supabase";
@@ -15,7 +20,6 @@ import SignInModal from "@/src/components/SignInModal";
 
 export default function TabTrips() {
   const [isDeleteModalVisible, setDeleteModalVisible] = useState(false);
-  const [isCreateModalVisible, setCreateModalVisible] = useState(false);
   const [isEditModalVisible, setEditModalVisible] = useState(false);
   const [loading, setLoading] = useState(false);
   const [tripId, setTripId] = useState(null);
@@ -30,29 +34,26 @@ export default function TabTrips() {
     setDeleteModalVisible(!isDeleteModalVisible);
   };
 
-  const toggleCreateModal = () => {
-    setCreateModalVisible(!isCreateModalVisible);
-  };
 
-  useEffect(()=>{
-    getTrips()
-  },[])
+  useEffect(() => {
+    getTrips();
+  }, []);
 
-  async function getTrips () {
-    setLoading(true)
-    const {data, error} = await supabase
-    .from('trips')
-    .select('*, accommodation(title, photos), airlines(airline_name)')
-    .eq("user_id", session.user.id)
-    .order('start_date', { ascending: false });
+  async function getTrips() {
+    setLoading(true);
+    const { data, error } = await supabase
+      .from("trips")
+      .select("*, accommodation(title, photos), airlines(airline_name)")
+      .eq("user_id", session.user.id)
+      .order("start_date", { ascending: false });
     if (error) {
       console.log(error);
     }
-    if(data){
-      setTrips(data)
-      setFilteredTrips(data)
+    if (data) {
+      setTrips(data);
+      setFilteredTrips(data);
     }
-      setLoading(false)
+    setLoading(false);
   }
 
   // useEffect(() => {
@@ -76,9 +77,14 @@ export default function TabTrips() {
       {session && session.user ? (
         <>
           <View style={styles.container}>
-              <Pressable style={styles.addTripButton} onPress={(toggleCreateModal, onTripAdded)=>{router.push('/add-trip')}} >
-                <AntDesign name="pluscircle" size={40} color="rgb(1,140,220)" />
-              </Pressable>
+            <Pressable
+              style={styles.addTripButton}
+              onPress={() => {
+                router.push("/add-trip");
+              }}
+            >
+              <AntDesign name="pluscircle" size={40} color="rgb(1,140,220)" />
+            </Pressable>
             {/* <Text style={styles.title}>Your Saved Trips</Text> */}
             <TripList
               user_id={session.user.id}
@@ -111,7 +117,7 @@ export default function TabTrips() {
             </View>
           </Modal>
           {/* Add trip modal */}
-          <Modal
+          {/* <Modal
             isVisible={isCreateModalVisible}
             animationIn="slideInUp"
             onBackdropPress={toggleCreateModal}
@@ -124,7 +130,7 @@ export default function TabTrips() {
                 onTripAdded={getTrips}
               />
             </View>
-          </Modal>
+          </Modal> */}
         </>
       ) : (
         <View style={styles.signInContainer}>
@@ -133,7 +139,7 @@ export default function TabTrips() {
 
           <TouchableOpacity
             style={styles.button}
-            onPress={()=>router.push('/sign-in')}
+            onPress={() => router.push("/sign-in")}
           >
             <Text style={styles.btnTitle}>Sign in</Text>
           </TouchableOpacity>
