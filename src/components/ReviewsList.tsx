@@ -74,7 +74,7 @@ export default function ReviewsList({
               <ReviewForm
                 id={id}
                 edit={true}
-                setModalVisible={setModalVisible}
+                toggleModal={toggleModal}
                 session={session}
                 existingRating={existingRating}
                 existingReviewText={existingReviewText}
@@ -96,7 +96,7 @@ export default function ReviewsList({
                 reviews={reviews}
                 filteredReviews={filteredReviews}
                 setFilteredReviews={setFilteredReviews}
-                setModalVisible={setModalVisible}
+                toggleModal={toggleModal}
                 setExistingRating={setExistingRating}
                 setExistingReviewText={setExistingReviewText}
                 table={table}

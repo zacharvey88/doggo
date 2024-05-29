@@ -10,7 +10,7 @@ import { useRouter } from "expo-router";
 import { ActivityIndicator } from "react-native";
 import { useLocalSearchParams,  } from "expo-router";
 
-export default function TripListSmall({user_id, setModalVisible, table} : {user_id: string, setModalVisible: any, table: string}) {
+export default function TripListSmall({user_id, toggleModal, table} : {user_id: string, toggleModal: any, table: string}) {
 
   const [trips, setTrips] = useState<Database['public']['Tables']['trips']['Row'][]>([]);
   const [loading, setLoading] = useState(false)
@@ -40,7 +40,7 @@ export default function TripListSmall({user_id, setModalVisible, table} : {user_
       if (error) {
         console.log(error);
       } else {
-        setModalVisible(false)
+        toggleModal()
         Alert.alert(`${table === "airlines" ? "Airline" : "Accommodation"} added to ${title}`)
       }
     setLoading(false)
@@ -89,7 +89,7 @@ export default function TripListSmall({user_id, setModalVisible, table} : {user_
         <Button
           title={"Cancel"}
           style={styles.button}
-          onPress={() => setModalVisible(false)}
+          onPress={() => toggleModal()}
         />
         </View>
     </View>

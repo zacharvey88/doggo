@@ -10,6 +10,7 @@ import {
   ActivityIndicator,
   ScrollView,
   Pressable,
+  Modal
 } from "react-native";
 import { Session } from "@supabase/supabase-js";
 import { Link, useNavigation } from "expo-router";
@@ -18,6 +19,7 @@ import UserReviewsList from "./UserReviewsList";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { FontAwesome } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
+import ReviewForm from "./ReviewForm";
 
 export default function Account({ session }: { session: Session }) {
   const [loading, setLoading] = useState(true);
@@ -28,7 +30,6 @@ export default function Account({ session }: { session: Session }) {
   const navigation = useNavigation();
   const defaultImage = "https://i.sstatic.net/l60Hf.png";
   const [table, setTable] = useState("reviews_airlines");
-
   const router = useRouter();
 
   const fetchProfile = async () => {
@@ -100,7 +101,6 @@ export default function Account({ session }: { session: Session }) {
 
   return (
     <SafeAreaView style={styles.safeArea} edges={["right", "left", "top"]}>
-      <View style={styles.container}>
         {loading ? (
           <View style={styles.loadingContainer}>
             <ActivityIndicator size="large" color="gray" />
@@ -196,11 +196,13 @@ export default function Account({ session }: { session: Session }) {
               </Pressable>
             </View>
             <View style={styles.listArea}>
-              <UserReviewsList id={session?.user.id} table={table} />
+              <UserReviewsList 
+                id={session?.user.id} 
+                table={table} 
+                />
             </View>
           </>
         )}
-      </View>
     </SafeAreaView>
   );
 }
@@ -209,10 +211,7 @@ const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
     backgroundColor: "white",
-  },
-  container: {
-    flex: 1,
-    width: "100%",
+    marginTop: -40
   },
   scrollContent: {
     flexGrow: 1,
@@ -226,7 +225,6 @@ const styles = StyleSheet.create({
   },
   badge: {
     alignItems: "center",
-    marginTop: 10,
   },
   image: {
     width: 120,
@@ -307,5 +305,13 @@ const styles = StyleSheet.create({
   links: {
     flexDirection: "row",
     gap: 10,
+  },
+  modal: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    color: "#000",
+    margin: 0,
+    borderRadius: 40,
   },
 });

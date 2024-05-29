@@ -102,7 +102,7 @@ export default function Airline() {
           <ReviewForm 
             id={id} 
             edit={false}
-            setModalVisible={setReviewModalVisible}
+            toggleModal={toggleReviewModal}
             session={session}
             table={'airlines'}
           />
@@ -119,7 +119,7 @@ export default function Airline() {
         <View style={styles.modalTrip}>
           <TripListSmall
             user_id={session?.user.id}
-            setModalVisible={setTripModalVisible}
+            toggleModal={toggleTripModal}
             table={"airlines"}
           />
         </View>
