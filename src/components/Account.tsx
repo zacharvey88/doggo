@@ -134,13 +134,14 @@ export default function Account({ session }: { session: Session }) {
                 >
                   Edit Profile
                 </Link>
-                <Pressable
-                  onPress={() => {
-                    router.push("/manage-properties");
+                <Link 
+                  style={styles.textButton}
+                  href={{
+                    pathname: "/manage-properties",
                   }}
-                >
-                  <Text style={styles.textButton}>Manage Properties</Text>
-                </Pressable>
+                  >
+                    Manage Properties
+                </Link>
               </View>
             </View>
             <View style={styles.tabs}>

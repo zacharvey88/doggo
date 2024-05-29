@@ -20,7 +20,7 @@ import { FontAwesome } from "@expo/vector-icons";
 import Colors from "@/src/constants/Colors";
 import ReviewsList from "@/src/components/ReviewsList";
 
-export default function usersAccommodation() {
+export default function UsersAccommodation() {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
   const [isTripModalVisible, setTripModalVisible] = useState(false);
@@ -89,7 +89,16 @@ export default function usersAccommodation() {
       <View style={styles.container}>
         <ScrollView>
           <View style={styles.card}>
-            <Stack.Screen options={{ title: "", headerLeft: () => null }} />
+            <Stack.Screen
+              options={{
+                title: "",
+                headerLeft: () => (
+                  <TouchableOpacity onPress={() => router.back()}>
+                    <FontAwesome name="arrow-left" size={24} color="black" />
+                  </TouchableOpacity>
+                ),
+              }}
+            />
             <Text style={styles.title}>{title}</Text>
             {photos ? (
               <ScrollView

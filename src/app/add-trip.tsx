@@ -6,11 +6,6 @@ export default function AddTrip() {
 
   return (
     <View style={styles.container}>
-      {/* <View style={styles.swipe}>
-        <AntDesign name="arrowdown"></AntDesign>
-        <Text style={styles.swipeText}>swipe down to close</Text>
-        <AntDesign name="arrowdown"></AntDesign>
-      </View> */}
       <View style={styles.form}>
         <TripForm/> 
       </View>
