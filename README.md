@@ -65,5 +65,5 @@ Android:
 
 iOS:
 - Run `npm start` 
-- Type `a` in the terminal to install Expo Go to your iOS emulator and view the app
+- Type `i` in the terminal to install Expo Go to your iOS emulator and view the app
 
