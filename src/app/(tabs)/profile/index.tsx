@@ -4,13 +4,13 @@ import {
   Pressable,
   StyleSheet,
   TouchableOpacity,
+  SafeAreaView
 } from "react-native";
 import { useEffect, useState } from "react";
 import Account from "@/src/components/Account";
 import { useAuth } from "@/src/providers/AuthProvider";
 import { useRouter } from "expo-router";
 import { FontAwesome } from "@expo/vector-icons";
-import { SafeAreaView } from "react-native-safe-area-context";
 
 const ProfileScreen: React.FC = () => {
   const { session } = useAuth();
