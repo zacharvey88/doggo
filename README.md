@@ -35,7 +35,7 @@ To view the app in android install Android Studio:
 
 - `https://developer.android.com/studio/install`
 
-To view the app in iOS install Android Studio:
+To view the app in iOS install Xcode:
 
 - `https://apps.apple.com/us/app/xcode/id497799835?mt=12`)
 
@@ -43,7 +43,8 @@ To view the app in iOS install Android Studio:
 
 Install dependencies `npm install`
 
-In order to connect to the database you will need to set local variable for EXPO_PUBLIC_API_KEY
+In order to connect to the database you will need to set local variable for EXPO_PUBLIC_API_KEY in a .env file,
+make sure you add the .env file to your .gitignore
 
 Supply EXPO_PUBLIC_API_KEY with the relevant API key as provided privately.
 
