@@ -87,19 +87,22 @@ function RootLayoutNav() {
               headerShown: false,
             }}
           />
-          
+
           <Stack.Screen
             name="manage-properties"
             options={{
-              headerTitle: "",
-              headerBackTitleVisible: true,
-              headerBackTitle: "Back",
-              headerShown: true,
+              headerTitle: "My Properties",
+              headerBackTitle: "Profile",
             }}
           />
-
+          <Stack.Screen
+            name="add-accommodation"
+            options={{
+              headerTitle: "Add accommodation",
+              headerBackTitle: "My Properties",
+            }}
+          />
         </Stack>
-        
       </AuthProvider>
     </ThemeProvider>
   );

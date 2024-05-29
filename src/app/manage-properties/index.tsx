@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/src/lib/supabase";
 import { Database } from "@/src/lib/database.types";
-import { StyleSheet, FlatList, Pressable, Alert, TouchableOpacity, Image, ScrollView } from "react-native";
+import { StyleSheet, FlatList, Pressable, Alert, TouchableOpacity, Image, ScrollView, SafeAreaView } from "react-native";
 import dateFormat from "dateformat";
 import { Button } from "react-native-elements";
 import { useRouter } from "expo-router";
@@ -58,24 +58,33 @@ const ManageProperties: React.FC<AccommodationListItemProps> = () => {
     
 
     return (
-        <ScrollView>
-          <Pressable style={styles.addTripButton} onPress={(toggleCreateModal, onTripAdded)=>{router.push('/add-accommodation')}} >
-                <AntDesign name="pluscircle" size={40} color="rgb(1,140,220)" />
-              </Pressable>
-            <FlatList
-                style={{ width: '100%' }}
-                data={accommodation}
-                ListEmptyComponent={() => (
-                    <Text style={styles.noProperty}>You don't have any properties</Text>
-                )}
-                renderItem={({ item }) => (
-                    <View style={styles.container}>
-                        <TouchableOpacity
-                        style={styles.placeItem}
-                        onPress={() =>
-                        router.push({
-                        pathname: `/manage-properties/${item.accommodation_id}`,
-                        params: {
+      <ScrollView>
+        <SafeAreaView style={{flex:1}}>
+          <Pressable
+            style={styles.addTripButton}
+            onPress={(toggleCreateModal, onTripAdded) => {
+              router.push("/add-accommodation");
+            }}
+          >
+            <AntDesign name="pluscircle" size={40} color="rgb(1,140,220)" />
+          </Pressable>
+          <FlatList
+            style={{ width: "100%" }}
+            data={accommodation}
+            ListEmptyComponent={() => (
+              <Text style={styles.noProperty}>
+                You don't have any properties
+              </Text>
+            )}
+            scrollEnabled={false}
+            renderItem={({ item }) => (
+              <View style={styles.container}>
+                <TouchableOpacity
+                  style={styles.placeItem}
+                  onPress={() =>
+                    router.push({
+                      pathname: `/manage-properties/${item.accommodation_id}`,
+                      params: {
                         accommodation_id: item.accommodation_id,
                         title: item.title,
                         description: item.description,
@@ -87,38 +96,39 @@ const ManageProperties: React.FC<AccommodationListItemProps> = () => {
                         city: item.city,
                         country: item.country,
                         rating: item.rating,
-                        },
-                        })
-                        }
-                        >
-                        <View style={styles.imageContainer}>
-                            {item.photos && item.photos.length > 0 ? (
-                                <Image
-                                    source={{ uri: item.photos[0] }}
-                                    style={styles.image}
-                                    resizeMode="cover"
-                                />
-                            ) : (
-                                <Text>No Image Available</Text>
-                            )}
-                        </View>
-                        <View style={styles.textContainer}>
-                            <Text style={styles.title}>{item.title}</Text>
-                            <View style={styles.titleContainer}>
-                                <Text style={styles.city}>
-                                    {item.city}, {item.country}{" "}
-                                </Text>
-                                <StarRatingDisplay rating={item.rating} starSize={20} />
-                            </View>
-                        </View>
-                        </TouchableOpacity>
+                      },
+                    })
+                  }
+                >
+                  <View style={styles.imageContainer}>
+                    {item.photos && item.photos.length > 0 ? (
+                      <Image
+                        source={{ uri: item.photos[0] }}
+                        style={styles.image}
+                        resizeMode="cover"
+                      />
+                    ) : (
+                      <Text>No Image Available</Text>
+                    )}
+                  </View>
+                  <View style={styles.textContainer}>
+                    <Text style={styles.title}>{item.title}</Text>
+                    <View style={styles.titleContainer}>
+                      <Text style={styles.city}>
+                        {item.city}, {item.country}{" "}
+                      </Text>
+                      <StarRatingDisplay rating={item.rating} starSize={20} />
                     </View>
-                )}
-                keyExtractor={(item) => item.accommodation_id.toString()}
-                contentContainerStyle={{ gap: 10, padding: 10 }}
-                showsVerticalScrollIndicator={false}
-            />
-        </ScrollView>
+                  </View>
+                </TouchableOpacity>
+              </View>
+            )}
+            keyExtractor={(item) => item.accommodation_id.toString()}
+            contentContainerStyle={{ gap: 10, padding: 10 }}
+            showsVerticalScrollIndicator={false}
+          />
+        </SafeAreaView>
+      </ScrollView>
     );
 };
 
@@ -126,7 +136,8 @@ const styles = StyleSheet.create({
     container: {
       padding: 20,
       width: "100%",
-      borderRadius: 15,
+    borderRadius: 15,
+      flex:1,
     },
     loadingContainer: {
       flex: 1,

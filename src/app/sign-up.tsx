@@ -12,6 +12,7 @@ import { Link, useRouter } from "expo-router";
 import { supabase } from "@/src/lib/supabase";
 import Colors from "@/src/constants/Colors";
 import { StatusBar } from "expo-status-bar";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 const SignUpScreen = () => {
   const [email, setEmail] = useState<string>("");
@@ -78,7 +79,11 @@ const SignUpScreen = () => {
   }
 
   return (
-    <View style={styles.container}>
+    <KeyboardAwareScrollView
+      contentContainerStyle={styles.scrollViewContent}
+      enableOnAndroid={true}
+      extraScrollHeight={100}
+    >
       <StatusBar style="light" />
       <Image
         source={require("@/assets/images/background.png")}
@@ -122,7 +127,6 @@ const SignUpScreen = () => {
               {loading ? "Signing up..." : "Sign Up"}
             </Text>
           </TouchableOpacity>
-     
         </View>
         <View style={styles.signinContainer}>
           <Text style={styles.text}>Already have an account?</Text>
@@ -131,7 +135,7 @@ const SignUpScreen = () => {
           </Link>
         </View>
       </View>
-    </View>
+    </KeyboardAwareScrollView>
   );
 };
 
@@ -151,14 +155,15 @@ const styles = StyleSheet.create({
     padding: 30,
   },
   titleText: {
-    marginTop: 40,
+    marginTop: 30,
     fontSize: 40,
     fontWeight: "800",
     color: "white",
     textAlign: "center",
+    fontFamily: "Futura",
   },
   subtitleText: {
-    fontSize: 22,
+    fontSize: 18,
     color: "white",
     textAlign: "center",
     marginTop: 40,
