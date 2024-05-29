@@ -135,13 +135,12 @@ const styles = StyleSheet.create({
     color: "#3A90CD",
   },
   button: {
-    alignItems:"center",
-    alignContent:"center",
-    padding:10,
-    width:"100%",
-    height: "100%",
+    // alignItems:"center",
+    // alignContent:"center",
+    padding:5,
+    flexGrow: 1,
     backgroundColor:"rgb(1,140,220)",
-    borderRadius:20,
+    borderRadius: 10,
   },
   noTrips: {
     fontSize: 18,
@@ -150,8 +149,11 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },  
   buttonContainer: {
-    flex:1,
+    marginTop: 10,
     flexDirection:"row",
     alignItems:"center",
+    gap: 10,
+    justifyContent: 'center'
   },
+
 });

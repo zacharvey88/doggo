@@ -25,17 +25,47 @@ export default function ReviewCard({ review, reviews, setFilteredReviews, filter
       setCurrentUser(data[0]?.username);
     }    
   }
-  const handleDeleteReview = async () => {    
-    setFilteredReviews(filteredReviews.filter((review) => review.review_id !== review_id))
-    const { data, error } = await supabase
-    .from(`${table}`)
-    .delete()
-    .eq('review_id', review_id);
-    if (error) {
-      Alert.alert('Something went wrong. Please try again.')
-      setFilteredReviews(reviews)
-    }
+
+  const handleDeleteReview = async () => {  
+    
+    Alert.alert(
+      "Confirm Deletion",
+      "Are you sure you want to delete this review?",
+      [
+        {
+          text: "Cancel",
+          style: "cancel",
+        },
+        {
+          text: "Delete",
+          onPress: async () => {
+            setFilteredReviews(filteredReviews.filter((review) => review.review_id !== review_id))
+            const { data, error } = await supabase
+            .from(`${table}`)
+            .delete()
+            .eq('review_id', review_id);
+
+            if (error) {
+              Alert.alert('Something went wrong. Please try again.')
+              setFilteredReviews(reviews)
+            } 
+          },
+          style: "destructive",
+        },
+      ],
+      { cancelable: false }
+    );
   }
+  //   setFilteredReviews(filteredReviews.filter((review) => review.review_id !== review_id))
+  //   const { data, error } = await supabase
+  //   .from(`${table}`)
+  //   .delete()
+  //   .eq('review_id', review_id);
+  //   if (error) {
+  //     Alert.alert('Something went wrong. Please try again.')
+  //     setFilteredReviews(reviews)
+  //   }
+  // }
 
   const handleEditReview = async () => {
     setReviewId(review_id)
@@ -78,6 +108,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.3,
     shadowRadius: 1,
     borderRadius: 10,
+    width:"100%"
   },
   title: {
     fontSize: 20,

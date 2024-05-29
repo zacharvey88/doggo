@@ -138,6 +138,7 @@ const styles = StyleSheet.create({
     width: "100%",
     borderWidth: 1,
     borderColor: "#e0e0e0",
+    borderRadius: 10
   },
   searchContainer: {
     width: "100%",

@@ -1,23 +1,36 @@
-import { FlatList, StyleSheet, Text, View, ActivityIndicator, Pressable } from 'react-native'
-import { supabase } from '@/src/lib/supabase'
-import { useEffect, useState } from 'react'
-import { Database } from '@/src/lib/database.types'
-import Modal from 'react-native-modal'
+import {
+  FlatList,
+  StyleSheet,
+  Text,
+  View,
+  ActivityIndicator,
+  Pressable,
+} from "react-native";
+import { supabase } from "@/src/lib/supabase";
+import { useEffect, useState } from "react";
+import { Database } from "@/src/lib/database.types";
+import Modal from "react-native-modal";
 import ReviewForm from "@/src/components/ReviewForm";
 import { useAuth } from "@/src/providers/AuthProvider";
-import UserReviewCard from './UserReviewCard'
+import UserReviewCard from "./UserReviewCard";
 
-export default function UserReviewsList({ id, table}: { id: number, table: string}) {
+export default function UserReviewsList({
+  id,
+  table,
+}: {
+  id: number;
+  table: string;
+}) {
   const [reviews, setReviews] = useState([]);
   const [filteredReviews, setFilteredReviews] = useState(reviews);
   const [loading, setLoading] = useState(false);
   const [isModalVisible, setModalVisible] = useState(false);
-  const [existingReviewText, setExistingReviewText] = useState('')
-  const [existingRating, setExistingRating] = useState(0)
-  const {session, profile} = useAuth()
+  const [existingReviewText, setExistingReviewText] = useState("");
+  const [existingRating, setExistingRating] = useState(0);
+  const { session, profile } = useAuth();
 
   useEffect(() => {
-    getReviews();   
+    getReviews();
   }, [id, table]);
 
   const toggleModal = () => {
@@ -28,19 +41,25 @@ export default function UserReviewsList({ id, table}: { id: number, table: strin
     setLoading(true);
     const { data, error } = await supabase
       .from(table)
-      .select(`*, ${table === 'reviews_airlines' ? 'airlines(airline_name)' : 'accommodation(title)'}`)
-      .eq('user_id', id)
-      .order('created_at', { ascending: false });
+      .select(
+        `*, ${
+          table === "reviews_airlines"
+            ? "airlines(airline_name)"
+            : "accommodation(title)"
+        }`
+      )
+      .eq("user_id", id)
+      .order("created_at", { ascending: false });
     if (data) {
       setReviews(data);
-      setFilteredReviews(data);      
+      setFilteredReviews(data);
     }
     if (error) {
       console.log(error);
-    } 
-    setLoading(false);    
+    }
+    setLoading(false);
   }
-  
+
   return (
     <View style={styles.container}>
       {loading ? (
@@ -67,20 +86,24 @@ export default function UserReviewsList({ id, table}: { id: number, table: strin
                 existingRating={existingRating}
               />
             </View>
-            </Modal>
-        <FlatList 
-          data={filteredReviews} 
-          renderItem={({ item }) => <UserReviewCard 
-                review={item} 
-                table={table} 
-                reviews={reviews} 
-                filteredReviews={filteredReviews} 
-                setFilteredReviews={setFilteredReviews} 
-                setModalVisible={setModalVisible} 
-                setExistingRating={setExistingRating} 
-                setExistingReviewText={setExistingReviewText}/>} 
-          showsVerticalScrollIndicator={false}
-        />
+          </Modal>
+          <FlatList
+            data={filteredReviews}
+            // scrollEnabled={false}
+            renderItem={({ item }) => (
+              <UserReviewCard
+                review={item}
+                table={table}
+                reviews={reviews}
+                filteredReviews={filteredReviews}
+                setFilteredReviews={setFilteredReviews}
+                setModalVisible={setModalVisible}
+                setExistingRating={setExistingRating}
+                setExistingReviewText={setExistingReviewText}
+              />
+            )}
+            showsVerticalScrollIndicator={false}
+          />
         </>
       ) : (
         <Text style={styles.title}>No reviews yet</Text>
@@ -92,10 +115,10 @@ export default function UserReviewsList({ id, table}: { id: number, table: strin
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: '100%',
+    backgroundColor: "white",
+    alignItems: "center",
+    justifyContent: "center",
+    width: "100%",
     borderRadius: 20,
   },
   title: {
@@ -103,18 +126,18 @@ const styles = StyleSheet.create({
   },
   loadingContainer: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   loading: {
     marginBottom: 30,
   },
   modal: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    color: '#000',
+    justifyContent: "center",
+    alignItems: "center",
+    color: "#000",
     margin: 0,
     borderRadius: 40,
   },
-})
+});

@@ -1,10 +1,11 @@
 import { View, Text } from "./Themed";
-import { StyleSheet, Image, Pressable} from "react-native";
+import { StyleSheet, Image, Pressable, Alert} from "react-native";
 import dateFormat from "dateformat";
 import { FontAwesome6, FontAwesome, Entypo} from "@expo/vector-icons";
-import { Database } from "../lib/database.types";
+import { Database } from "../lib/database.types"
+import { supabase } from "../lib/supabase";
 
-export default function TripCard({trip, setDeleteModalVisible, isDeleteModalVisible, toggleDeleteModal, setTripId} : {trip: Database['public']['Tables']['trips']['Row'], setDeleteModalVisible: any, isDeleteModalVisible: any, toggleDeleteModal: any, setTripId: any}) {
+export default function TripCard({trip, setTripId, trips, filteredTrips, setFilteredTrips} : { trip: any, setTripId: any, trips: any, filteredTrips: any, setFilteredTrips: any}) {
 
   const { airline_name = "" } = trip.airlines ?? {};
   const { title = "", photos = ["https://orcurstjttnhckjuhyqb.supabase.co/storage/v1/object/public/accommodation_photos/photo-placeholder.png"] } = trip.accommodation ?? {};
@@ -19,8 +20,37 @@ export default function TripCard({trip, setDeleteModalVisible, isDeleteModalVisi
 
   const handleDeleteTrip = async (trip_id) => {
     setTripId(trip_id);
-    toggleDeleteModal();
+
+    Alert.alert(
+      "Confirm Deletion",
+      "Are you sure you want to remove this trip?",
+      [
+        {
+          text: "Cancel",
+          style: "cancel",
+        },
+        {
+          text: "Delete",
+          onPress: async () => {
+            setFilteredTrips(filteredTrips.filter((trip)=> trip.trip_id !== trip_id))
+            const { data, error } = await supabase
+            .from('trips')
+            .delete()
+            .eq("trip_id", trip_id)
+        
+            if (error) {
+                Alert.alert('Something went wrong, please try again.')
+                setFilteredTrips(trips)
+            }
+        },
+          style: "destructive",
+        },
+      ],
+      { cancelable: false }
+    );
+    // toggleDeleteModal();
   }
+
 
   return (
     <View>

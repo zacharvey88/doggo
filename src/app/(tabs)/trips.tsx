@@ -25,6 +25,7 @@ export default function TabTrips() {
   const [filteredTrips, setFilteredTrips] = useState(trips);
   const { session } = useAuth();
   const router = useRouter();
+
   const toggleDeleteModal = () => {
     setDeleteModalVisible(!isDeleteModalVisible);
   };
@@ -75,10 +76,10 @@ export default function TabTrips() {
       {session && session.user ? (
         <>
           <View style={styles.container}>
-              <Pressable style={styles.addTripButton} onPress={()=>{router.push('/add-trip')}} >
+              <Pressable style={styles.addTripButton} onPress={(toggleCreateModal, onTripAdded)=>{router.push('/add-trip')}} >
                 <AntDesign name="pluscircle" size={40} color="rgb(1,140,220)" />
               </Pressable>
-            <Text style={styles.title}>Your Saved Trips</Text>
+            {/* <Text style={styles.title}>Your Saved Trips</Text> */}
             <TripList
               user_id={session.user.id}
               setDeleteModalVisible={setDeleteModalVisible}
@@ -88,6 +89,7 @@ export default function TabTrips() {
               setTrips={setTrips}
               filteredTrips={filteredTrips}
               setFilteredTrips={setFilteredTrips}
+              trips={trips}
             />
           </View>
           {/* Delete Trip Modal */}
@@ -130,8 +132,7 @@ export default function TabTrips() {
           <Text style={styles.signInTitle}>Sign in to view your trips</Text>
 
           <TouchableOpacity
-            // onPress={() => setLoginModalVisible(true)}
-            style={styles.signInButton}
+            style={styles.button}
             onPress={()=>router.push('/sign-in')}
           >
             <Text style={styles.btnTitle}>Sign in</Text>
@@ -145,18 +146,29 @@ export default function TabTrips() {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: "white",
+    backgroundColor: "#fff",
   },
   container: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: "white",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  button: {
+    alignItems: "center",
+    paddingVertical: 12,
+    paddingHorizontal: 32,
+    borderRadius: 10,
+    backgroundColor: "#3990CD",
+    marginTop: 15,
+    width: "45%",
   },
   title: {
     fontSize: 18,
     fontWeight: "bold",
-    textAlign: 'center',
-    fontFamily: 'Futura',
-    color: '#3990CD'
+    textAlign: "center",
+    fontFamily: "Futura",
+    color: "#3990CD",
   },
   addTripButton: {
     position: "absolute",
@@ -214,14 +226,5 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontSize: 16,
     color: "white",
-  },
-  signInButton: {
-    alignItems: "center",
-    paddingVertical: 12,
-    paddingHorizontal: 32,
-    borderRadius: 10,
-    backgroundColor: "#3990CD",
-    marginTop: 15,
-    width: "45%",
   },
 });

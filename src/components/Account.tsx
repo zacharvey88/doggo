@@ -9,13 +9,14 @@ import {
   TouchableOpacity,
   ActivityIndicator,
   ScrollView,
-  Pressable
+  Pressable,
 } from "react-native";
 import { Session } from "@supabase/supabase-js";
 import { Link, useNavigation } from "expo-router";
 import Colors from "../constants/Colors";
 import UserReviewsList from "./UserReviewsList";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { FontAwesome } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 
 export default function Account({ session }: { session: Session }) {
@@ -26,10 +27,9 @@ export default function Account({ session }: { session: Session }) {
   const [email, setEmail] = useState("");
   const navigation = useNavigation();
   const defaultImage = "https://i.sstatic.net/l60Hf.png";
-  const [table, setTable] = useState('reviews_airlines')
+  const [table, setTable] = useState("reviews_airlines");
 
   const router = useRouter();
-
 
   const fetchProfile = async () => {
     try {
@@ -99,7 +99,7 @@ export default function Account({ session }: { session: Session }) {
   };
 
   return (
-    <SafeAreaView style={styles.safeArea}>
+    <SafeAreaView style={styles.safeArea} edges={["right", "left", "top"]}>
       <View style={styles.container}>
         {loading ? (
           <View style={styles.loadingContainer}>
@@ -108,6 +108,12 @@ export default function Account({ session }: { session: Session }) {
         ) : (
           <>
             <View style={styles.badge}>
+              <TouchableOpacity
+                style={styles.signOutButton}
+                onPress={handleSignOut}
+              >
+                <FontAwesome style={styles.icon} name="sign-out" />
+              </TouchableOpacity>
               <Image
                 source={{
                   uri: avatarUrl
@@ -128,12 +134,12 @@ export default function Account({ session }: { session: Session }) {
                 >
                   Edit Profile
                 </Link>
-                  <Pressable
-                  onPress={() => {router.push('/my-accommodation')}}>
-                    <Text>
-                      Manage Properties
-                      
-                  </Text>
+                <Pressable
+                  onPress={() => {
+                    router.push("/manage-properties");
+                  }}
+                >
+                  <Text style={styles.textButton}>Manage Properties</Text>
                 </Pressable>
               </View>
             </View>
@@ -142,30 +148,56 @@ export default function Account({ session }: { session: Session }) {
                 onPress={() => {
                   setTable("reviews_airlines");
                 }}
-                style={styles.tab}
+                style={[
+                  styles.tab,
+                  table === "reviews_airlines" && styles.activeTab,
+                ]}
               >
-                <Text style={styles.tabText}>Airline Reviews</Text>
+                <FontAwesome
+                  name="plane"
+                  style={[
+                    styles.tabIcon,
+                    table === "reviews_airlines" && styles.activeTabIcon,
+                  ]}
+                />
+                <Text
+                  style={[
+                    styles.tabText,
+                    table === "reviews_airlines" && styles.activeTabText,
+                  ]}
+                >
+                  Airline Reviews
+                </Text>
               </Pressable>
               <Pressable
                 onPress={() => {
                   setTable("reviews_accommodation");
                 }}
-                style={styles.tab}
+                style={[
+                  styles.tab,
+                  table === "reviews_accommodation" && styles.activeTab,
+                ]}
               >
-                <Text style={styles.tabText}>Property Reviews</Text>
+                <FontAwesome
+                  name="building"
+                  style={[
+                    styles.tabIcon,
+                    table === "reviews_accommodation" && styles.activeTabIcon,
+                  ]}
+                />
+                <Text
+                  style={[
+                    styles.tabText,
+                    table === "reviews_accommodation" && styles.activeTabText,
+                  ]}
+                >
+                  Property Reviews
+                </Text>
               </Pressable>
-              {/* <Pressable onPress={()=>{setTable('reviews_airlines')}} style={styles.tab}><Text style={styles.tabText}>Property Listings</Text></Pressable> */}
             </View>
             <View style={styles.listArea}>
               <UserReviewsList id={session?.user.id} table={table} />
             </View>
-
-            <TouchableOpacity
-              style={styles.signOutButton}
-              onPress={handleSignOut}
-            >
-              <Text style={styles.signOutButtonText}>Sign Out</Text>
-            </TouchableOpacity>
           </>
         )}
       </View>
@@ -177,7 +209,14 @@ const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
     backgroundColor: "white",
-    justifyContent:"space-between",
+  },
+  container: {
+    flex: 1,
+    width: "100%",
+  },
+  scrollContent: {
+    flexGrow: 1,
+    justifyContent: "space-between",
     alignItems: "center",
   },
   loadingContainer: {
@@ -187,16 +226,15 @@ const styles = StyleSheet.create({
   },
   badge: {
     alignItems: "center",
-    gap: 5,
-    marginTop:10,
+    marginTop: 10,
   },
   image: {
-    width: 150,
-    height: 150,
+    width: 120,
+    height: 120,
     borderRadius: 75,
     marginBottom: 10,
     borderWidth: 1,
-    color: "gray",
+    borderColor: "gray",
   },
   textButton: {
     color: Colors.light.tint,
@@ -208,7 +246,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontSize: 22,
     marginBottom: 5,
-    marginTop:10,
+    marginTop: 10,
     color: "#333",
   },
   username: {
@@ -217,47 +255,57 @@ const styles = StyleSheet.create({
   },
   listArea: {
     flexGrow: 1,
-    flexShrink: 1,
     marginBottom: 20,
     paddingHorizontal: 20,
   },
   signOutButton: {
-    alignSelf: 'center',
-    borderColor: "gray",
-    borderWidth: 1,
-    paddingHorizontal: 15,
-    paddingVertical: 10,
-    borderRadius: 10,
-    alignItems: "center",
-    justifyContent: "center",
-    width: 100,
+    position: "absolute",
+    top: 15,
+    right: 25,
+    zIndex: 1,
   },
-  signOutButtonText: {
-    fontSize: 16,
-    color: "gray",
+  icon: {
+    color: "#636363",
+    fontSize: 30,
   },
   tabs: {
     flexDirection: "row",
-    alignSelf: 'center',
+    alignSelf: "center",
     gap: 10,
     padding: 10,
-    width: '95%'
+    width: "95%",
+    marginTop: 10,
   },
   tab: {
+    marginTop: 5,
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#3A90CD',
+    alignItems: "center",
+    justifyContent: "center",
     padding: 5,
-    borderRadius: 5
+    borderBottomWidth: 3,
+    borderBottomColor: "transparent",
+  },
+  activeTab: {
+    borderBottomColor: "#3A90CD",
   },
   tabText: {
-    color: 'white',
-    textAlign: 'center',
-    fontWeight: '600'
+    color: "gray",
+    textAlign: "center",
+    fontWeight: "600",
+    fontSize: 12,
+  },
+  activeTabText: {
+    color: "#3A90CD",
+  },
+  tabIcon: {
+    fontSize: 24,
+    color: "gray",
+  },
+  activeTabIcon: {
+    color: "#3A90CD",
   },
   links: {
-    flexDirection: 'row',
-    gap: 10
-  }
+    flexDirection: "row",
+    gap: 10,
+  },
 });
