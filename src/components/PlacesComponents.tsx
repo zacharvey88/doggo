@@ -205,7 +205,6 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 15,
     borderTopRightRadius: 15,
     marginBottom: 5,
-    
   },
   textContainer: {
     paddingHorizontal: 10,
@@ -232,16 +231,14 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   image: {
-    width: 125,
-    height: 100,
-    borderRadius: 5,
+    width: "100%",
+    height: "100%",
   },
   scrollView: {
     marginBottom: 10,
   },
   scrollViewContent: {
-    flex: 1,
-    justifyContent: 'space-between'
+    gap: 10,
   },
   status: {
     fontSize: 16,
@@ -249,9 +246,6 @@ const styles = StyleSheet.create({
   listContent: {
     flexGrow: 1,
   },
-  noImage: {
-    marginBottom: 5 
-  }
 });
 
 export default PlacesComponent;
