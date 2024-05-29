@@ -35,10 +35,8 @@ export default function TabTrips() {
   };
 
   useEffect(() => {
-    if (session) {
       getTrips();
-    }
-  }, [session]);
+  }, []);
 
   async function getTrips() {
     if (!session?.user?.id) {
@@ -86,6 +84,7 @@ export default function TabTrips() {
               filteredTrips={filteredTrips}
               setFilteredTrips={setFilteredTrips}
               trips={trips}
+              getTrips={getTrips}
             />
           </View>
           <Modal

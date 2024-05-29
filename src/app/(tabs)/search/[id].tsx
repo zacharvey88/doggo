@@ -51,15 +51,15 @@ export default function Accommodation() {
 
   const images = photos.split(",");
 
-  const handleAddReview = () => { 
+  const handleAddButton = (button) => { 
     
     if (session && session.user) {  
-      toggleReviewModal()
+      button === 'review' ? toggleReviewModal() : toggleTripModal()
     } else {
     
       Alert.alert(
         "Not Logged In",
-        "You must be logged in to add a review",
+        `You must be logged in to ${button === 'review' ? "add a review" : "add to a trip"}`,
         [
           {
             text: "Okay",
@@ -174,14 +174,14 @@ export default function Accommodation() {
                 title="Add Review"
                 titleStyle={{ fontSize: 14 }}
                 style={styles.button}
-                onPress={handleAddReview}
+                onPress={()=>{handleAddButton('review')}}
               />
 
               <Button
                 title="Add to trip"
                 titleStyle={{ fontSize: 14 }}
                 style={styles.button}
-                onPress={toggleTripModal}
+                onPress={()=>{handleAddButton('trip')}}
               />
             </View>
             <Text style={styles.reviewTitle}>Customer Reviews</Text>

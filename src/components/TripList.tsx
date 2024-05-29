@@ -8,30 +8,13 @@ import { Navigator } from "expo-router";
 import { ActivityIndicator } from "react-native";
 import TripCard from "./TripCard";
 
-export default function TripList({user_id, toggleDeleteModal, setTripId, setTrips, filteredTrips, setFilteredTrips, trips} : {user_id: string, toggleDeleteModal: any, setTripId: any, setTrips: any, filteredTrips: any, setFilteredTrips: any, trips: any}) {
+export default function TripList({user_id, setTripId, setTrips, filteredTrips, setFilteredTrips, trips, getTrips} : {user_id: string, setTripId: any, setTrips: any, filteredTrips: any, setFilteredTrips: any, trips: any, getTrips : any}) {
 
   const [loading, setLoading] = useState(false)
 
-  // useEffect(()=>{
-  //   getTrips()
-  // },[])
-
-  // async function getTrips () {
-  //   setLoading(true)
-  //   const {data, error} = await supabase
-  //   .from('trips')
-  //   .select('*, accommodation(title, photos), airlines(airline_name)')
-  //   .eq("user_id",user_id)
-  //   .order('start_date', { ascending: false });
-  //   if (error) {
-  //     console.log(error);
-  //   }
-  //   if(data){
-  //     setTrips(data)
-  //     setFilteredTrips(data)
-  //   }
-  //     setLoading(false)
-  // }
+  const refreshTrips = () => {
+    getTrips();
+  }
 
   return (
     <View style={styles.container}>
@@ -51,7 +34,6 @@ export default function TripList({user_id, toggleDeleteModal, setTripId, setTrip
           renderItem={({ item }) => (
             <TripCard
               trip={item}
-              toggleDeleteModal={toggleDeleteModal}
               setTripId={setTripId}
               trips={trips}
               filteredTrips={filteredTrips}

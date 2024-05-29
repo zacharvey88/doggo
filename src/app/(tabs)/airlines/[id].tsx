@@ -54,15 +54,15 @@ export default function Airline() {
     setTripModalVisible(!isTripModalVisible);
   };
 
-  const handleAddReview = () => { 
+  const handleAddButton = (button) => { 
     
     if (session && session.user) {  
-      toggleReviewModal()
+      button === 'review' ? toggleReviewModal() : toggleTripModal()
     } else {
     
       Alert.alert(
         "Not Logged In",
-        "You must be logged in to add a review",
+        `You must be logged in to ${button === 'review' ? "add a review" : "add to a trip"}`,
         [
           {
             text: "Okay",
@@ -148,14 +148,14 @@ export default function Airline() {
             title="Add Review" 
             titleStyle={{ fontSize: 14 }}
             style={styles.button}
-            onPress={handleAddReview}
+            onPress={()=>{handleAddButton('review')}}
             
           />
           <Button 
             title="Add to trip" 
             titleStyle={{ fontSize: 14 }}
             style={styles.button}
-            onPress={toggleTripModal}
+            onPress={()=>{handleAddButton('trip')}}
           />
         </View>
         {policy_reservations && 
@@ -193,6 +193,9 @@ export default function Airline() {
           <Text style={styles.header}>Restrictions</Text>
           <Text style={styles.text}>{policy_restrictions}</Text>
         </View>
+        }
+        {!(policy_reservations || policy_cabin || policy_cargo || policy_checked_baggage || policy_guidelines || policy_restrictions) && 
+          <Text style={styles.noInfo}>No Information Available</Text>
         }
       </ScrollView>
     </View>
@@ -266,4 +269,9 @@ const styles = StyleSheet.create({
     color: '#000',
     margin: 0,
   },
+  noInfo: {
+    fontSize: 16,
+    fontWeight: 500,
+    textAlign: 'center',
+  }
 });

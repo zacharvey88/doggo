@@ -5,12 +5,23 @@ import { useLocalSearchParams } from "expo-router"
 import { useEffect } from "react"
 export default function AddTrip() {
 
-  const {airline_id, accommodation_id} = useLocalSearchParams()
+  const {airline_id, accommodation_id, trip_id, existingTripName, existingDestination, existingEndDate, existingStartDate, existingAirline, existingAccommodation, edit} = useLocalSearchParams()
 
   return (
     <View style={styles.container}>
       <View style={styles.form}>
-        <TripForm airline_id={airline_id} accommodation_id={accommodation_id}/> 
+        <TripForm 
+          airline_id={airline_id} 
+          accommodation_id={accommodation_id} 
+          existingTripName={existingTripName}
+          existingDestination={existingDestination}
+          existingStartDate={existingStartDate}
+          existingEndDate={existingEndDate}
+          existingAirline={existingAirline}
+          existingAccommodation={existingAccommodation}
+          edit={edit ? true : false}
+          trip_id={trip_id}
+        /> 
       </View>
     </View>
   )
