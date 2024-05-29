@@ -17,6 +17,7 @@ import {
 import { supabase } from "@/src/lib/supabase";
 import Colors from "@/src/constants/Colors";
 import { StatusBar } from "expo-status-bar";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 const SignInScreen = () => {
   const [email, setEmail] = useState<string>("");
@@ -53,7 +54,7 @@ const SignInScreen = () => {
     }
 
     const { error } = await supabase.auth.resetPasswordForEmail(email);
-    if (error) {    
+    if (error) {
       Alert.alert(error.message);
     } else {
       Alert.alert("Password reset email sent!");
@@ -61,7 +62,11 @@ const SignInScreen = () => {
   }
 
   return (
-    <View style={styles.container}>
+    <KeyboardAwareScrollView
+      contentContainerStyle={styles.scrollViewContent}
+      enableOnAndroid={true}
+      extraScrollHeight={100}
+    >
       <StatusBar style="light" />
       <Image
         source={require("@/assets/images/background.png")}
@@ -119,7 +124,7 @@ const SignInScreen = () => {
           </Link>
         </View>
       </View>
-    </View>
+    </KeyboardAwareScrollView>
   );
 };
 
@@ -127,7 +132,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "white",
-    justifyContent: "space-between",
+  },
+  scrollViewContent: {
+    flexGrow: 1,
+    justifyContent: "center",
   },
   background: {
     flex: 1,
@@ -152,6 +160,7 @@ const styles = StyleSheet.create({
     color: "white",
     marginTop: 30,
     textAlign: "center",
+    fontFamily:"Futura"
   },
   form: {
     marginTop: 160,

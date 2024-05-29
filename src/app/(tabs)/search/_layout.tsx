@@ -14,7 +14,7 @@ export default function SearchStack() {
           headerTitle: "",
 
           headerBackTitleVisible: true,
-          headerBackTitle: "Back",
+          headerBackTitle: "Search",
         }}
       />
     </Stack>

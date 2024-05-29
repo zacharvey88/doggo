@@ -136,9 +136,7 @@ export default function Account({ session }: { session: Session }) {
                 </Link>
                 <Link 
                   style={styles.textButton}
-                  href={{
-                    pathname: "/manage-properties",
-                  }}
+                   push href="/manage-properties"
                   >
                     Manage Properties
                 </Link>

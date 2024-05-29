@@ -89,16 +89,6 @@ export default function UsersAccommodation() {
       <View style={styles.container}>
         <ScrollView>
           <View style={styles.card}>
-            <Stack.Screen
-              options={{
-                title: "",
-                headerLeft: () => (
-                  <TouchableOpacity onPress={() => router.back()}>
-                    <FontAwesome name="arrow-left" size={24} color="black" />
-                  </TouchableOpacity>
-                ),
-              }}
-            />
             <Text style={styles.title}>{title}</Text>
             {photos ? (
               <ScrollView

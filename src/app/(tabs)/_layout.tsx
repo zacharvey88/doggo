@@ -87,7 +87,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="trips"
         options={{
-          title: "Your Trips",
+          title: "My Trips",
           headerShown: false,
           tabBarIcon: ({ color }) => <FontAwesome6 name="route" size={24} color={color} />,
         // headerRight: () => (
