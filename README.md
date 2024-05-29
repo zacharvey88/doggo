@@ -43,9 +43,14 @@ To view the app in iOS install Xcode:
 
 Install dependencies `npm install`
 
-To view places other than accommodation, you first need to obtain a [Google Places API](https://developers.google.com/maps/documentation/places/web-service/overview) key. 
-Then you will need create a .env file in the root of the folder, place `EXPO_PUBLIC_API_KEY = YOUR_API_KEY`
+To view places other than accommodation, follow these steps:
 
+- Obtain a [Google Places API](https://console.cloud.google.com/projectselector2/google/maps-apis/credentials?utm_source=Docs_CreateAPIKey&utm_content=Docs_maps-backend&_gl=1*3uptfz*_ga*MTk2Nzc1MDk4MC4xNzE1NzAyOTUy*_ga_NRWSTWS78N*MTcxNjk4NTA0NS4yNC4xLjE3MTY5ODU4MzkuMC4wLjA.) key.
+
+- Create a .env file in the root of your project folder.
+
+- Add the following line to the .env file: `EXPO_PUBLIC_API_KEY=YOUR_API_KEY`
+- Replace YOUR_API_KEY with your actual API key.
 
 ## Running the App
 
