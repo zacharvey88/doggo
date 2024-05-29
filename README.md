@@ -20,7 +20,7 @@ The front-end was built in React Native with Expo
 To make a local clone of the repo for yourself:
 
 - In your terminal, navigate to the desired directory
-- Run this command: git clone `https://github.com/zacharvey88/doggo.git`
+- Run this command: `git clone` [https://github.com/zacharvey88/doggo.git](url)
 - Open the directory in your chosen code editor and refer to further instructions below.
 
 ## Set-up
@@ -33,20 +33,19 @@ Minimum versions required:
 
 To view the app in android install Android Studio:
 
-- `https://developer.android.com/studio/install`
+- [https://developer.android.com/studio/install](url)
 
 To view the app in iOS install Xcode:
 
-- `https://apps.apple.com/us/app/xcode/id497799835?mt=12`)
+- [https://apps.apple.com/us/app/xcode/id497799835?mt=12](url)
 
 
 
 Install dependencies `npm install`
 
-In order to connect to the database you will need to set local variable for EXPO_PUBLIC_API_KEY in a .env file,
-make sure you add the .env file to your .gitignore
+To view places other than accommodation, you first need to obtain a [Google Places API](https://developers.google.com/maps/documentation/places/web-service/overview) key. 
+Then you will need create a .env file in the root of the folder, place `EXPO_PUBLIC_API_KEY = YOUR_API_KEY`
 
-Supply EXPO_PUBLIC_API_KEY with the relevant API key as provided privately.
 
 ## Running the App
 
