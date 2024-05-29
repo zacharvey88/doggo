@@ -14,13 +14,17 @@ import { useAuth } from "@/src/providers/AuthProvider";
 import DatePicker from "react-native-modern-datepicker";
 import { getFormatedDate } from "react-native-modern-datepicker";
 import { useRouter, useNavigation } from "expo-router";
+import { Dropdown } from "react-native-element-dropdown";
+import Accommodation from "../app/(tabs)/search/[id]";
+import { FontAwesome, MaterialCommunityIcons } from "@expo/vector-icons";
 import { LogBox } from "react-native";
 
 LogBox.ignoreLogs([
   "Warning: DatePicker: Support for defaultProps will be removed from function components in a future major release. Use JavaScript default parameters instead.",
 ]);
 
-export default function TripForm() {
+export default function TripForm({ airline_id, accommodation_id }: { airline_id?: number; accommodation_id?: number }) {
+  
   // form state
   const [title, setTitle] = useState("");
   const [startDate, setStartDate] = useState("");
@@ -29,13 +33,58 @@ export default function TripForm() {
   const [tempEndDate, setTempEndDate] = useState(""); // temporary state for end date
   const [isFocus, setIsFocus] = useState(false);
   const navigation = useNavigation();
-  // date picker state
+  const [destination, setDestination] = useState("");
+  const [airline, setAirline] = useState("Not selected")
+  const [accommodation, setAccommodation] = useState("Not selected")
   const [startOpen, setStartOpen] = useState(false); // open and close the modal
   const [endOpen, setEndOpen] = useState(false);
   const [errors, setErrors] = useState({});
   const { session, loading, profile } = useAuth();
   const router = useRouter();
 
+  //date picker toggle
+  const toggleStartDatePicker = () => {
+    setStartOpen(!startOpen);
+  };
+
+  const toggleEndDatePicker = () => {
+    setEndOpen(!endOpen);
+  };
+
+
+  useEffect(()=>{
+    getAirline()
+    getAccommodation()
+    console.log(airline);
+    console.log(accommodation);
+    console.log(airline_id);
+    
+  },[])
+
+  const getAirline = async () => {
+    const { data, error } = await supabase
+    .from("airlines")
+    .select('airline_name')
+    .eq('airline_id', airline_id)
+    if (error) {
+      console.log(error);
+    } else {      
+      setAirline(data[0].airline_name);
+    }
+  }
+
+
+  const getAccommodation = async () => {
+    const { data, error } = await supabase
+    .from("accommodation")
+    .select('title')
+    .eq('accommodation_id', accommodation_id)
+    if (error) {
+      console.log(error);
+    } else {
+      setAccommodation(data[0].title);
+    }
+  }
   const today = new Date();
   const minDate = getFormatedDate(
     today.setDate(today.getDate() + 1),
@@ -66,12 +115,20 @@ export default function TripForm() {
   };
 
   const submitForm = async () => {
-    const { data, error } = await supabase.from("trips").insert({
+
+    const tripData = {
       user_id: session?.user.id,
       start_date: startDate,
       end_date: endDate,
       title: title,
-    });
+      location: destination,
+      ...(airline_id ? { airline_id: parseInt(airline_id) } : {}),
+      ...(accommodation_id ? { accommodation_id: parseInt(accommodation_id) } : {})
+    };  
+
+    const { data, error } = await supabase
+      .from("trips")
+      .insert(tripData);
     if (error) {
       Alert.alert(error.message);
     } else {
@@ -114,6 +171,16 @@ export default function TripForm() {
         {errors.title ? (
           <Text style={styles.errorstext}>{errors.title}</Text>
         ) : null}
+
+        <Text style={styles.label}>Destination</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="Enter your destination"
+          value={destination}
+          onChangeText={setDestination}
+          autoCorrect={false}
+          autoCapitalize="words"
+        />
 
         <Text style={styles.label}>Start Date</Text>
           <TextInput
@@ -168,6 +235,20 @@ export default function TripForm() {
           onPress={() => setEndOpen(true)}
         />
 
+        <Text style={styles.label}>Airline</Text>
+        <TextInput
+          style={[styles.input, styles.readonlyInput]}
+          defaultValue={airline}
+          editable={false}
+        />
+
+        <Text style={[styles.label]}>Accommodation</Text>
+        <TextInput
+          style={[styles.input, styles.readonlyInput]}
+          defaultValue={accommodation}
+          editable={false}
+        />
+
         <Modal animationType="slide" transparent={true} visible={endOpen}>
           <View style={styles.centeredView}>
             <View style={styles.modalView}>
@@ -197,15 +278,17 @@ export default function TripForm() {
         </Modal>
 
         {errors.endDate ? (
-          <Text style={styles.errorstext}>{errors.endDate}</Text>
+          <Text style={[styles.errorstext]}>{errors.endDate}</Text>
         ) : null}
       </View>
       <View style={styles.buttonContainer}>
         <Pressable onPress={handleSubmit} style={styles.button}>
-          <Text style={styles.buttonText}>Create Your Trip</Text>
+          <FontAwesome name="save" size={16} color={'white'}></FontAwesome>
+          <Text style={styles.buttonText}>Save</Text>
         </Pressable>
 
         <Pressable onPress={handleClose} style={styles.button}>
+        {/* <MaterialCommunityIcons name="cancel" size={16} color={'white'}></MaterialCommunityIcons> */}
           <Text style={styles.buttonText}>Cancel</Text>
         </Pressable>
       </View>
@@ -316,6 +399,7 @@ const styles = StyleSheet.create({
     marginBottom: 5,
     marginVertical: 10,
     fontFamily: "Futura",
+    color: '#3A90CD'
   },
   button: {
     backgroundColor: "#3A90CD",
@@ -323,6 +407,14 @@ const styles = StyleSheet.create({
     height: 40,
     width: 135,
     padding: 10,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 10,
+  },
+  readonlyInput: {
+    backgroundColor: '#f0f0f0', 
+    color: '#a0a0a0', 
   },
   modalButtonContainer: {
     flexDirection: "row",

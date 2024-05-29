@@ -10,7 +10,7 @@ import { useRouter } from "expo-router";
 import { ActivityIndicator } from "react-native";
 import { useLocalSearchParams,  } from "expo-router";
 
-export default function TripListSmall({user_id, toggleModal, table} : {user_id: string, toggleModal: any, table: string}) {
+export default function TripListSmall({user_id, toggleModal, table, airline_id, accommodation_id} : {user_id: string, toggleModal: any, table: string, airline_id: Number, accommodation_id: Number}) {
 
   const [trips, setTrips] = useState<Database['public']['Tables']['trips']['Row'][]>([]);
   const [loading, setLoading] = useState(false)
@@ -84,7 +84,7 @@ export default function TripListSmall({user_id, toggleModal, table} : {user_id: 
         <Button
           title={"Create New Trip"}
           style={styles.button}
-          onPress={() => router.push('/add-trip')}
+          onPress={() => router.push(`/add-trip?airline_id=${airline_id}&accommodation_id=${accommodation_id}`)}
         />
         <Button
           title={"Cancel"}
