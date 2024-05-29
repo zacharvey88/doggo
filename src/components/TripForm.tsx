@@ -16,6 +16,10 @@ import DatePicker from "react-native-modern-datepicker";
 import { getToday, getFormatedDate } from "react-native-modern-datepicker";
 import { useRouter, useNavigation } from "expo-router";
 import { Dropdown } from "react-native-element-dropdown";
+import { LogBox } from "react-native";
+LogBox.ignoreLogs([
+  "Warning: DatePicker: Support for defaultProps will be removed from function components in a future major release. Use JavaScript default parameters instead.",
+]);
 
 export default function TripForm() {
   //form state
