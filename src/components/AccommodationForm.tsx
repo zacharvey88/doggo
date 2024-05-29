@@ -37,7 +37,7 @@ export default function AccommodationForm() {
   const validateForm = () => {
     let errors = {};
     if (!name) errors.name = "Title is required";
-    if (!imageURL) errors.imageURL = "Image URL is required";
+    // if (!imageURL) errors.imageURL = "Image URL is required";
     if (!description) errors.description = "Description is required";
     if (!address) errors.address = "Address is required";
     if (!phone) errors.phone = "Phone is required";
@@ -65,7 +65,7 @@ export default function AccommodationForm() {
     if (error) {
       Alert.alert(error.message);
     } else {
-      router.replace("accommodation");
+      router.replace("manage-properties");
     }
   };
 
