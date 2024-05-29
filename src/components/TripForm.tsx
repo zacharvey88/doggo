@@ -1,49 +1,40 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import {
   StyleSheet,
   Text,
   View,
-  StatusBar,
   SafeAreaView,
   TextInput,
-  TouchableOpacity,
   Modal,
+  Pressable,
+  Alert,
 } from "react-native";
-import { Pressable, Platform, Alert } from "react-native";
 import { supabase } from "../lib/supabase";
 import { useAuth } from "@/src/providers/AuthProvider";
 import DatePicker from "react-native-modern-datepicker";
-import { getToday, getFormatedDate } from "react-native-modern-datepicker";
+import { getFormatedDate } from "react-native-modern-datepicker";
 import { useRouter, useNavigation } from "expo-router";
-import { Dropdown } from "react-native-element-dropdown";
 import { LogBox } from "react-native";
+
 LogBox.ignoreLogs([
   "Warning: DatePicker: Support for defaultProps will be removed from function components in a future major release. Use JavaScript default parameters instead.",
 ]);
 
 export default function TripForm() {
-  //form state
+  // form state
   const [title, setTitle] = useState("");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
+  const [tempStartDate, setTempStartDate] = useState(""); // temporary state for start date
+  const [tempEndDate, setTempEndDate] = useState(""); // temporary state for end date
   const [isFocus, setIsFocus] = useState(false);
   const navigation = useNavigation();
-  //date picker state
+  // date picker state
   const [startOpen, setStartOpen] = useState(false); // open and close the modal
   const [endOpen, setEndOpen] = useState(false);
   const [errors, setErrors] = useState({});
-  const [validForm, setValidForm] = useState(false);
   const { session, loading, profile } = useAuth();
   const router = useRouter();
-
-  //date picker toggle
-  const toggleStartDatePicker = () => {
-    setStartOpen(!startOpen);
-  };
-
-  const toggleEndDatePicker = () => {
-    setEndOpen(!endOpen);
-  };
 
   const today = new Date();
   const minDate = getFormatedDate(
@@ -52,16 +43,16 @@ export default function TripForm() {
   );
   const minDateForEndDate = minDate + 1;
 
-  const onChangeStartDate = (propDate) => {
-    setStartDate(propDate);
+  // event handlers
+  const onChangeTempStartDate = (propDate) => {
+    setTempStartDate(propDate);
   };
 
-  const onChangeEndDate = (propDate) => {
-    setEndDate(propDate);
+  const onChangeTempEndDate = (propDate) => {
+    setTempEndDate(propDate);
   };
 
   // validate form
-
   const validateForm = () => {
     let errors = {};
 
@@ -98,6 +89,16 @@ export default function TripForm() {
     navigation.goBack();
   };
 
+  const confirmStartDate = () => {
+    setStartDate(tempStartDate);
+    setStartOpen(false);
+  };
+
+  const confirmEndDate = () => {
+    setEndDate(tempEndDate);
+    setEndOpen(false);
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <View>
@@ -121,7 +122,7 @@ export default function TripForm() {
             value={startDate}
             onChangeText={setStartDate}
             editable={false}
-            onPress={toggleStartDatePicker}
+            onPress={() => setStartOpen(true)}
           />
 
         <Modal animationType="slide" transparent={true} visible={startOpen}>
@@ -130,14 +131,24 @@ export default function TripForm() {
               <DatePicker
                 mode="calendar"
                 minimumDate={minDate}
-                selected={startDate}
-                onDateChange={onChangeStartDate}
+                selected={tempStartDate || startDate}
+                onDateChange={onChangeTempStartDate}
                 style={styles.datePicker}
               />
-
-              <Pressable onPress={toggleStartDatePicker}>
-                <Text>Close</Text>
-              </Pressable>
+              <View style={styles.modalButtonContainer}>
+                <Pressable
+                  style={[styles.modalButton, styles.cancelButton]}
+                  onPress={() => setStartOpen(false)}
+                >
+                  <Text style={styles.buttonText}>Cancel</Text>
+                </Pressable>
+                <Pressable
+                  style={[styles.modalButton, styles.confirmButton]}
+                  onPress={confirmStartDate}
+                >
+                  <Text style={styles.buttonText}>Confirm</Text>
+                </Pressable>
+              </View>
             </View>
           </View>
         </Modal>
@@ -147,13 +158,14 @@ export default function TripForm() {
         ) : null}
 
         <Text style={styles.label}>End Date</Text>
+
         <TextInput
           style={styles.input}
           placeholder="Enter End Date"
           value={endDate}
           onChangeText={setEndDate}
           editable={false}
-          onPress={toggleEndDatePicker}
+          onPress={() => setEndOpen(true)}
         />
 
         <Modal animationType="slide" transparent={true} visible={endOpen}>
@@ -161,15 +173,25 @@ export default function TripForm() {
             <View style={styles.modalView}>
               <DatePicker
                 mode="calendar"
-                selected={minDateForEndDate}
+                selected={tempEndDate || endDate}
                 minimumDate={minDateForEndDate}
-                onDateChange={onChangeEndDate}
+                onDateChange={onChangeTempEndDate}
                 style={styles.datePicker}
               />
-
-              <Pressable onPress={toggleEndDatePicker}>
-                <Text>Close</Text>
-              </Pressable>
+              <View style={styles.modalButtonContainer}>
+                <Pressable
+                  style={[styles.modalButton, styles.cancelButton]}
+                  onPress={() => setEndOpen(false)}
+                >
+                  <Text style={styles.buttonText}>Cancel</Text>
+                </Pressable>
+                <Pressable
+                  style={[styles.modalButton, styles.confirmButton]}
+                  onPress={confirmEndDate}
+                >
+                  <Text style={styles.buttonText}>Confirm</Text>
+                </Pressable>
+              </View>
             </View>
           </View>
         </Modal>
@@ -186,7 +208,6 @@ export default function TripForm() {
         <Pressable onPress={handleClose} style={styles.button}>
           <Text style={styles.buttonText}>Cancel</Text>
         </Pressable>
-        {/* <Button style={styles.button} title="Cancel" onPress={() => router.push("/trips")} /> */}
       </View>
     </SafeAreaView>
   );
@@ -204,8 +225,8 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     borderRadius: 20,
     width: "90%",
-    height: "50%",
-    padding: 35,
+    height: "50%", // Adjust the height as necessary
+    padding: 20,
     alignItems: "center",
     shadowColor: "#000",
     shadowOffset: {
@@ -302,5 +323,21 @@ const styles = StyleSheet.create({
     height: 40,
     width: 135,
     padding: 10,
+  },
+  modalButtonContainer: {
+    flexDirection: "row",
+    marginTop: 20,
+  },
+  modalButton: {
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    borderRadius: 5,
+    marginHorizontal: 10,
+  },
+  cancelButton: {
+    backgroundColor: "#ff5c5c",
+  },
+  confirmButton: {
+    backgroundColor: "#3A90CD",
   },
 });
