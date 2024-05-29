@@ -4,6 +4,8 @@ import dateFormat from "dateformat";
 import { FontAwesome6, FontAwesome, Entypo} from "@expo/vector-icons";
 import { Database } from "../lib/database.types"
 import { supabase } from "../lib/supabase";
+import { router } from "expo-router";
+import { useEffect, useState } from "react";
 
 export default function TripCard({trip, setTripId, trips, filteredTrips, setFilteredTrips} : { trip: any, setTripId: any, trips: any, filteredTrips: any, setFilteredTrips: any}) {
 
@@ -14,8 +16,23 @@ export default function TripCard({trip, setTripId, trips, filteredTrips, setFilt
   const end_date = trip.end_date ? `to ${dateFormat(trip.end_date, "dd mmm yyyy")}` : ""; 
   const location = trip.location ? `in ${trip.location}` : "";
 
-  const handleEditTrip = async (trip_id) => {
-    // Implementation needed
+  const [existingTripName, setExistingTripName] = useState("")
+  const [existingDestination, setExistingDestination] = useState("")
+  const [existingStartDate, setExistingStartDate] = useState("")
+  const [existingEndDate, setExistingEndDate] = useState("")
+  const [existingAirline, setExistingAirline] = useState("")
+  const [existingAccommodation, setExistingAccommodation] = useState("")
+
+  const handleEditTrip = (trip_id, title, location, start_date, end_date, airline_name, accommodation_title) => {
+    setTripId(trip_id);    
+    setExistingTripName(title ?? "");
+    setExistingDestination(location ?? "");
+    setExistingStartDate(start_date ?? "");
+    setExistingEndDate(end_date ?? "");    
+    setExistingAccommodation(accommodation_title ?? "");
+    setExistingAirline(airline_name ?? "");
+    
+    router.push(`/add-trip?trip_id=${trip_id}&existingTripName=${title}&existingDestination=${location}&existingStartDate=${start_date}&existingEndDate=${end_date}&existingAirline=${airline_name}&existingAccommodation=${accommodation_title}&edit='true'`);
   }
 
   const handleDeleteTrip = async (trip_id) => {
@@ -71,8 +88,12 @@ export default function TripCard({trip, setTripId, trips, filteredTrips, setFilt
           </View>
         </View>
         <View style={styles.icons}>
-          <Pressable onPress={() => {handleEditTrip(trip.trip_id)}}><FontAwesome6 name="edit" style={styles.icon}></FontAwesome6></Pressable>
-          <Pressable onPress={() => {handleDeleteTrip(trip.trip_id)}}><FontAwesome6 name="trash" style={styles.icon}></FontAwesome6></Pressable>
+        <Pressable onPress={() => {handleEditTrip(trip.trip_id, trip.title, trip.location, trip.start_date, trip.end_date, trip.airlines?.airline_name, trip.accommodation?.title)}}>
+          <FontAwesome6 name="edit" style={styles.icon}></FontAwesome6>
+        </Pressable>
+          <Pressable onPress={() => {handleDeleteTrip(trip.trip_id)}}>
+            <FontAwesome6 name="trash" style={styles.icon}></FontAwesome6>
+          </Pressable>
         </View>
       </View>
     </View>

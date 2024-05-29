@@ -23,7 +23,7 @@ export default function TripListSmall({user_id, toggleModal, table, airline_id, 
 
   async function getTrips () {
     setLoading(true)
-    const {data} = await supabase.from('trips').select('*').eq("user_id",user_id)
+    const {data} = await supabase.from('trips').select('*').eq("user_id",user_id).order('start_date')
     if(data){
       setTrips(data)
     }
@@ -41,6 +41,7 @@ export default function TripListSmall({user_id, toggleModal, table, airline_id, 
         console.log(error);
       } else {
         toggleModal()
+        router.replace("trips");
         Alert.alert(`${table === "airlines" ? "Airline" : "Accommodation"} added to ${title}`)
       }
     setLoading(false)
@@ -68,7 +69,7 @@ export default function TripListSmall({user_id, toggleModal, table, airline_id, 
                 <View style={{ backgroundColor: "#f9f9f9" }}>
                   <Text style={styles.tripName}>{item.title}</Text>
                   <Text style={styles.tripDates}>
-                    Tokyo - {dateFormat(item.start_date, "mmm yyyy")}
+                    {item.location} | {dateFormat(item.start_date, "mmm yyyy")}
                   </Text>
                 </View>
                 <FontAwesome6

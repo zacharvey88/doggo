@@ -3,16 +3,17 @@ import { useState, useEffect } from 'react'
 import StarRating from 'react-native-star-rating-widget'
 import { Button } from 'react-native-elements'
 import { supabase } from '../lib/supabase'
+import { useLocalSearchParams } from 'expo-router'
 
 export default function ReviewForm({id, toggleModal, session, edit, existingRating, existingReviewText, table, review_id }: {id: number, toggleModal: any, session: Session | null, edit?: { review_id: number, rating: number, review_text: string }, existingRating?: number, existingReviewText?: string, table: string, review_id: Number}) {
   const [rating, setRating] = useState(existingRating ? existingRating : 0)
   const [reviewText, setReviewText] = useState(existingReviewText ? existingReviewText : '')
   const [errorMessage, setErrorMessage] = useState('');
   
-  // useEffect(() => {
-    // if(edit) {      
-    //   getExistingReview()
-    // }    
+  // useEffect(() => {    
+  //   if(edit) {      
+  //     getExistingReview()
+  //   }    
   // }, [])
 
   // const  getExistingReview = async () => {
@@ -73,7 +74,6 @@ export default function ReviewForm({id, toggleModal, session, edit, existingRati
       )
       .eq('review_id', review_id)
       if (error) {
-        console.log(table);
         Alert.alert('Something went wrong. Please try again.')
       } else {
         toggleModal()

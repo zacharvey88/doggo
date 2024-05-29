@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   StyleSheet,
   Text,
@@ -18,25 +18,28 @@ import { Dropdown } from "react-native-element-dropdown";
 import Accommodation from "../app/(tabs)/search/[id]";
 import { FontAwesome, MaterialCommunityIcons } from "@expo/vector-icons";
 import { LogBox } from "react-native";
+import { Feather } from "@expo/vector-icons";
 
 LogBox.ignoreLogs([
   "Warning: DatePicker: Support for defaultProps will be removed from function components in a future major release. Use JavaScript default parameters instead.",
 ]);
 
-export default function TripForm({ airline_id, accommodation_id }: { airline_id?: number; accommodation_id?: number }) {
-  
+export default function TripForm({ airline_id, accommodation_id, existingTripName, existingDestination, existingStartDate, existingEndDate, existingAirline, existingAccommodation, edit, trip_id }: { airline_id?: number; accommodation_id?: number, existingTripName: string, existingDestination: string, existingStartDate: string, existingEndDate: string, existingAirline: string, existingAccommodation: string, edit : boolean, trip_id : Number }) {
+
   // form state
-  const [title, setTitle] = useState("");
-  const [startDate, setStartDate] = useState("");
-  const [endDate, setEndDate] = useState("");
-  const [tempStartDate, setTempStartDate] = useState(""); // temporary state for start date
-  const [tempEndDate, setTempEndDate] = useState(""); // temporary state for end date
+  const [title, setTitle] = useState(existingTripName ? existingTripName : "");
+  const [startDate, setStartDate] = useState(existingStartDate ? existingStartDate : "");
+  const [endDate, setEndDate] = useState(existingEndDate ? existingEndDate : "");
+  const [destination, setDestination] = useState(existingDestination ? existingDestination : "");
+  const [airline, setAirline] = useState(existingAirline ? existingAirline : "Not selected")
+  const [accommodation, setAccommodation] = useState(existingAccommodation ? existingAccommodation : "Not selected")
+
+  const [tempStartDate, setTempStartDate] = useState("");
+  const [tempEndDate, setTempEndDate] = useState(""); 
   const [isFocus, setIsFocus] = useState(false);
   const navigation = useNavigation();
-  const [destination, setDestination] = useState("");
-  const [airline, setAirline] = useState("Not selected")
-  const [accommodation, setAccommodation] = useState("Not selected")
-  const [startOpen, setStartOpen] = useState(false); // open and close the modal
+
+  const [startOpen, setStartOpen] = useState(false); 
   const [endOpen, setEndOpen] = useState(false);
   const [errors, setErrors] = useState({});
   const { session, loading, profile } = useAuth();
@@ -51,14 +54,14 @@ export default function TripForm({ airline_id, accommodation_id }: { airline_id?
     setEndOpen(!endOpen);
   };
 
+  const searchAirlines = () => {
+    router.push('/')
+  }
+
 
   useEffect(()=>{
     getAirline()
     getAccommodation()
-    console.log(airline);
-    console.log(accommodation);
-    console.log(airline_id);
-    
   },[])
 
   const getAirline = async () => {
@@ -67,7 +70,7 @@ export default function TripForm({ airline_id, accommodation_id }: { airline_id?
     .select('airline_name')
     .eq('airline_id', airline_id)
     if (error) {
-      console.log(error);
+      // console.log(error);
     } else {      
       setAirline(data[0].airline_name);
     }
@@ -80,7 +83,7 @@ export default function TripForm({ airline_id, accommodation_id }: { airline_id?
     .select('title')
     .eq('accommodation_id', accommodation_id)
     if (error) {
-      console.log(error);
+      // console.log(error);
     } else {
       setAccommodation(data[0].title);
     }
@@ -141,6 +144,28 @@ export default function TripForm({ airline_id, accommodation_id }: { airline_id?
       submitForm();
     }
   };
+
+  const handleEdit = async () => {
+
+    const tripData = {
+      user_id: session?.user.id,
+      start_date: startDate,
+      end_date: endDate,
+      title: title,
+      location: destination,
+    }
+
+    const { data, error } = await supabase
+    .from("trips")
+    .update(tripData)
+    .eq('trip_id', trip_id)
+  if (error) {
+    Alert.alert(error.message);
+  } else {
+    router.replace("trips");
+  }
+
+  }
 
   const handleClose = () => {
     navigation.goBack();
@@ -235,19 +260,33 @@ export default function TripForm({ airline_id, accommodation_id }: { airline_id?
           onPress={() => setEndOpen(true)}
         />
 
-        <Text style={styles.label}>Airline</Text>
-        <TextInput
-          style={[styles.input, styles.readonlyInput]}
-          defaultValue={airline}
-          editable={false}
-        />
+        {errors.endDate ? (
+          <Text style={[styles.errorstext]}>{errors.endDate}</Text>
+        ) : null}
 
-        <Text style={[styles.label]}>Accommodation</Text>
-        <TextInput
-          style={[styles.input, styles.readonlyInput]}
-          defaultValue={accommodation}
-          editable={false}
-        />
+        <View style={styles.disbaled}>
+          <Text style={[styles.label]}>Airline</Text>
+          <TextInput
+            style={[styles.input, styles.readonlyInput]}
+            defaultValue={airline}
+            editable={false}
+          />
+          <Pressable style={styles.picker} onPress={searchAirlines}>
+            <Feather name="search" size={15} />
+          </Pressable>
+        </View>
+
+        <View style={styles.disbaled}>
+          <Text style={[styles.label]}>Accommodation</Text>
+          <TextInput
+            style={[styles.input, styles.readonlyInput]}
+            defaultValue={accommodation}
+            editable={false}
+          />
+          <Pressable style={styles.picker} onPress={()=>{router.push('/search')}}>
+            <Feather name="search" size={15} />
+          </Pressable>
+        </View>
 
         <Modal animationType="slide" transparent={true} visible={endOpen}>
           <View style={styles.centeredView}>
@@ -277,12 +316,9 @@ export default function TripForm({ airline_id, accommodation_id }: { airline_id?
           </View>
         </Modal>
 
-        {errors.endDate ? (
-          <Text style={[styles.errorstext]}>{errors.endDate}</Text>
-        ) : null}
       </View>
       <View style={styles.buttonContainer}>
-        <Pressable onPress={handleSubmit} style={styles.button}>
+        <Pressable onPress={edit ? handleEdit : handleSubmit} style={styles.button}>
           <FontAwesome name="save" size={16} color={'white'}></FontAwesome>
           <Text style={styles.buttonText}>Save</Text>
         </Pressable>
@@ -308,7 +344,7 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     borderRadius: 20,
     width: "90%",
-    height: "50%", // Adjust the height as necessary
+    height: "50%", 
     padding: 20,
     alignItems: "center",
     shadowColor: "#000",
@@ -432,4 +468,12 @@ const styles = StyleSheet.create({
   confirmButton: {
     backgroundColor: "#3A90CD",
   },
+  picker: {
+    position: 'absolute',
+    right: 25,
+    bottom: 12
+  },
+  disabled: {
+    flexDirection: 'row'
+  }
 });
