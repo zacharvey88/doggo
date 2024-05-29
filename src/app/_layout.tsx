@@ -102,6 +102,14 @@ function RootLayoutNav() {
               headerBackTitle: "My Properties",
             }}
           />
+          <Stack.Screen
+            name="reset-password"
+            options={{
+              headerTitle: "Reset Password",
+              headerBackTitleVisible: false,
+              headerBackTitle:"back"
+            }}
+          />
         </Stack>
       </AuthProvider>
     </ThemeProvider>

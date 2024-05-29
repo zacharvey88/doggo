@@ -47,19 +47,19 @@ const SignInScreen = () => {
     setLoading(false);
   }
 
-  async function resetPassword() {
-    if (!email) {
-      Alert.alert("Please enter your email address to reset password");
-      return;
-    }
+  // async function resetPassword() {
+  //   if (!email) {
+  //     Alert.alert("Please enter your email address to reset password");
+  //     return;
+  //   }
 
-    const { error } = await supabase.auth.resetPasswordForEmail(email);
-    if (error) {
-      Alert.alert(error.message);
-    } else {
-      Alert.alert("Password reset email sent!");
-    }
-  }
+  //   const { error } = await supabase.auth.resetPasswordForEmail(email);
+  //   if (error) {
+  //     Alert.alert(error.message);
+  //   } else {
+  //     Alert.alert("Password reset email sent!");
+  //   }
+  // }
 
   return (
     <KeyboardAwareScrollView
@@ -112,7 +112,7 @@ const SignInScreen = () => {
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.forgotPasswordButton}
-            onPress={resetPassword}
+            onPress={() =>router.replace("/reset-password")}
           >
             <Text style={styles.forgotPasswordText}>Forgot Password?</Text>
           </TouchableOpacity>
