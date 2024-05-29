@@ -1,18 +1,16 @@
 import TripForm from "@/src/components/TripForm"
 import { View, StyleSheet, Text } from "react-native"
 import { AntDesign } from "@expo/vector-icons"
+import { useLocalSearchParams } from "expo-router"
+import { useEffect } from "react"
 export default function AddTrip() {
 
+  const {airline_id, accommodation_id} = useLocalSearchParams()
 
   return (
     <View style={styles.container}>
-      {/* <View style={styles.swipe}>
-        <AntDesign name="arrowdown"></AntDesign>
-        <Text style={styles.swipeText}>swipe down to close</Text>
-        <AntDesign name="arrowdown"></AntDesign>
-      </View> */}
       <View style={styles.form}>
-        <TripForm/> 
+        <TripForm airline_id={airline_id} accommodation_id={accommodation_id}/> 
       </View>
     </View>
   )
@@ -37,5 +35,8 @@ const styles = StyleSheet.create({
   form: {
     flex: 1,
     justifyContent: 'center'
+  },
+  slogan: {
+    width: '50%'
   }
 })

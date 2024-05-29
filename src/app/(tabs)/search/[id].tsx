@@ -90,6 +90,7 @@ export default function Accommodation() {
             user_id={session?.user.id}
             toggleModal={toggleTripModal}
             table={"accommodation"}
+            accommodation_id={id}
           />
         </View>
       </Modal>

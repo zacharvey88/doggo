@@ -121,6 +121,7 @@ export default function Airline() {
             user_id={session?.user.id}
             toggleModal={toggleTripModal}
             table={"airlines"}
+            airline_id={id}
           />
         </View>
       </Modal>
