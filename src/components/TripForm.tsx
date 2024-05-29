@@ -9,28 +9,21 @@ import {
   TouchableOpacity,
   Modal,
 } from "react-native";
-import { Button } from "react-native-elements";
 import { Pressable, Platform, Alert } from "react-native";
 import { supabase } from "../lib/supabase";
 import { useAuth } from "@/src/providers/AuthProvider";
 import DatePicker from "react-native-modern-datepicker";
 import { getToday, getFormatedDate } from "react-native-modern-datepicker";
-import { useRouter } from "expo-router";
+import { useRouter, useNavigation } from "expo-router";
 import { Dropdown } from "react-native-element-dropdown";
 
-export default function TripForm({
-  toggleCreateModal,
-  onTripAdded,
-}: {
-  toggleCreateModal: any;
-  onTripAdded: () => void;
-}) {
+export default function TripForm() {
   //form state
   const [title, setTitle] = useState("");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [isFocus, setIsFocus] = useState(false);
-
+  const navigation = useNavigation();
   //date picker state
   const [startOpen, setStartOpen] = useState(false); // open and close the modal
   const [endOpen, setEndOpen] = useState(false);
@@ -38,8 +31,6 @@ export default function TripForm({
   const [validForm, setValidForm] = useState(false);
   const { session, loading, profile } = useAuth();
   const router = useRouter();
-
-  
 
   //date picker toggle
   const toggleStartDatePicker = () => {
@@ -86,18 +77,21 @@ export default function TripForm({
       end_date: endDate,
       title: title,
     });
-
-    if (!error) {
-      onTripAdded();
+    if (error) {
+      Alert.alert(error.message);
+    } else {
+      router.replace("trips");
     }
-
-    toggleCreateModal();
   };
 
-  const handleSubmit = async () => {
+  const handleSubmit = () => {
     if (validateForm()) {
       submitForm();
     }
+  };
+
+  const handleClose = () => {
+    navigation.goBack();
   };
 
   return (
@@ -116,7 +110,7 @@ export default function TripForm({
           <Text style={styles.errorstext}>{errors.title}</Text>
         ) : null}
 
-<Text style={styles.label}>Start Date</Text>
+        <Text style={styles.label}>Start Date</Text>
         <Pressable onPress={toggleStartDatePicker}>
           <TextInput
             style={styles.input}
@@ -149,7 +143,7 @@ export default function TripForm({
           <Text style={styles.errorstext}>{errors.startDate}</Text>
         ) : null}
 
-<Text style={styles.label}>End Date</Text>
+        <Text style={styles.label}>End Date</Text>
         <Pressable onPress={toggleEndDatePicker}>
           <TextInput
             style={styles.input}
@@ -181,16 +175,15 @@ export default function TripForm({
         {errors.endDate ? (
           <Text style={styles.errorstext}>{errors.endDate}</Text>
         ) : null}
-
       </View>
       <View style={styles.buttonContainer}>
-      <Pressable onPress={handleSubmit} style={styles.button}>
-        <Text style={styles.buttonText}>Create Your Trip</Text>
-      </Pressable>
+        <Pressable onPress={handleSubmit} style={styles.button}>
+          <Text style={styles.buttonText}>Create Your Trip</Text>
+        </Pressable>
 
-      <Pressable onPress={toggleCreateModal} style={styles.button}>
-        <Text style={styles.buttonText}>Cancel</Text>
-      </Pressable>
+        <Pressable onPress={handleClose} style={styles.button}>
+          <Text style={styles.buttonText}>Cancel</Text>
+        </Pressable>
         {/* <Button style={styles.button} title="Cancel" onPress={() => router.push("/trips")} /> */}
       </View>
     </SafeAreaView>
@@ -230,7 +223,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     gap: 10,
     marginVertical: 20,
-    alignItems: 'center',
+    alignItems: "center",
   },
   input: {
     width: 300,
@@ -253,8 +246,8 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: "500",
     color: "#fff",
-    fontFamily: 'Futura',
-    textAlign: 'center'
+    fontFamily: "Futura",
+    textAlign: "center",
   },
   datePicker: {
     height: 120,
@@ -295,17 +288,17 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 16,
-    fontWeight: '500',
+    fontWeight: "500",
     marginLeft: 15,
     marginBottom: 5,
     marginVertical: 10,
-    fontFamily: 'Futura'
+    fontFamily: "Futura",
   },
   button: {
-    backgroundColor: '#3A90CD',
+    backgroundColor: "#3A90CD",
     borderRadius: 10,
     height: 40,
     width: 135,
-    padding: 10
-  }
+    padding: 10,
+  },
 });

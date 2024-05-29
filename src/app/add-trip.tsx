@@ -1,7 +1,7 @@
 import TripForm from "@/src/components/TripForm"
 import { View, StyleSheet, Text } from "react-native"
 import { AntDesign } from "@expo/vector-icons"
-export default function AddTrip({toggleCreateModal, onTripAdded} : {toggleCreateModal: any, onTripAdded: any}) {
+export default function AddTrip() {
 
 
   return (
@@ -12,7 +12,7 @@ export default function AddTrip({toggleCreateModal, onTripAdded} : {toggleCreate
         <AntDesign name="arrowdown"></AntDesign>
       </View> */}
       <View style={styles.form}>
-        <TripForm toggleCreateModal={toggleCreateModal} onTripAdded={onTripAdded}/> 
+        <TripForm/> 
       </View>
     </View>
   )
