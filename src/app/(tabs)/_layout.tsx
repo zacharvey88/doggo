@@ -88,7 +88,7 @@ export default function TabLayout() {
         name="trips"
         options={{
           title: "My Trips",
-          headerShown: false,
+          headerShown: true,
           tabBarIcon: ({ color }) => <FontAwesome6 name="route" size={24} color={color} />,
         // headerRight: () => (
         //   <View style={{ flexDirection: "row", alignItems: "center" }}>
@@ -124,6 +124,14 @@ export default function TabLayout() {
           },
         }}
       />
+      {/* <Tabs.Screen
+        name="manage-properties"
+        options={{
+          title: "My Properties",
+          headerShown: false,
+          tabBarButton: () => null
+        }}
+      /> */}
     </Tabs>
   );
 }

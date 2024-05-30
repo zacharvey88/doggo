@@ -7,6 +7,7 @@ const AccountStack = () => {
     <Stack>
       <Stack.Screen name="index" options={{ headerShown: false, title: "Profile" }} />
       <Stack.Screen name="update" options={{ title: "" }} />
+      <Stack.Screen name="manage-properties" options={{ title: "My Properties",  headerBackTitle: "Back"}} />
     </Stack>
   );
 };

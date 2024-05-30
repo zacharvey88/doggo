@@ -86,19 +86,12 @@ function RootLayoutNav() {
               headerShown: false,
             }}
           />
-
-          <Stack.Screen
-            name="manage-properties"
-            options={{
-              headerTitle: "My Properties",
-              headerBackTitle: "Profile",
-            }}
-          />
+          
           <Stack.Screen
             name="add-accommodation"
             options={{
-              headerTitle: "Add accommodation",
-              headerBackTitle: "My Properties",
+              headerTitle: "",
+              headerBackTitle: "Back",
             }}
           />
           <Stack.Screen
