@@ -44,12 +44,12 @@ const PlaceDetailsScreen = () => {
         <Text style={styles.title}>{displayName.text}</Text>
         {photos && photos.length > 0 ? (
           <ScrollView horizontal contentContainerStyle={styles.imageContainer}>
-            {photos.map((photo: string, index: number) => (
+            {photos.slice(0,5).map((photo: string, index: number) => (
               <Image
                 key={index}
                 source={{
-                  uri: restaurantImages[index],
-                  // uri: `https://places.googleapis.com/v1/${photo.name}/media?key=${process.env.EXPO_PUBLIC_API_KEY}&maxWidthPx=400`,
+                  // uri: restaurantImages[index],
+                  uri: `https://places.googleapis.com/v1/${photo.name}/media?key=${process.env.EXPO_PUBLIC_API_KEY}&maxWidthPx=300`,
                 }}
                 style={styles.image}
               />

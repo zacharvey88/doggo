@@ -83,7 +83,6 @@ function RootLayoutNav() {
             options={{
               headerTitle: "",
               headerBackTitle: "Back",
-              presentation: "modal",
               headerShown: false,
             }}
           />
