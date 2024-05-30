@@ -17,7 +17,7 @@ import { useRouter } from "expo-router";
 import { ActivityIndicator } from "react-native";
 import { useLocalSearchParams } from "expo-router";
 import { useAuth } from "@/src/providers/AuthProvider";
-import { Text, View } from "../../components/Themed";
+import { Text, View } from "react-native"
 import { StarRatingDisplay } from "react-native-star-rating-widget";
 import { AntDesign, FontAwesome } from "@expo/vector-icons";
 import { ScreenHeight } from "react-native-elements/dist/helpers";
@@ -116,7 +116,7 @@ const ManageProperties: React.FC<AccommodationListItemProps> = () => {
                     <Text style={styles.city}>
                       {item.city}, {item.country}{" "}
                     </Text>
-                    <StarRatingDisplay rating={item.rating} starSize={20} />
+                    <StarRatingDisplay rating={4} starSize={20} />
                   </View>
                 </View>
               </TouchableOpacity>
@@ -206,6 +206,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.3,
     shadowRadius: 1,
     minWidth: "100%",
+    marginBottom: -25
   },
   imageContainer: {
     width: "100%",
@@ -223,9 +224,9 @@ const styles = StyleSheet.create({
   },
   addTripButton: {
     position: "absolute",
-    top: ScreenHeight*0.7,
-    right: 30,
-    zIndex: 2,
+    bottom: 20,
+    right: 20,
+    zIndex: 1,
   },
   textContainer: {
     paddingHorizontal: 10,

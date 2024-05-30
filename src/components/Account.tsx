@@ -136,7 +136,7 @@ export default function Account({ session }: { session: Session }) {
                 </Link>
                 <Link 
                   style={styles.textButton}
-                   push href="/manage-properties"
+                   push href="/profile/manage-properties"
                   >
                     Manage Properties
                 </Link>
@@ -210,7 +210,7 @@ const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
     backgroundColor: "white",
-    marginTop: -40
+    marginTop: -40,
   },
   scrollContent: {
     flexGrow: 1,
