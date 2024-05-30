@@ -22,6 +22,7 @@ import { Feather } from "@expo/vector-icons";
 
 LogBox.ignoreLogs([
   "Warning: DatePicker: Support for defaultProps will be removed from function components in a future major release. Use JavaScript default parameters instead.",
+  "Warning: Header: Support for defaultProps will be removed from function components in a future major release. Use JavaScript default parameters instead.",
 ]);
 
 export default function TripForm({ airline_id, accommodation_id, existingTripName, existingDestination, existingStartDate, existingEndDate, existingAirline, existingAccommodation, edit, trip_id }: { airline_id?: number; accommodation_id?: number, existingTripName: string, existingDestination: string, existingStartDate: string, existingEndDate: string, existingAirline: string, existingAccommodation: string, edit : boolean, trip_id : Number }) {
