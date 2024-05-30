@@ -30,6 +30,10 @@ export default function TripListSmall({user_id, toggleModal, table, airline_id, 
     setLoading(false)
   }
 
+  const handleCreateTrip = () => {
+    toggleModal()
+    router.push(`/add-trip?airline_id=${airline_id}&accommodation_id=${accommodation_id}`)
+  }
 
   const addToTrip = async (trip_id, title) => {
     setLoading(true)
@@ -85,7 +89,7 @@ export default function TripListSmall({user_id, toggleModal, table, airline_id, 
         <Button
           title={"Create New Trip"}
           style={styles.button}
-          onPress={() => router.push(`/add-trip?airline_id=${airline_id}&accommodation_id=${accommodation_id}`)}
+          onPress={handleCreateTrip}
         />
         <Button
           title={"Cancel"}

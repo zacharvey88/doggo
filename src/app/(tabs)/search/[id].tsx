@@ -27,6 +27,7 @@ export default function Accommodation() {
   const [isTripModalVisible, setTripModalVisible] = useState(false);
   const [isReviewModalVisible, setReviewModalVisible] = useState(false);
   const { session, profile } = useAuth();
+  const [rating, setRating] = useState(0)
   const {
     id,
     title,
@@ -38,7 +39,6 @@ export default function Accommodation() {
     booking_url,
     city,
     country,
-    rating,
   } = useLocalSearchParams();
 
   const toggleTripModal = () => {
@@ -47,6 +47,25 @@ export default function Accommodation() {
 
   const toggleReviewModal = () => {
     setReviewModalVisible(!isReviewModalVisible);
+  };
+
+  useEffect(()=>{
+    getRating()
+  },[])
+
+  const getRating = async () => {
+    const { data: ratings, error } = await supabase
+      .from("reviews_accommodation")
+      .select("rating")
+      .eq("accommodation_id", id);
+    if (ratings) {
+      const totalRatings = ratings.reduce(
+        (acc, rating) => acc + rating.rating,
+        0
+      );
+      const averageRating = totalRatings / ratings.length;
+      setRating(averageRating);
+    }
   };
 
   const images = photos.split(",");
