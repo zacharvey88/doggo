@@ -154,6 +154,7 @@ export default function TripForm({ airline_id, accommodation_id, existingTripNam
       title: title,
       location: destination,
     }
+    
 
     const { data, error } = await supabase
     .from("trips")

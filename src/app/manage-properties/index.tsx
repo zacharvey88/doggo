@@ -34,6 +34,7 @@ type AccommodationListItemProps = {
     booking_url: string;
     city: string;
     country: string;
+    state: string;
     rating: number;
   };
 };
@@ -79,18 +80,21 @@ const ManageProperties: React.FC<AccommodationListItemProps> = () => {
                 style={styles.placeItem}
                 onPress={() =>
                   router.push({
-                    pathname: `/manage-properties/${item.accommodation_id}`,
+                    pathname: `/add-accommodation/`,
                     params: {
-                      accommodation_id: item.accommodation_id,
-                      title: item.title,
-                      description: item.description,
-                      address: item.address,
-                      phone: item.phone,
-                      photos: item.photos,
-                      postcode: item.postcode,
-                      booking_url: item.booking_url,
-                      city: item.city,
-                      country: item.country,
+                      existingAccommodation_id: item.accommodation_id,
+                      existingTitle: item.title,
+                      existingDescription: item.description,
+                      existingAddress: item.address,
+                      existingPhone: item.phone,
+                      existingPhotos: item.photos,
+                      existingPostcode: item.postcode,
+                      existingBooking_url: item.booking_url,
+                      existingCity: item.city,
+                      existingCountry: item.country,
+                      existingState: item.state,
+                      existingRating: item.rating ?? 0,
+                      edit: true
                     },
                   })
                 }
