@@ -15,16 +15,44 @@ import { useRouter, useNavigation } from "expo-router";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import * as ImagePicker from "expo-image-picker";
 
-export default function AccommodationForm() {
-  const [name, setName] = useState("");
-  const [imageURL, setImageURL] = useState("");
-  const [description, setDescription] = useState("");
-  const [address, setAddress] = useState("");
-  const [phone, setPhone] = useState("");
-  const [postcode, setPostcode] = useState("");
-  const [city, setCity] = useState("");
-  const [country, setCountry] = useState("");
-  const [state, setState] = useState("");
+
+export default function AccommodationForm({existingAccommodation_id,
+  existingTitle,
+  existingDescription,
+  existingAddress,
+  existingPhone,
+  existingPhotos,
+  existingPostcode,
+  existingBooking_url,
+  existingCity,
+  existingCountry,
+  existingState,
+  existingRating,
+  edit}:{
+    accommodation_id: number;
+    description: string;
+    address: string;
+    phone: string | null;
+    photos: string[];
+    title: string;
+    postcode: number | string;
+    booking_url: string;
+    city: string;
+    country: string;
+    state: string;
+    rating: number;
+  }) {
+    const [name, setName] = useState(existingTitle ? existingTitle:"");
+    
+  const [imageURL, setImageURL] = useState(existingPhotos || "");
+  const [description, setDescription] = useState(existingDescription || "");
+  const [address, setAddress] = useState(existingAddress || "");
+  const [phone, setPhone] = useState(existingPhone || "");
+  const [postcode, setPostcode] = useState(existingPostcode || "");
+  const [city, setCity] = useState(existingCity || "");
+  const [country, setCountry] = useState(existingCountry || "");
+  const [state, setState] = useState(existingState || "");
+
   const [uploading, setUploading] = useState(false);
   const navigation = useNavigation();
   const [errors, setErrors] = useState({});
@@ -71,7 +99,36 @@ export default function AccommodationForm() {
 
   const handleSubmit = () => {
     if (validateForm()) {
-      submitForm();
+      edit ? handleEdit() : submitForm();
+    }
+  };
+
+  const handleEdit = async () => {
+
+    const accommodationData = {
+      user_id: session?.user.id,
+      title: name,
+      description: description,
+      photos: [imageURL],
+      address: address,
+      phone: phone,
+      postcode: postcode,
+      city: city,
+      country: country,
+      state: state,
+    }
+    
+    
+    const { data, error } = await supabase
+    .from("accommodation")
+    .update(accommodationData)
+    .eq('accommodation_id', existingAccommodation_id);
+    if (error) {
+      Alert.alert(error.message);
+      console.log(error.message);
+      
+    } else {
+      router.replace("manage-properties");
     }
   };
 
@@ -104,7 +161,7 @@ export default function AccommodationForm() {
         );
         return;
       }
-      setImageURL(image.uri);
+      setImageURL([image.uri]);
     } catch (error) {
       if (error instanceof Error) {
         Alert.alert(error.message);
@@ -228,9 +285,9 @@ export default function AccommodationForm() {
               disabled={uploading}
             />
           </View>
-          {imageURL ? (
-            <Text style={styles.imageURLText}>Image URL: {imageURL}</Text>
-          ) : null}
+          {/* {imageURL ? (
+            <Text style={styles.imageURLText}></Text>
+          ) : null} */}
           <View style={styles.buttonContainer}>
             <TouchableOpacity onPress={handleSubmit} style={styles.button}>
               <Text style={styles.buttonText}>Post</Text>

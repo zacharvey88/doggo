@@ -1,12 +1,44 @@
 import { View, StyleSheet, Text } from "react-native"
 import AccommodationForm from "../components/AccommodationForm"
+import { useLocalSearchParams } from "expo-router";
 
 export default function AddAccommodation() {
+
+  const {
+    existingAccommodation_id,
+    existingTitle,
+    existingDescription,
+    existingAddress,
+    existingPhone,
+    existingPhotos,
+    existingPostcode,
+    existingBooking_url,
+    existingCity,
+    existingCountry,
+    existingState,
+    existingRating,
+    edit,
+  } = useLocalSearchParams();
+  
 
     return (
         <View style={styles.container}>
         <View style={styles.form}>
-          <AccommodationForm/>
+          <AccommodationForm 
+            existingAccommodation_id = {existingAccommodation_id}
+            existingTitle = {existingTitle}
+            existingDescription = {existingDescription}
+            existingAddress = {existingAddress}
+            existingPhone = {existingPhone}
+            existingPhotos = {existingPhotos}
+            existingPostcode = {existingPostcode}
+            existingBooking_url = {existingBooking_url}
+            existingCity = {existingCity}
+            existingCountry = {existingCountry}
+            existingState = {existingState}
+            existingRating = {existingRating}
+            edit= {edit}
+            />
         </View>
         </View>
     )
