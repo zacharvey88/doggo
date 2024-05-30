@@ -91,7 +91,6 @@ const ManageProperties: React.FC<AccommodationListItemProps> = () => {
                       booking_url: item.booking_url,
                       city: item.city,
                       country: item.country,
-                      rating: item.rating,
                     },
                   })
                 }
