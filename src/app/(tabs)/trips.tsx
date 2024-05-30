@@ -36,7 +36,7 @@ export default function TabTrips() {
 
   useEffect(() => {
       getTrips();
-  }, []);
+  }, [session]);
 
   async function getTrips() {
     if (!session?.user?.id) {

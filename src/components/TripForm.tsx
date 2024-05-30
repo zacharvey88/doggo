@@ -437,7 +437,7 @@ const styles = StyleSheet.create({
     marginBottom: 5,
     marginVertical: 10,
     fontFamily: "Futura",
-    color: '#3A90CD'
+    color: 'black'
   },
   button: {
     backgroundColor: "#3A90CD",

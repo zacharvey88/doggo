@@ -280,7 +280,7 @@ export default function AccommodationForm({existingAccommodation_id,
 
           <View style={styles.uploadButtonContainer}>
             <Button
-              title={uploading ? "Uploading ..." : "Pick Image"}
+              title={uploading ? "Uploading ..." : "Upload an Image"}
               onPress={pickImage}
               disabled={uploading}
             />
@@ -290,7 +290,7 @@ export default function AccommodationForm({existingAccommodation_id,
           ) : null} */}
           <View style={styles.buttonContainer}>
             <TouchableOpacity onPress={handleSubmit} style={styles.button}>
-              <Text style={styles.buttonText}>Post</Text>
+              <Text style={styles.buttonText}>{edit ? "Save Changes" : "Save Property"}</Text>
             </TouchableOpacity>
             <TouchableOpacity onPress={handleClose} style={styles.button}>
               <Text style={styles.buttonText}>Cancel</Text>
@@ -333,6 +333,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "500",
     marginBottom: 5,
+    fontFamily: 'Futura'
   },
   errorText: {
     color: "#cc0000",
@@ -351,10 +352,10 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     flexDirection: "row",
-    justifyContent: "space-around",
+    justifyContent: "center",
     paddingVertical: 20,
     backgroundColor: "#fff",
-    gap: 30
+    gap: 10
     
   },
   button: {
@@ -363,7 +364,7 @@ const styles = StyleSheet.create({
     paddingVertical: 15,
     paddingHorizontal: 20,
     alignItems: "center",
-    flexGrow: 1,
+
   },
   buttonText: {
     color: "#fff",

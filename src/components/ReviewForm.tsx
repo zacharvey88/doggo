@@ -5,15 +5,38 @@ import { Button } from 'react-native-elements'
 import { supabase } from '../lib/supabase'
 import { useLocalSearchParams } from 'expo-router'
 
-export default function ReviewForm({id, toggleModal, session, edit, existingRating, existingReviewText, table, review_id }: {id: number, toggleModal: any, session: Session | null, edit?: { review_id: number, rating: number, review_text: string }, existingRating?: number, existingReviewText?: string, table: string, review_id: Number}) {
-  const [rating, setRating] = useState(existingRating ? existingRating : 0)
-  const [reviewText, setReviewText] = useState(existingReviewText ? existingReviewText : '')
-  const [errorMessage, setErrorMessage] = useState('');
-  
+export default function ReviewForm({
+  id,
+  toggleModal,
+  session,
+  edit,
+  existingRating,
+  existingReviewText,
+  table,
+  review_id,
+  setEdited,
+}: {
+  id: number;
+  toggleModal: any;
+  session: Session | null;
+  edit?: { review_id: number; rating: number; review_text: string };
+  existingRating?: number;
+  existingReviewText?: string;
+  table: string;
+  review_id: Number;
+  onEditComplete: any
+  setEdited: any
+}) {
+  const [rating, setRating] = useState(existingRating ? existingRating : 0);
+  const [reviewText, setReviewText] = useState(
+    existingReviewText ? existingReviewText : ""
+  );
+  const [errorMessage, setErrorMessage] = useState("");
+
   // useEffect(() => {    
-  //   if(edit) {      
-  //     getExistingReview()
-  //   }    
+    // if(edit) {
+    //   getExistingReview()
+    // }
   // }, [])
 
   // const  getExistingReview = async () => {
@@ -30,75 +53,65 @@ export default function ReviewForm({id, toggleModal, session, edit, existingRati
   //   }
   // }
 
+
   const handleAddReview = async () => {
-
-      if (reviewText.trim() === "") {
-        setErrorMessage('Please enter your review');
-        return;
-      }
-      setErrorMessage('');
-    
-    const { data, error } = await supabase
-      .from(`reviews_${table}`)
-      .insert(
-        {
-          user_id: session?.user.id,
-          [table === 'airlines' ? 'airline_id' : 'accommodation_id']: id,
-          rating: rating,
-          review_text: reviewText
-        }
-      )
-      if (error && error.code === '42501') {
-          Alert.alert('Error', 'You must be logged in to submit a review')
-      } else {
-        toggleModal()
-        Alert.alert('Thanks, your review was submitted.')
-      }
-  }
-
-  const handleEditReview = async () => {
-
     if (reviewText.trim() === "") {
-      setErrorMessage('Please enter your review');
+      setErrorMessage("Please enter your review");
       return;
     }
-    setErrorMessage('');
+    setErrorMessage("");
+
+    const { data, error } = await supabase.from(`reviews_${table}`).insert({
+      user_id: session?.user.id,
+      [table === "airlines" ? "airline_id" : "accommodation_id"]: id,
+      rating: rating,
+      review_text: reviewText,
+    });
+    if (error && error.code === "42501") {
+      Alert.alert("Error", "You must be logged in to submit a review");
+    } else {
+      toggleModal();
+      Alert.alert("Thanks, your review was submitted.");
+    }
+  };
+
+  const handleEditReview = async () => {
+    if (reviewText.trim() === "") {
+      setErrorMessage("Please enter your review");
+      return;
+    }
+    setErrorMessage("");
 
     const { data, error } = await supabase
       .from(`${table}`)
-      .update(
-        {
-          rating: rating,
-          review_text: reviewText
-        }
-      )
-      .eq('review_id', review_id)
-      if (error) {
-        Alert.alert('Something went wrong. Please try again.')
-      } else {
-        toggleModal()
-        Alert.alert('Thanks, your review was updated.')
-      }
-  }
+      .update({
+        rating: rating,
+        review_text: reviewText,
+      })
+      .eq("review_id", review_id);
+    if (error) {
+      Alert.alert("Something went wrong. Please try again.");
+    } else {
+      toggleModal();
+      setEdited(true)
+      Alert.alert("Thanks, your review was updated.");
+    }
+  };
 
   return (
     <View style={styles.container}>
       {edit ? null : <Text>How was your experience?</Text>}
-      <StarRating
-        style={styles.stars}
-        rating={rating}
-        onChange={setRating}
-
-      /><TextInput 
-      multiline={true} 
-      style={styles.input}
-      onChangeText={setReviewText}
-      placeholder={edit ? '' : 'Write your review...'}
-      value={reviewText}
-
-    >
-    </TextInput>
-    {errorMessage ? <Text style={styles.errorText}>{errorMessage}</Text> : null}
+      <StarRating style={styles.stars} rating={rating} onChange={setRating} />
+      <TextInput
+        multiline={true}
+        style={styles.input}
+        onChangeText={setReviewText}
+        placeholder={edit ? "" : "Write your review..."}
+        value={reviewText}
+      ></TextInput>
+      {errorMessage ? (
+        <Text style={styles.errorText}>{errorMessage}</Text>
+      ) : null}
       <View style={styles.buttonContainer}>
         <Button
           style={styles.btn}
@@ -108,13 +121,15 @@ export default function ReviewForm({id, toggleModal, session, edit, existingRati
         />
         <Button
           style={styles.btn}
-          title="Cancel"  
+          title="Cancel"
           titleStyle={styles.buttonTitle}
-          onPress={()=>{toggleModal()}}
-          />
+          onPress={() => {
+            toggleModal();
+          }}
+        />
       </View>
     </View>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
