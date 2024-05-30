@@ -29,14 +29,16 @@ export default function ReviewsList({
   const [existingReviewText, setExistingReviewText] = useState("");
   const [existingRating, setExistingRating] = useState(0);
   const [review_id, setReviewId] = useState(null);
+  const [edited, setEdited] = useState(false)
 
   const toggleModal = () => {
     setModalVisible(!isModalVisible);
   };
 
   useEffect(() => {
+    console.log(edited);
     getReviews();
-  }, [id, table]);
+  }, [edited]);
 
   async function getReviews() {
     setLoading(true);
@@ -53,6 +55,7 @@ export default function ReviewsList({
       setFilteredReviews(data);
     }
     setLoading(false);
+    setEdited(false)
   }
   return (
     <View style={styles.container}>
@@ -100,7 +103,7 @@ export default function ReviewsList({
                 setExistingRating={setExistingRating}
                 setExistingReviewText={setExistingReviewText}
                 table={table}
-                setReviewId={setReviewId}
+                setEdited={setEdited}
               />
             )}
           />
