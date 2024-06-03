@@ -125,7 +125,7 @@ export default function AccommodationForm({existingAccommodation_id,
     .eq('accommodation_id', existingAccommodation_id);
     if (error) {
       Alert.alert(error.message);
-      console.log(error.message);
+
       
     } else {
       router.replace("manage-properties");

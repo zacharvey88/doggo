@@ -1,9 +1,9 @@
 import { View, Text, StyleSheet, TextInput, Alert } from 'react-native'
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import StarRating from 'react-native-star-rating-widget'
 import { Button } from 'react-native-elements'
 import { supabase } from '../lib/supabase'
-import { useLocalSearchParams } from 'expo-router'
+import { Session } from '@supabase/supabase-js'
 
 export default function ReviewForm({
   id,
@@ -54,26 +54,34 @@ export default function ReviewForm({
   // }
 
 
-  const handleAddReview = async () => {
-    if (reviewText.trim() === "") {
-      setErrorMessage("Please enter your review");
-      return;
-    }
-    setErrorMessage("");
+const handleAddReview = async () => {
+  if (reviewText.trim() === "") {
+    setErrorMessage("Please enter your review");
+    return;
+  }
+  setErrorMessage("");
 
-    const { data, error } = await supabase.from(`reviews_${table}`).insert({
-      user_id: session?.user.id,
+  const userId = session?.user.id;
+  if (!userId) {
+    Alert.alert("Error", "You must be logged in to submit a review");
+    return;
+  }
+
+  const { data, error } = await supabase
+    .from(table === "airlines" ? "reviews_airlines" : "reviews_accommodation")
+    .insert({
+      user_id: userId,
       [table === "airlines" ? "airline_id" : "accommodation_id"]: id,
       rating: rating,
       review_text: reviewText,
     });
-    if (error && error.code === "42501") {
-      Alert.alert("Error", "You must be logged in to submit a review");
-    } else {
-      toggleModal();
-      Alert.alert("Thanks, your review was submitted.");
-    }
-  };
+  if (error) {
+    Alert.alert("Error", "Something went wrong. Please try again.");
+  } else {
+    toggleModal();
+    Alert.alert("Thanks, your review was submitted.");
+  }
+};
 
   const handleEditReview = async () => {
     if (reviewText.trim() === "") {
@@ -83,7 +91,7 @@ export default function ReviewForm({
     setErrorMessage("");
 
     const { data, error } = await supabase
-      .from(`${table}`)
+      .from(table === "airlines" ? "reviews_airlines" : "reviews_accommodation")
       .update({
         rating: rating,
         review_text: reviewText,
@@ -93,7 +101,7 @@ export default function ReviewForm({
       Alert.alert("Something went wrong. Please try again.");
     } else {
       toggleModal();
-      setEdited(true)
+      setEdited(true);
       Alert.alert("Thanks, your review was updated.");
     }
   };

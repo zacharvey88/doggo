@@ -5,7 +5,7 @@ import { Alert, Pressable, StyleSheet } from 'react-native'
 export default function DeleteTrip({trip_id, setDeleteModalVisible, filteredTrips, setFilteredTrips, trips} : {trip_id: Number, setDeleteModalVisible: any, filteredTrips: any, setFilteredTrips: any, trips: any}){
 
 const deleteTrip = async () => {
-    setFilteredTrips(filteredTrips.filter((trip)=> trip.trip_id !== trip_id))
+    setFilteredTrips(filteredTrips.filter((trip:any)=> trip.trip_id !== trip_id))
     const { data, error } = await supabase
     .from('trips')
     .delete()

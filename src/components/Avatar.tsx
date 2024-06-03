@@ -14,7 +14,6 @@ const MAX_HEIGHT = 800;
 export default function Avatar({ url, size = 150, onUpload }: Props) {
   const [uploading, setUploading] = useState(false);
   const [avatarUrl, setAvatarUrl] = useState<string | null>(url);
-  const avatarSize = { height: size, width: size };
   const defaultImage = "https://i.sstatic.net/l60Hf.png";
 
   async function uploadAvatar() {
@@ -22,11 +21,11 @@ export default function Avatar({ url, size = 150, onUpload }: Props) {
       setUploading(true);
 
       const result = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.Images, // Restrict to only images
-        allowsMultipleSelection: false, // Can only select one image
-        allowsEditing: true, // Allows the user to crop / rotate their photo before uploading it
+        mediaTypes: ImagePicker.MediaTypeOptions.Images, 
+        allowsMultipleSelection: false, 
+        allowsEditing: true, 
         quality: 1,
-        exif: false, // We don't want nor need that data.
+        exif: false, 
       });
 
       if (result.canceled || !result.assets || result.assets.length === 0) {
@@ -37,7 +36,7 @@ export default function Avatar({ url, size = 150, onUpload }: Props) {
       console.log("Got image", image);
 
       if (!image.uri) {
-        throw new Error("No image uri!"); // Realistically, this should never happen, but just in case...
+        throw new Error("No image uri!");
       }
       const { width, height } = image;
       if (width > MAX_WIDTH || height > MAX_HEIGHT) {

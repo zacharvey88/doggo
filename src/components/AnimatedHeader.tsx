@@ -1,8 +1,11 @@
 // src/components/AnimatedHeader.js
 import React from "react";
 import { Animated, StyleSheet, View } from "react-native";
+type AnimatedHeaderProps = {
+  scrollY: Animated.Value;
+};
 
-const AnimatedHeader = ({ scrollY }) => {
+const AnimatedHeader: React.FC<AnimatedHeaderProps> = ({ scrollY }) => {
   const headerTranslate = scrollY.interpolate({
     inputRange: [0, 100],
     outputRange: [0, -100],
@@ -14,7 +17,6 @@ const AnimatedHeader = ({ scrollY }) => {
       style={[styles.header, { transform: [{ translateY: headerTranslate }] }]}
     >
       <View style={styles.tabsContainer}>
-        {/* Your top tabs bar content goes here */}
       </View>
     </Animated.View>
   );

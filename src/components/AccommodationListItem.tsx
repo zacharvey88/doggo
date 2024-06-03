@@ -3,26 +3,29 @@ import { StyleSheet, Image, Text, View, TouchableOpacity } from "react-native";
 import { useRouter } from "expo-router";
 import { supabase } from "../lib/supabase";
 import { StarRatingDisplay } from "react-native-star-rating-widget";
+import { Json } from "../lib/database.types";
+
+type Accommodation = {
+  accommodation_id: number;
+  description: string;
+  address: string;
+  phone: string | null;
+  photos: any;
+  title: string;
+  postcode: number | string;
+  booking_url: string;
+  city: string;
+  country: string;
+};
 
 type AccommodationListItemProps = {
-  accommodation: {
-    accommodation_id: number;
-    description: string;
-    address: string;
-    phone: string | null;
-    photos: [];
-    title: string;
-    postcode: number | string;
-    booking_url: string;
-    city: string;
-    country: string;
-  };
+  accommodation: Accommodation;
 };
 
 const AccommodationListItem: React.FC<AccommodationListItemProps> = ({
   accommodation,
 }) => {
-  const [rating, setRating] = useState(0);
+  const [rating, setRating] = useState<number>(0);
   const router = useRouter();
 
   useEffect(() => {
@@ -34,9 +37,10 @@ const AccommodationListItem: React.FC<AccommodationListItemProps> = ({
       .from("reviews_accommodation")
       .select("rating")
       .eq("accommodation_id", accommodation.accommodation_id);
-    if (ratings) {
+
+    if (ratings && ratings.length > 0) {
       const totalRatings = ratings.reduce(
-        (acc, rating) => acc + rating.rating,
+        (acc: number, rating: { rating: number }) => acc + rating.rating,
         0
       );
       const averageRating = totalRatings / ratings.length;
@@ -67,7 +71,7 @@ const AccommodationListItem: React.FC<AccommodationListItemProps> = ({
         }
       >
         <View style={styles.imageContainer}>
-          {accommodation.photos ? (
+          {accommodation.photos && accommodation.photos.length > 0 ? (
             <Image
               source={{ uri: accommodation.photos[0] }}
               style={styles.image}
@@ -81,7 +85,7 @@ const AccommodationListItem: React.FC<AccommodationListItemProps> = ({
           <Text style={styles.title}>{accommodation.title}</Text>
           <View style={styles.titleContainer}>
             <Text style={styles.city}>
-              {accommodation.city}, {accommodation.country}{" "}
+              {accommodation.city}, {accommodation.country}
             </Text>
             <StarRatingDisplay rating={rating} starSize={20} />
           </View>
@@ -96,7 +100,6 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     flex: 1,
     overflow: "hidden",
-    
   },
   placeItem: {
     marginBottom: 5,
