@@ -17,9 +17,7 @@ const TripAccomodationPhoto = ({ accommodation_id }: { accommodation_id: number 
       .select("*")
       .eq("accommodation_id", accommodation_id);
     if (data) {
-      setAccommodationPhotoUrl(data[0].photos[0]);
-      console.log(accommodationPhotoUrl); 
-    }
+      setAccommodationPhotoUrl(data[0].photos[0]);    }
   }
   if (loading) {
     return (
