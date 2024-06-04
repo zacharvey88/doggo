@@ -3,8 +3,7 @@ import { Text, View, Image, StyleSheet, Alert } from "react-native";
 import { StarRatingDisplay } from "react-native-star-rating-widget";
 import dateFormat from "dateformat";
 import { supabase } from "../lib/supabase";
-import { Review } from "../lib/types";
-import { ReviewCardProps } from "../lib/types";
+import { useEffect } from "react";
 export default function UserReviewCard({
   review,
   reviews,
@@ -15,7 +14,20 @@ export default function UserReviewCard({
   setExistingReviewText,
   table,
   setReviewId,
-}: ReviewCardProps) {
+}: {
+  review: {
+    review_id: number;
+    rating: number;
+    review_text: string;
+    avatar_url: string;
+    created_at: string;
+    username: string;
+    table: string;
+    setReviewId: any;
+    accommodation: string;
+    airlines: string;
+  };
+}) {
   const { review_id, rating, review_text, created_at } = review;
   const { title } = review.accommodation ? review.accommodation : "";
   const { airline_name } = review.airlines ? review.airlines : "";
@@ -64,7 +76,7 @@ export default function UserReviewCard({
       <Text style={styles.title}>{title ? title : airline_name}</Text>
       <View style={styles.reviewMetaContainer}>
         <View style={styles.reviewMeta}>
-          <View >
+          <View style={styles.starContainer}>
             <StarRatingDisplay
               rating={rating}
               starSize={25}

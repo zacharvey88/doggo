@@ -1,9 +1,9 @@
 import { View, Text, StyleSheet, TextInput, Alert } from 'react-native'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import StarRating from 'react-native-star-rating-widget'
 import { Button } from 'react-native-elements'
 import { supabase } from '../lib/supabase'
-import { Session } from '@supabase/supabase-js'
+import { useLocalSearchParams } from 'expo-router'
 
 export default function ReviewForm({
   id,
@@ -54,34 +54,26 @@ export default function ReviewForm({
   // }
 
 
-const handleAddReview = async () => {
-  if (reviewText.trim() === "") {
-    setErrorMessage("Please enter your review");
-    return;
-  }
-  setErrorMessage("");
+  const handleAddReview = async () => {
+    if (reviewText.trim() === "") {
+      setErrorMessage("Please enter your review");
+      return;
+    }
+    setErrorMessage("");
 
-  const userId = session?.user.id;
-  if (!userId) {
-    Alert.alert("Error", "You must be logged in to submit a review");
-    return;
-  }
-
-  const { data, error } = await supabase
-    .from(table === "airlines" ? "reviews_airlines" : "reviews_accommodation")
-    .insert({
-      user_id: userId,
+    const { data, error } = await supabase.from(`reviews_${table}`).insert({
+      user_id: session?.user.id,
       [table === "airlines" ? "airline_id" : "accommodation_id"]: id,
       rating: rating,
       review_text: reviewText,
     });
-  if (error) {
-    Alert.alert("Error", "Something went wrong. Please try again.");
-  } else {
-    toggleModal();
-    Alert.alert("Thanks, your review was submitted.");
-  }
-};
+    if (error && error.code === "42501") {
+      Alert.alert("Error", "You must be logged in to submit a review");
+    } else {
+      toggleModal();
+      Alert.alert("Thanks, your review was submitted.");
+    }
+  };
 
   const handleEditReview = async () => {
     if (reviewText.trim() === "") {
@@ -91,7 +83,7 @@ const handleAddReview = async () => {
     setErrorMessage("");
 
     const { data, error } = await supabase
-      .from(table === "airlines" ? "reviews_airlines" : "reviews_accommodation")
+      .from(`${table}`)
       .update({
         rating: rating,
         review_text: reviewText,
@@ -101,7 +93,7 @@ const handleAddReview = async () => {
       Alert.alert("Something went wrong. Please try again.");
     } else {
       toggleModal();
-      setEdited(true);
+      setEdited(true)
       Alert.alert("Thanks, your review was updated.");
     }
   };
