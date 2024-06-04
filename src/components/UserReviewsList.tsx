@@ -4,6 +4,7 @@ import {
   Text,
   View,
   ActivityIndicator,
+  Pressable,
 } from "react-native";
 import { supabase } from "@/src/lib/supabase";
 import { useEffect, useState } from "react";
@@ -26,8 +27,8 @@ export default function UserReviewsList({
   const [isModalVisible, setModalVisible] = useState(false);
   const [existingReviewText, setExistingReviewText] = useState("");
   const [existingRating, setExistingRating] = useState(0);
-  const { session } = useAuth();
-  const [review_id, setReviewId] = useState(0);
+  const { session, profile } = useAuth();
+  const [review_id, setReviewId] = useState(null);
 
   useEffect(() => {
     getReviews();
