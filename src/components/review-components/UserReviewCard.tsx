@@ -1,9 +1,9 @@
 import { FontAwesome } from "@expo/vector-icons";
-import { Text, View, Image, StyleSheet, Alert } from "react-native";
+import { Text, View, StyleSheet, Alert } from "react-native";
 import { StarRatingDisplay } from "react-native-star-rating-widget";
 import dateFormat from "dateformat";
-import { supabase } from "../lib/supabase";
-import { useEffect } from "react";
+import { supabase } from "@/src/lib/supabase";
+
 export default function UserReviewCard({
   review,
   reviews,
@@ -26,7 +26,14 @@ export default function UserReviewCard({
     setReviewId: any;
     accommodation: string;
     airlines: string;
-  };
+  },
+  setFilteredReviews: any,
+  filteredReviews: any,
+  toggleModal: any, 
+  setExistingRating: any,
+  setExistingReviewText: any,
+  table: string,
+  setReviewId: any
 }) {
   const { review_id, rating, review_text, created_at } = review;
   const { title } = review.accommodation ? review.accommodation : "";

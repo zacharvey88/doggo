@@ -5,95 +5,57 @@ import {
   StyleSheet,
   FlatList,
   ActivityIndicator,
-  Pressable,
   Image,
-  ScrollView,
   TouchableOpacity,
 } from "react-native";
 import { useRouter } from "expo-router";
-import beaches from "@/data/beaches.json";
-import restaurants from "@/data/restaurants.json";
-import vets from "@/data/vets.json";
-import parks from "@/data/parks.json";
-import shops from "@/data/shops.json";
-import { restaurantImages } from "@/data/restaurantImages";
-import { fetchPlaces } from "../api/googlePlacesApi";
+import { fetchPlaces } from "@/src/api/googlePlacesApi";
 
-const PlacesComponent = ({ location, category }) => {
+export default function PlacesCard({
+  location,
+  category,
+}: {
+  location: string;
+  category: string;
+}) {
   const [places, setPlaces] = useState([]);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 
-  // useEffect(() => {
-  //   const fetchPlacesData = async () => {
-  //     setLoading(true);
-  //     let data;
-  //     switch (category) {
-  //       case "Restaurants":
-  //         data = restaurants;
-  //         break;
-  //       case "Vets":
-  //         data = vets;
-  //         break;
-  //       case "Parks":
-  //         data = parks;
-  //         break;
-  //       case "Beaches":
-  //         data = beaches;
-  //         break;
-  //       case "Shops":
-  //         data = shops;
-  //         break;
-  //       default:
-  //         data = { places: [] };
-  //     }
+  useEffect(() => {
+    const fetchPlacesData = async () => {
+      setLoading(true);
+      let searchString = "";
+      switch (category) {
+        case "Restaurants":
+          searchString = `Pet-friendly restaurants in ${location}`;
+          break;
+        case "Vets":
+          searchString = `vets in ${location}`;
+          break;
+        case "Parks":
+          searchString = `Dog-friendly parks in ${location}`;
+          break;
+        case "Beaches":
+          searchString = `Dog-friendly beaches in ${location}`;
+          break;
+        case "Shops":
+          searchString = `Pet shops in ${location}`;
+          break;
+      }
 
-  //     try {
-  //       setPlaces(data.places || []);
-  //     } catch (error) {
-  //       console.error("Error fetching places data:", error);
-  //     } finally {
-  //       setLoading(false);
-  //     }
-  //   };
+      try {
+        const data = await fetchPlaces(searchString);
+        setPlaces(data.places || []);
+      } catch (error) {
+        console.error("Error fetching places data:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  //   fetchPlacesData();
-  // }, [location, category]);
-
-    useEffect(() => {
-      const fetchPlacesData = async () => {
-        setLoading(true);
-        let searchString = "";
-        switch (category) {
-          case "Restaurants":
-            searchString = `Pet-friendly restaurants in ${location}`;
-            break;
-          case "Vets":
-            searchString = `vets in ${location}`;
-            break;
-          case "Parks":
-            searchString = `Dog-friendly parks in ${location}`;
-            break;
-          case "Beaches":
-            searchString = `Dog-friendly beaches in ${location}`;
-            break;
-          case "Shops":
-            searchString = `Pet shops in ${location}`;
-            break;
-        }
-
-        try {
-          const data = await fetchPlaces(searchString);
-  setPlaces(data.places || []);
-        } catch (error) {
-          console.error("Error fetching places data:", error);
-        } finally {
-          setLoading(false);
-        }
-      };
-
-      fetchPlacesData();
-    }, [location, category]);
+    fetchPlacesData();
+  }, [location, category]);
 
   if (loading) {
     return (
@@ -121,14 +83,11 @@ const PlacesComponent = ({ location, category }) => {
               })
             }
           >
-    
-
             <View style={styles.imageContainer}>
               {item.photos ? (
                 <Image
                   source={{
-                    // uri: restaurantImages[0],
-                    uri:`https://places.googleapis.com/v1/${item.photos[0].name}/media?key=${process.env.EXPO_PUBLIC_API_KEY}&maxWidthPx=300`
+                    uri: `https://places.googleapis.com/v1/${item.photos[0].name}/media?key=${process.env.EXPO_PUBLIC_API_KEY}&maxWidthPx=300`,
                   }}
                   style={styles.image}
                   resizeMode="cover"
@@ -143,7 +102,7 @@ const PlacesComponent = ({ location, category }) => {
                 {item.displayName?.text || "N/A"}
               </Text>
               <Text style={styles.address}>
-                {item.shortFormattedAddress || "N/A"}
+                {item.shortFormattedAddress.replace(/\b\w/g, (char) => char.toUpperCase()) || "N/A"}
               </Text>
               <Text
                 style={[
@@ -164,7 +123,7 @@ const PlacesComponent = ({ location, category }) => {
       />
     </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {
@@ -228,5 +187,3 @@ const styles = StyleSheet.create({
     flexGrow: 1,
   },
 });
-
-export default PlacesComponent;

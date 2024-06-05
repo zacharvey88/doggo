@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { supabase } from "@/src/lib/supabase";
 import { StyleSheet, View, Alert, Image, Button } from "react-native";
 import * as ImagePicker from "expo-image-picker";
@@ -14,7 +14,6 @@ const MAX_HEIGHT = 800;
 export default function Avatar({ url, size = 150, onUpload }: Props) {
   const [uploading, setUploading] = useState(false);
   const [avatarUrl, setAvatarUrl] = useState<string | null>(url);
-  const avatarSize = { height: size, width: size };
   const defaultImage = "https://i.sstatic.net/l60Hf.png";
 
   async function uploadAvatar() {
@@ -34,10 +33,9 @@ export default function Avatar({ url, size = 150, onUpload }: Props) {
       }
 
       const image = result.assets[0];
-      console.log("Got image", image);
 
       if (!image.uri) {
-        throw new Error("No image uri!"); // Realistically, this should never happen, but just in case...
+        throw new Error("No image URL");
       }
       const { width, height } = image;
       if (width > MAX_WIDTH || height > MAX_HEIGHT) {
@@ -66,7 +64,7 @@ export default function Avatar({ url, size = 150, onUpload }: Props) {
       onUpload(data.path);
     } catch (error) {
       if (error instanceof Error) {
-        Alert.alert(error.message);
+        Alert.alert(error.message)
       } else {
         throw error;
       }

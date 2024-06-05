@@ -4,14 +4,14 @@ import {
   Image,
   ActivityIndicator,
   Pressable,
+  View,
+  SafeAreaView,
 } from "react-native";
-import { View } from "@/src/components/Themed";
 import { supabase } from "@/src/lib/supabase";
 import { useEffect, useState } from "react";
 import { Database } from "@/src/lib/database.types";
 import { SearchBar } from "react-native-elements";
 import { Link } from "expo-router";
-import { SafeAreaView } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
 export default function TabAirlines() {
@@ -61,20 +61,17 @@ export default function TabAirlines() {
           </View>
         ) : (
           <>
-              <SearchBar
-                placeholder="Search airline pet policies"
-                placeholderTextColor
-                onChangeText={(value) => setSearchTerm(value)}
-                value={searchTerm}
-                inputStyle={styles.inputText}
-                lightTheme
-                round
-                containerStyle={styles.searchContainer}
-                inputContainerStyle={styles.searchInput}
-                searchIcon={
-                  <Ionicons name="search-outline" style={styles.searchIcon} />
-                }
-              />
+            <SearchBar
+              placeholder="Search airline pet policies"
+              onChangeText={(value) => setSearchTerm(value)}
+              value={searchTerm}
+              inputStyle={styles.inputText}
+              lightTheme
+              round
+              containerStyle={styles.searchContainer}
+              inputContainerStyle={styles.searchInput}
+              searchIcon={<Ionicons name="search-outline" style={styles.searchIcon} />}
+            />
             <FlatList
               data={filteredAirlines}
               keyExtractor={(item) => item.airline_id.toString()}
@@ -121,7 +118,7 @@ export default function TabAirlines() {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: "white",
+    backgroundColor: "#fff",
   },
   container: {
     flex: 1,
@@ -138,19 +135,20 @@ const styles = StyleSheet.create({
     width: "100%",
     borderWidth: 1,
     borderColor: "#e0e0e0",
-    borderRadius: 10
+    borderRadius: 10,
   },
   searchContainer: {
     width: "100%",
     backgroundColor: "transparent",
     borderBottomColor: "transparent",
     borderTopColor: "transparent",
-    marginBottom: 10,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 0 },
     shadowOpacity: 0.2,
     shadowRadius: 2,
-    marginHorizontal:3
+    marginBottom: 15,
+    zIndex: 2,
+    paddingHorizontal: 10,
   },
   searchInput: {
     backgroundColor: "#eee",
@@ -179,5 +177,3 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
 });
-
-export default TabAirlines;

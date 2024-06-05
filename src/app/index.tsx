@@ -1,10 +1,14 @@
-import { StyleSheet, Image, Pressable, TouchableOpacity } from "react-native";
-import { Text, View } from "@/src/components/Themed";
+import {
+  StyleSheet,
+  Image,
+  Pressable,
+  TouchableOpacity,
+  Text,
+  View,
+} from "react-native";
 import { Link, useRouter } from "expo-router";
-import { useAuth } from "@/src/providers/AuthProvider";
 
 export default function App() {
-  const { session } = useAuth();
   const router = useRouter();
 
   return (
@@ -14,12 +18,11 @@ export default function App() {
         source={require("@/assets/images/logo.png")}
         resizeMode="contain"
       />
-      <Image
+      {/* <Image
         style={styles.slogan}
         source={require("@/assets/images/slogan.png")}
         resizeMode="contain"
-      />
-      {/* <Text style={styles.tagline}>Don't Leave Doggo At Home!</Text> */}
+      /> */}
 
       <View style={styles.buttonContainer}>
         <TouchableOpacity
@@ -45,7 +48,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "white",
+    backgroundColor: "#fff",
     paddingVertical: 20,
     paddingHorizontal: 10,
   },
@@ -58,7 +61,7 @@ const styles = StyleSheet.create({
   logo: {
     width: "80%",
     height: "40%",
-    marginBottom: 20,
+    marginBottom: 50,
   },
   slogan: {
     width: "80%",
@@ -67,10 +70,10 @@ const styles = StyleSheet.create({
   buttonContainer: {
     width: "100%",
     alignItems: "center",
+    backgroundColor: "white",
   },
   button: {
-    width: 260,
-    paddingVertical: 12,
+    padding: 12,
     borderRadius: 10,
     elevation: 3,
     backgroundColor: "#2A99D0",

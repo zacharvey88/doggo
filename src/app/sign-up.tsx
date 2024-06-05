@@ -45,7 +45,7 @@ const SignUpScreen = () => {
     });
 
     if (error) {
-      Alert.alert(error.message);
+      Alert.alert(error.message)
     } else {
       Alert.alert("Sign-up successful!");
 
@@ -72,7 +72,7 @@ const SignUpScreen = () => {
 
     const { error } = await supabase.auth.resetPasswordForEmail(email);
     if (error) {
-      Alert.alert(error.message);
+      Alert.alert(error.message)
     } else {
       Alert.alert("Password reset email sent!");
     }
@@ -90,8 +90,16 @@ const SignUpScreen = () => {
         style={styles.background}
       />
       <View style={styles.foreground}>
-        <Text style={styles.titleText}>Don't Leave Doggo At Home!</Text>
-        <Text style={styles.subtitleText}>Create an account now</Text>
+        <Image
+              source={require("@/assets/images/dog-colour.png")}
+              style={styles.logo}
+              resizeMode="contain"
+        />
+        <Image
+          source={require("@/assets/images/slogan.png")}
+          style={styles.slogan}
+          resizeMode="contain"
+        />
         <View style={styles.form}>
           <TextInput
             value={email}
@@ -155,23 +163,23 @@ const styles = StyleSheet.create({
     padding: 30,
   },
   titleText: {
-    marginTop: 30,
-    fontSize: 40,
-    fontWeight: "800",
+    fontSize: 32,
+    fontWeight: "bold",
     color: "white",
     textAlign: "center",
     fontFamily: "Futura",
+    marginBottom: -5
   },
   subtitleText: {
     fontSize: 18,
     color: "white",
     textAlign: "center",
-    marginTop: 40,
     fontWeight: "500",
     alignSelf: "center",
+    marginTop: 10,
   },
   form: {
-    marginTop: 180,
+    marginTop: 140,
   },
   input: {
     padding: 10,
@@ -229,6 +237,16 @@ const styles = StyleSheet.create({
     color: "gray",
     fontSize: 14,
     marginBottom: 15,
+  },
+  logo: {
+    width: 200,
+    height: 200,
+    alignSelf: "center",
+  },
+  slogan: {
+    width: '90%',
+    alignSelf: 'center',
+    marginTop: -15,
   },
 });
 

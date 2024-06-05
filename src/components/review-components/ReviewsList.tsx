@@ -4,14 +4,15 @@ import {
   Text,
   View,
   ActivityIndicator,
+  Alert,
 } from "react-native";
 import { supabase } from "@/src/lib/supabase";
 import { useEffect, useState } from "react";
-import { Database } from "@/src/lib/database.types";
+import { Database } from "@src/lib/database.types"
 import ReviewCard from "./ReviewCard";
-import { useLocalSearchParams } from "expo-router";
 import Modal from "react-native-modal";
-import ReviewForm from "@/src/components/ReviewForm";
+import ReviewForm from "@/src/components/review-components/ReviewForm";
+import { useAuth } from "@/src/providers/AuthProvider";
 export default function ReviewsList({
   id,
   table,
@@ -24,21 +25,20 @@ export default function ReviewsList({
   >([]);
   const [filteredReviews, setFilteredReviews] = useState(reviews);
   const [loading, setLoading] = useState(false);
-  const session = useLocalSearchParams();
   const [isModalVisible, setModalVisible] = useState(false);
   const [existingReviewText, setExistingReviewText] = useState("");
   const [existingRating, setExistingRating] = useState(0);
   const [review_id, setReviewId] = useState(null);
-  const [edited, setEdited] = useState(false)
+  const { session } = useAuth()
 
   const toggleModal = () => {
     setModalVisible(!isModalVisible);
   };
 
+
   useEffect(() => {
-    console.log(edited);
     getReviews();
-  }, [edited]);
+  }, []);
 
   async function getReviews() {
     setLoading(true);
@@ -46,17 +46,18 @@ export default function ReviewsList({
       .from(table)
       .select("*, profiles(username, avatar_url)")
       .eq(
-        table === "reviews_accommodation" ? "accommodation_id" : "airline_id",
-        id
-      )
-      .order("created_at", { ascending: false });
-    if (data) {
+        table === "reviews_accommodation" ? "accommodation_id" : "airline_id", id)
+      .order("created_at", { ascending: false })
+    if (error) {
+      Alert.alert(error.message)
+    } 
+    else {
       setReviews(data);
       setFilteredReviews(data);
     }
     setLoading(false);
-    setEdited(false)
   }
+  
   return (
     <View style={styles.container}>
       {loading ? (
@@ -103,7 +104,7 @@ export default function ReviewsList({
                 setExistingRating={setExistingRating}
                 setExistingReviewText={setExistingReviewText}
                 table={table}
-                setEdited={setEdited}
+                setReviewId={setReviewId}
               />
             )}
           />

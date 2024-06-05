@@ -1,5 +1,4 @@
 import {
-  Children,
   createContext,
   PropsWithChildren,
   useContext,
@@ -7,6 +6,7 @@ import {
   useState,
 } from "react";
 import { supabase } from "../lib/supabase";
+import { Session } from "@supabase/supabase-js";
 
 type AuthData = {
   session: Session | null;
@@ -15,7 +15,6 @@ type AuthData = {
   isAdmin: boolean
 };
 
-import { Session } from "@supabase/supabase-js";
 
 const AuthContext = createContext<AuthData>({ session: null, profile: null, loading: true, isAdmin: false });
 

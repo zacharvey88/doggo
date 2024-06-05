@@ -1,5 +1,5 @@
-import { Link, Stack, useLocalSearchParams, useRouter } from "expo-router";
-import { useEffect, useState } from "react";
+import { useLocalSearchParams } from "expo-router";
+import { useState } from "react";
 import {
   View,
   Text,
@@ -11,21 +11,19 @@ import {
 } from "react-native";
 import { Button } from "react-native-elements";
 import { StarRatingDisplay } from "react-native-star-rating-widget";
-import { supabase } from "@/src/lib/supabase";
 import Modal from "react-native-modal";
-import TripListSmall from "@/src/components/TripListSmall";
+import TripListSmall from "@/src/components/trip-components/TripListSmall";
 import { useAuth } from "@/src/providers/AuthProvider";
-import ReviewForm from "@/src/components/ReviewForm";
+import ReviewForm from "@/src/components/review-components/ReviewForm";
 import { FontAwesome } from "@expo/vector-icons";
 import Colors from "@/src/constants/Colors";
-import ReviewsList from "@/src/components/ReviewsList";
+import ReviewsList from "@/src/components/review-components/ReviewsList";
 
 export default function UsersAccommodation() {
   const [loading, setLoading] = useState(false);
-  const router = useRouter();
   const [isTripModalVisible, setTripModalVisible] = useState(false);
   const [isReviewModalVisible, setReviewModalVisible] = useState(false);
-  const { session, profile } = useAuth();
+  const { session } = useAuth();
   const {
     id,
     title,

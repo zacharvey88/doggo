@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { StyleSheet, View, FlatList, ActivityIndicator } from "react-native";
-import AccommodationListItem from "@/src/components/AccommodationListItem";
+import AccommodationListItem from "@/src/components/accommodation-components/AccommodationListItem";
 import { supabase } from "@/src/lib/supabase";
 import { Database } from "@/src/lib/database.types";
 
@@ -9,6 +9,7 @@ type AccommodationTabProps = {
 };
 
 const AccommodationTab: React.FC<AccommodationTabProps> = ({ searchTerm }) => {
+
   const [accommodation, setAccommodation] = useState<
     Database["public"]["Tables"]["accommodation"]["Row"][]
   >([]);
@@ -16,6 +17,7 @@ const AccommodationTab: React.FC<AccommodationTabProps> = ({ searchTerm }) => {
     Database["public"]["Tables"]["accommodation"]["Row"][]
   >([]);
   const [loading, setLoading] = useState(false);
+
   useEffect(() => {
     async function getAccommodation() {
       setLoading(true);
@@ -72,19 +74,18 @@ const AccommodationTab: React.FC<AccommodationTabProps> = ({ searchTerm }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-
     backgroundColor: "white",
     alignItems: "center",
   },
   loadingContainer: {
     flex: 1,
+    backgroundColor: "white",
     justifyContent: "center",
     alignItems: "center",
   },
   list: {
     flex: 1,
     width: '100%',
-    
   },
 });
 

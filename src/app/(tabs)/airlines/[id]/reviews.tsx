@@ -1,6 +1,6 @@
 import { View, StyleSheet } from "react-native";
-import { Stack, useLocalSearchParams } from "expo-router";
-import ReviewsList from "@/src/components/ReviewsList";
+import { useLocalSearchParams } from "expo-router";
+import ReviewsList from "@/src/components/review-components/ReviewsList";
 export default function Reviews() {
 
   const { id } = useLocalSearchParams();

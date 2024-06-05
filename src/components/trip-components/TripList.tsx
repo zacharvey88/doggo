@@ -1,20 +1,25 @@
-import { useEffect, useState } from "react";
-import { View, Text } from "./Themed";
-import { supabase } from "@/src/lib/supabase";
-import { Database } from "@/src/lib/database.types";
-import { StyleSheet, FlatList} from "react-native";
-import { Button } from "react-native-elements";
-import { Navigator } from "expo-router";
-import { ActivityIndicator } from "react-native";
+import { useState } from "react";
+import { StyleSheet, FlatList } from "react-native";
+import { ActivityIndicator, View, Text } from "react-native";
 import TripCard from "./TripCard";
 
-export default function TripList({user_id, setTripId, setTrips, filteredTrips, setFilteredTrips, trips, getTrips} : {user_id: string, setTripId: any, setTrips: any, filteredTrips: any, setFilteredTrips: any, trips: any, getTrips : any}) {
-
-  const [loading, setLoading] = useState(false)
-
-  const refreshTrips = () => {
-    getTrips();
-  }
+export default function TripList({
+  user_id,
+  setTripId,
+  setTrips,
+  filteredTrips,
+  setFilteredTrips,
+  trips,
+  loading,
+}: {
+  user_id: string;
+  setTripId: any;
+  setTrips: any;
+  filteredTrips: any;
+  setFilteredTrips: any;
+  trips: any;
+  loading: boolean
+}) {
 
   return (
     <View style={styles.container}>

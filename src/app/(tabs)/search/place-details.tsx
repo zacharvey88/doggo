@@ -1,5 +1,5 @@
 // src/app/tabs/search/PlaceDetailsScreen.tsx
-import React from "react";
+import React, {useEffect, useState} from "react";
 import {
   View,
   Text,
@@ -10,54 +10,58 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { useLocalSearchParams } from "expo-router";
-import { restaurantImages } from "@/data/restaurantImages";
 import Colors from "@/src/constants/Colors";
 import { FontAwesome } from "@expo/vector-icons";
-import { useState } from "react";
 
-const PlaceDetailsScreen = () => {
+export default function PlaceDetailsScreen() {
+
   const params = useLocalSearchParams();
   const place = JSON.parse(params.place);
   const [isAccordionExpanded, setIsAccordionExpanded] = useState(false);
-  const toggleAccordion = () => {
-    setIsAccordionExpanded(!isAccordionExpanded);
-  };
   const {
     displayName,
     formattedAddress,
-    primaryTypeDisplayName,
     currentOpeningHours,
     internationalPhoneNumber,
     websiteUri,
     photos,
     googleMapsUri,
+    reviews,
   } = place;
+
+  const toggleAccordion = () => {
+    setIsAccordionExpanded(!isAccordionExpanded);
+  };
 
   const handleCallPress = (phoneNumber:string) => {
     if (phoneNumber) {
       Linking.openURL(`tel:${phoneNumber}`);
     }
   };
+  
   return (
     <ScrollView style={styles.container}>
       <View style={styles.card}>
-        <Text style={styles.title}>{displayName.text}</Text>
         {photos && photos.length > 0 ? (
-          <ScrollView horizontal contentContainerStyle={styles.imageContainer}>
+          <ScrollView horizontal 
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={styles.imageContainer}>
             {photos.slice(0,5).map((photo: string, index: number) => (
               <Image
                 key={index}
                 source={{
-                  // uri: restaurantImages[index],
                   uri: `https://places.googleapis.com/v1/${photo.name}/media?key=${process.env.EXPO_PUBLIC_API_KEY}&maxWidthPx=300`,
                 }}
-                style={styles.image}
+                style={photos.length > 1 ? styles.image : styles.singleImage}
               />
             ))}
           </ScrollView>
         ) : (
           <Text style={styles.noImagesText}>No Images Available</Text>
         )}
+        <View style={styles.titleContainer}>
+          <Text style={styles.title}>{displayName.text}</Text>
+        </View>
         <View style={styles.infoContainer}>
           <View style={styles.infoRow}>
             <FontAwesome name="map-marker" style={styles.icon} />
@@ -65,7 +69,7 @@ const PlaceDetailsScreen = () => {
               style={styles.address}
               onPress={() => Linking.openURL(googleMapsUri)}
             >
-              {formattedAddress}
+              {formattedAddress.replace(/\b\w/g, (char) => char.toUpperCase())}
             </Text>
           </View>
 
@@ -116,10 +120,13 @@ const PlaceDetailsScreen = () => {
                 onPress={() => Linking.openURL(websiteUri)}
                 numberOfLines={1}
               >
-                {websiteUri}
+                Visit Website
               </Text>
             </View>
           )}
+          <View>
+            {reviews}
+          </View>
         </View>
       </View>
     </ScrollView>
@@ -129,38 +136,34 @@ const PlaceDetailsScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 14,
-    backgroundColor: "#f5f5f5",
+    paddingHorizontal: 14,
+    backgroundColor: "#fff",
     color: "gray",
+    marginTop: -10
   },
   card: {
     backgroundColor: "white",
     borderRadius: 12,
     padding: 14,
     marginVertical: 8,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
     elevation: 2,
   },
   title: {
     fontSize: 24,
     fontWeight: "bold",
-    marginBottom: 12,
     textAlign: "center",
   },
   imageContainer: {
-    paddingVertical: 8,
+    marginBottom: 10,
+  },
+  titleContainer: {
+    margin: 10,
   },
   noImagesText: {
     fontSize: 14,
     color: "gray",
     textAlign: "center",
     marginVertical: 8,
-  },
-  infoContainer: {
-    marginTop: 12,
   },
   infoRow: {
     flexDirection: "row",
@@ -187,8 +190,7 @@ const styles = StyleSheet.create({
   },
   website: {
     fontSize: 14,
-    flexShrink: 1,
-    flexWrap: "wrap",
+    color: Colors.light.tint,
   },
   address: {
     fontSize: 14,
@@ -213,6 +215,11 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     marginRight: 8,
   },
+  singleImage: {
+    width: 370,
+    height: 200,
+    borderRadius: 8,
+  },
   icon: {
     marginRight: 20,
     marginLeft: 5,
@@ -221,7 +228,6 @@ const styles = StyleSheet.create({
   },
   seeMoreHours: {
     color: Colors.light.tint,
-    textDecorationLine: "underline",
     marginLeft: 8,
   },
   accordionContent: {
@@ -231,5 +237,3 @@ const styles = StyleSheet.create({
     color: "gray"
   },
 });
-
-export default PlaceDetailsScreen;

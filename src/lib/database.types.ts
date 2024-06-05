@@ -18,25 +18,25 @@ export type Database = {
           country: string
           created_at: string
           description: string
-          phone: string | null
-          photos: Json
+          phone: string
+          photos: Json | null
           postcode: string
-          state: string | null
+          state: string
           title: string
           user_id: string
         }
         Insert: {
           accommodation_id?: number
           address: string
-          booking_url: string
+          booking_url?: string
           city: string
           country: string
           created_at?: string
           description: string
-          phone?: string | null
-          photos: Json
+          phone: string
+          photos?: Json | null
           postcode: string
-          state?: string | null
+          state: string
           title: string
           user_id: string
         }
@@ -48,10 +48,10 @@ export type Database = {
           country?: string
           created_at?: string
           description?: string
-          phone?: string | null
-          photos?: Json
+          phone?: string
+          photos?: Json | null
           postcode?: string
-          state?: string | null
+          state?: string
           title?: string
           user_id?: string
         }
@@ -134,7 +134,7 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "profiles_id_fkey1"
+            foreignKeyName: "profiles_id_fkey"
             columns: ["id"]
             isOneToOne: true
             referencedRelation: "users"
@@ -176,7 +176,7 @@ export type Database = {
             referencedColumns: ["accommodation_id"]
           },
           {
-            foreignKeyName: "reviews_user_id_fkey"
+            foreignKeyName: "reviews_accommodation_user_id_fkey"
             columns: ["user_id"]
             isOneToOne: false
             referencedRelation: "profiles"
@@ -228,8 +228,6 @@ export type Database = {
       }
       trips: {
         Row: {
-          airlines: any
-          accommodation: any
           accommodation_id: number | null
           airline_id: number | null
           created_at: string
@@ -285,33 +283,6 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
-      }
-      vets: {
-        Row: {
-          address: string | null
-          created_at: string
-          id: number
-          photos: Json | null
-          rating: number | null
-          title: string | null
-        }
-        Insert: {
-          address?: string | null
-          created_at?: string
-          id?: number
-          photos?: Json | null
-          rating?: number | null
-          title?: string | null
-        }
-        Update: {
-          address?: string | null
-          created_at?: string
-          id?: number
-          photos?: Json | null
-          rating?: number | null
-          title?: string | null
-        }
-        Relationships: []
       }
     }
     Views: {

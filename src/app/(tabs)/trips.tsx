@@ -3,24 +3,18 @@ import {
   Pressable,
   TouchableOpacity,
   SafeAreaView,
+  Text,
+  View,
 } from "react-native";
-import { Text, View } from "@/src/components/Themed";
 import { useEffect, useState } from "react";
 import { supabase } from "@/src/lib/supabase";
-import { Session } from "@supabase/supabase-js";
-import { Link, useRouter } from "expo-router";
-import TripList from "@/src/components/TripList";
+import { useLocalSearchParams, useRouter } from "expo-router";
+import TripList from "@/src/components/trip-components/TripList";
 import { AntDesign, FontAwesome } from "@expo/vector-icons";
-import Modal from "react-native-modal";
-import DeleteTripModal from "@/src/components/DeleteTripModal";
 import { Database } from "@/src/lib/database.types";
-import TripForm from "@/src/components/TripForm";
 import { useAuth } from "@/src/providers/AuthProvider";
-import SignInModal from "@/src/components/SignInModal";
 
 export default function TabTrips() {
-  const [isDeleteModalVisible, setDeleteModalVisible] = useState(false);
-  const [isEditModalVisible, setEditModalVisible] = useState(false);
   const [loading, setLoading] = useState(false);
   const [tripId, setTripId] = useState(null);
   const [trips, setTrips] = useState<
@@ -30,17 +24,12 @@ export default function TabTrips() {
   const { session } = useAuth();
   const router = useRouter();
 
-  const toggleDeleteModal = () => {
-    setDeleteModalVisible(!isDeleteModalVisible);
-  };
-
   useEffect(() => {
       getTrips();
-  }, [session]);
+  }, []);
 
   async function getTrips() {
     if (!session?.user?.id) {
-      console.log("User not logged in");
       setLoading(false);
       return;
     }
@@ -51,9 +40,6 @@ export default function TabTrips() {
       .select("*, accommodation(title, photos), airlines(airline_name)")
       .eq("user_id", session.user.id)
       .order("start_date", { ascending: false });
-    if (error) {
-      console.log(error);
-    }
     if (data) {
       setTrips(data);
       setFilteredTrips(data);
@@ -76,34 +62,14 @@ export default function TabTrips() {
             </Pressable>
             <TripList
               user_id={session.user.id}
-              setDeleteModalVisible={setDeleteModalVisible}
-              isDeleteModalVisible={isDeleteModalVisible}
-              toggleDeleteModal={toggleDeleteModal}
               setTripId={setTripId}
               setTrips={setTrips}
               filteredTrips={filteredTrips}
               setFilteredTrips={setFilteredTrips}
               trips={trips}
-              getTrips={getTrips}
+              loading={loading}
             />
           </View>
-          <Modal
-            isVisible={isDeleteModalVisible}
-            animationIn="slideInUp"
-            onBackdropPress={toggleDeleteModal}
-            backdropOpacity={0.8}
-            backdropColor="black"
-          >
-            <View style={styles.modalDelete}>
-              <DeleteTripModal
-                trip_id={tripId}
-                setDeleteModalVisible={setDeleteModalVisible}
-                filteredTrips={setFilteredTrips}
-                setFilteredTrips={setFilteredTrips}
-                trips={trips}
-              />
-            </View>
-          </Modal>
         </>
       ) : (
         <View style={styles.signInContainer}>
@@ -129,7 +95,7 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    backgroundColor: "white",
+    backgroundColor: "#fff",
     justifyContent: "center",
     alignItems: "center",
   },
@@ -142,18 +108,17 @@ const styles = StyleSheet.create({
     marginTop: 15,
     width: "45%",
   },
-  title: {
-    fontSize: 18,
-    fontWeight: "bold",
-    textAlign: "center",
-    fontFamily: "Futura",
-    color: "#3990CD",
-  },
   addTripButton: {
     position: "absolute",
     bottom: 20,
     right: 20,
     zIndex: 1,
+    backgroundColor: "#fff",
+    borderRadius: 99,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 1,
   },
   modalDelete: {
     alignSelf: "center",

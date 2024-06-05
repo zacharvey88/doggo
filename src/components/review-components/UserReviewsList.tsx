@@ -4,21 +4,19 @@ import {
   Text,
   View,
   ActivityIndicator,
-  Pressable,
 } from "react-native";
 import { supabase } from "@/src/lib/supabase";
 import { useEffect, useState } from "react";
-import { Database } from "@/src/lib/database.types";
 import Modal from "react-native-modal";
-import ReviewForm from "@/src/components/ReviewForm";
+import ReviewForm from "@/src/components/review-components/ReviewForm";
 import { useAuth } from "@/src/providers/AuthProvider";
 import UserReviewCard from "./UserReviewCard";
 
 export default function UserReviewsList({
-  id,
+  user_id,
   table,
 }: {
-  id: number;
+  user_id: number;
   table: string;
 }) {
   const [reviews, setReviews] = useState([]);
@@ -27,12 +25,12 @@ export default function UserReviewsList({
   const [isModalVisible, setModalVisible] = useState(false);
   const [existingReviewText, setExistingReviewText] = useState("");
   const [existingRating, setExistingRating] = useState(0);
-  const { session, profile } = useAuth();
+  const { session } = useAuth();
   const [review_id, setReviewId] = useState(null);
 
   useEffect(() => {
     getReviews();
-  }, [id, table]);
+  }, [user_id, table]);
 
   const toggleModal = () => {
     setModalVisible(!isModalVisible);
@@ -49,14 +47,14 @@ export default function UserReviewsList({
             : "accommodation(title)"
         }`
       )
-      .eq("user_id", id)
+      .eq("user_id", user_id)
       .order("created_at", { ascending: false });
     if (data) {
       setReviews(data);
       setFilteredReviews(data);
     }
     if (error) {
-      console.log(error);
+      Alert.alert(error.message)
     }
     setLoading(false);
   }
@@ -79,7 +77,7 @@ export default function UserReviewsList({
           >
             <View style={styles.modal}>
               <ReviewForm
-                id={id}
+                user_id={user_id}
                 edit={true}
                 toggleModal={toggleModal}
                 session={session}

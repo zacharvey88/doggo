@@ -1,6 +1,6 @@
-import { View, StyleSheet, Text} from "react-native";
+import { View, StyleSheet} from "react-native";
 import { useLocalSearchParams } from "expo-router";
-import ReviewsList from "@/src/components/ReviewsList";
+import ReviewsList from "@/src/components/review-components/ReviewsList";
 
 export default function AccommodationReviews() {
 

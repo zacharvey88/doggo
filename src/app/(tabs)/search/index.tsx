@@ -1,22 +1,23 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   StyleSheet,
   View,
-  Pressable,
+  Text,
   ActivityIndicator,
   ScrollView,
   SafeAreaView,
   TouchableOpacity,
+  Alert,
 } from "react-native";
-import { Text } from "@/src/components/Themed";
-import { FontAwesome6 } from "@expo/vector-icons";
+import { FontAwesome6, Ionicons } from "@expo/vector-icons";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
-import AccommodationTab from "@/src/components/Accommodation";
-import PlacesComponent from "@/src/components/PlacesComponents";
-import { Ionicons } from "@expo/vector-icons";
+import AccommodationTab from "@/src/components/accommodation-components/Accommodation";
+import PlacesCard from "@/src/components/PlacesCard";
+
 export default function TabSearch() {
   const [loading, setLoading] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("Stays");
   const categories = [
     { name: "Stays", icon: "bed" },
     { name: "Restaurants", icon: "utensils" },
@@ -25,7 +26,7 @@ export default function TabSearch() {
     { name: "Beaches", icon: "umbrella-beach" },
     { name: "Shops", icon: "shop" },
   ];
-  const [selectedCategory, setSelectedCategory] = useState("Stays");
+
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
@@ -46,7 +47,7 @@ export default function TabSearch() {
                   key: process.env.EXPO_PUBLIC_API_KEY,
                   language: "en",
                 }}
-                onFail={(error) => console.log(error)}
+                onFail={(error) => Alert.alert(error.message)}
                 styles={{
                   container: styles.autocompleteContainer,
                   listView: styles.listView,
@@ -98,7 +99,7 @@ export default function TabSearch() {
             {selectedCategory === "Stays" ? (
               <AccommodationTab searchTerm={searchTerm} />
             ) : (
-              <PlacesComponent
+              <PlacesCard
                 location={searchTerm}
                 category={selectedCategory}
               />
@@ -107,17 +108,18 @@ export default function TabSearch() {
         )}
       </View>
     </SafeAreaView>
-  );
+ )
 }
+
 
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: "white",
+    backgroundColor: "#fff",
   },
   container: {
     flex: 1,
-    backgroundColor: "white",
+    backgroundColor: "#fff",
     alignItems: "center",
     paddingTop: 20,
     paddingHorizontal: 5,
@@ -143,7 +145,7 @@ const styles = StyleSheet.create({
   leftIconContainer: {
     position: "absolute",
     top: 15,
-    left: 10,
+    left: 8,
     zIndex: 1,
   },
   autocompleteContainer: {
@@ -154,7 +156,7 @@ const styles = StyleSheet.create({
   listView: {
     position: "absolute",
     top: 50,
-    backgroundColor: "white",
+    backgroundColor: "#fff",
     borderRadius: 5,
     elevation: 5,
     zIndex: 3,
@@ -232,6 +234,4 @@ const styles = StyleSheet.create({
     width: "100%",
     alignItems: "center",
   },
-});
-
-export default TabSearch;
+})

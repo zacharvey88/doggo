@@ -1,12 +1,11 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { supabase } from "@/src/lib/supabase";
-import { StyleSheet, View, Alert, Image, Text, ScrollView } from "react-native";
+import { StyleSheet, View, Alert, ScrollView } from "react-native";
 import { Input } from "@rneui/themed";
-import Button from "@components/Button";
 import { useRouter, useLocalSearchParams } from "expo-router";
-import { Session } from "@supabase/supabase-js";
 import Avatar from "@/src/components/Avatar";
 import { useAuth } from "@/src/providers/AuthProvider";
+import { Button } from "react-native-elements";
 
 export default function UpdateAccount() {
   const {
@@ -15,6 +14,7 @@ export default function UpdateAccount() {
     fullName: initialFullName,
     email: initialEmail,
   } = useLocalSearchParams();
+  
   const [loading, setLoading] = useState(false);
   const [username, setUsername] = useState(initialUsername || "");
   const [avatarUrl, setAvatarUrl] = useState(initialAvatarUrl || "");

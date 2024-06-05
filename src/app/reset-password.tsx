@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
   Alert,
 } from "react-native";
-import { supabase } from "../lib/supabase";
+import { supabase } from "@/src/lib/supabase";
 import Colors from "@/src/constants/Colors";
 import { StatusBar } from "expo-status-bar";
 import { useRouter } from "expo-router";
@@ -27,7 +27,7 @@ const ResetPassword = () => {
     setLoading(false);
 
     if (error) {
-      Alert.alert(error.message);
+      Alert.alert(error.message)
     } else {
         Alert.alert("Password reset email sent!");
     }
