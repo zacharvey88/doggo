@@ -8,18 +8,14 @@ import {
   Image,
   TouchableOpacity,
   ActivityIndicator,
-  ScrollView,
   Pressable,
-  Modal
 } from "react-native";
 import { Session } from "@supabase/supabase-js";
 import { Link, useNavigation } from "expo-router";
 import Colors from "../constants/Colors";
-import UserReviewsList from "./UserReviewsList";
+import UserReviewsList from "@components/review-components/UserReviewsList";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { FontAwesome } from "@expo/vector-icons";
-import { useRouter } from "expo-router";
-import ReviewForm from "./ReviewForm";
 
 export default function Account({ session }: { session: Session }) {
   const [loading, setLoading] = useState(true);
@@ -30,7 +26,6 @@ export default function Account({ session }: { session: Session }) {
   const navigation = useNavigation();
   const defaultImage = "https://i.sstatic.net/l60Hf.png";
   const [table, setTable] = useState("reviews_airlines");
-  const router = useRouter();
 
   const fetchProfile = async () => {
     try {
@@ -54,7 +49,7 @@ export default function Account({ session }: { session: Session }) {
       }
     } catch (error) {
       if (error instanceof Error) {
-        Alert.alert(error.message);
+        Alert.alert(error.message)
       }
     } finally {
       setLoading(false);
@@ -90,7 +85,7 @@ export default function Account({ session }: { session: Session }) {
           text: "Sign Out",
           onPress: async () => {
             const { error } = await supabase.auth.signOut();
-            if (error) Alert.alert(error.message);
+            if (error) Alert.alert(error.message)
           },
           style: "destructive",
         },
@@ -101,107 +96,105 @@ export default function Account({ session }: { session: Session }) {
 
   return (
     <SafeAreaView style={styles.safeArea} edges={["right", "left", "top"]}>
-        {loading ? (
-          <View style={styles.loadingContainer}>
-            <ActivityIndicator size="large" color="gray" />
+      {loading ? (
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color="gray" />
+        </View>
+      ) : (
+        <>
+          <View style={styles.badge}>
+            <TouchableOpacity
+              style={styles.signOutButton}
+              onPress={handleSignOut}
+            >
+              <FontAwesome style={styles.icon} name="sign-out" />
+            </TouchableOpacity>
+            <Image
+              source={{
+                uri: avatarUrl
+                  ? `https://orcurstjttnhckjuhyqb.supabase.co/storage/v1/object/public/avatars/${avatarUrl}`
+                  : defaultImage,
+              }}
+              style={styles.image}
+            />
+            <Text style={styles.fullName}>{fullName}</Text>
+            <Text style={styles.username}>{username}</Text>
+            <View style={styles.links}>
+              <Link
+                style={styles.textButton}
+                href={{
+                  pathname: "/profile/update",
+                  params: { username, avatarUrl, fullName, email },
+                }}
+              >
+                Edit Profile
+              </Link>
+              <Link
+                style={styles.textButton}
+                push
+                href="/profile/manage-properties"
+              >
+                Manage Properties
+              </Link>
+            </View>
           </View>
-        ) : (
-          <>
-            <View style={styles.badge}>
-              <TouchableOpacity
-                style={styles.signOutButton}
-                onPress={handleSignOut}
-              >
-                <FontAwesome style={styles.icon} name="sign-out" />
-              </TouchableOpacity>
-              <Image
-                source={{
-                  uri: avatarUrl
-                    ? `https://orcurstjttnhckjuhyqb.supabase.co/storage/v1/object/public/avatars/${avatarUrl}`
-                    : defaultImage,
-                }}
-                style={styles.image}
+          <View style={styles.tabs}>
+            <Pressable
+              onPress={() => {
+                setTable("reviews_airlines");
+              }}
+              style={[
+                styles.tab,
+                table === "reviews_airlines" && styles.activeTab,
+              ]}
+            >
+              <FontAwesome
+                name="plane"
+                style={[
+                  styles.tabIcon,
+                  table === "reviews_airlines" && styles.activeTabIcon,
+                ]}
               />
-              <Text style={styles.fullName}>{fullName}</Text>
-              <Text style={styles.username}>{username}</Text>
-              <View style={styles.links}>
-                <Link
-                  style={styles.textButton}
-                  href={{
-                    pathname: "/profile/update",
-                    params: { username, avatarUrl, fullName, email },
-                  }}
-                >
-                  Edit Profile
-                </Link>
-                <Link 
-                  style={styles.textButton}
-                   push href="/profile/manage-properties"
-                  >
-                    Manage Properties
-                </Link>
-              </View>
-            </View>
-            <View style={styles.tabs}>
-              <Pressable
-                onPress={() => {
-                  setTable("reviews_airlines");
-                }}
+              <Text
                 style={[
-                  styles.tab,
-                  table === "reviews_airlines" && styles.activeTab,
+                  styles.tabText,
+                  table === "reviews_airlines" && styles.activeTabText,
                 ]}
               >
-                <FontAwesome
-                  name="plane"
-                  style={[
-                    styles.tabIcon,
-                    table === "reviews_airlines" && styles.activeTabIcon,
-                  ]}
-                />
-                <Text
-                  style={[
-                    styles.tabText,
-                    table === "reviews_airlines" && styles.activeTabText,
-                  ]}
-                >
-                  Airline Reviews
-                </Text>
-              </Pressable>
-              <Pressable
-                onPress={() => {
-                  setTable("reviews_accommodation");
-                }}
+                Airline Reviews
+              </Text>
+            </Pressable>
+            <Pressable
+              onPress={() => {
+                setTable("reviews_accommodation");
+              }}
+              style={[
+                styles.tab,
+                table === "reviews_accommodation" && styles.activeTab,
+              ]}
+            >
+              <FontAwesome
+                name="home"
                 style={[
-                  styles.tab,
-                  table === "reviews_accommodation" && styles.activeTab,
+                  styles.tabIcon,
+                  table === "reviews_accommodation" && styles.activeTabIcon,
+                ]}
+              />
+              <Text
+                style={[
+                  styles.tabText,
+                  table === "reviews_accommodation" && styles.activeTabText,
                 ]}
               >
-                <FontAwesome
-                  name="building"
-                  style={[
-                    styles.tabIcon,
-                    table === "reviews_accommodation" && styles.activeTabIcon,
-                  ]}
-                />
-                <Text
-                  style={[
-                    styles.tabText,
-                    table === "reviews_accommodation" && styles.activeTabText,
-                  ]}
-                >
-                  Property Reviews
-                </Text>
-              </Pressable>
-            </View>
-            <View style={styles.listArea}>
-              <UserReviewsList 
-                id={session?.user.id} 
-                table={table} 
-                />
-            </View>
-          </>
-        )}
+                Property Reviews
+              </Text>
+            </Pressable>
+          </View>
+          <View style={styles.listArea}>
+            <UserReviewsList user_id={session?.user.id} table={table} />
+          </View>
+        </>
+      )}
     </SafeAreaView>
   );
 }

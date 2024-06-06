@@ -4,49 +4,24 @@ import { Database } from "@/src/lib/database.types";
 import {
   StyleSheet,
   FlatList,
-  Pressable,
-  Alert,
   TouchableOpacity,
   Image,
   ScrollView,
   SafeAreaView,
 } from "react-native";
-import dateFormat from "dateformat";
-import { Button } from "react-native-elements";
 import { useRouter } from "expo-router";
-import { ActivityIndicator } from "react-native";
-import { useLocalSearchParams } from "expo-router";
 import { useAuth } from "@/src/providers/AuthProvider";
-import { Text, View } from "react-native"
+import { Text, View } from "react-native";
+import { AntDesign, MaterialIcons } from "@expo/vector-icons";
 import { StarRatingDisplay } from "react-native-star-rating-widget";
-import { AntDesign, FontAwesome } from "@expo/vector-icons";
-import { ScreenHeight } from "react-native-elements/dist/helpers";
 
-type AccommodationListItemProps = {
-  accom: {
-    accommodation_id: number;
-    description: string;
-    address: string;
-    phone: string | null;
-    photos: string[];
-    title: string;
-    postcode: number | string;
-    booking_url: string;
-    city: string;
-    country: string;
-    state: string;
-    rating: number;
-  };
-};
-
-const ManageProperties: React.FC<AccommodationListItemProps> = () => {
+const ManageProperties = () => {
   const [accommodation, setAccommodation] = useState<
     Database["public"]["Tables"]["accommodation"]["Row"][]
   >([]);
   const [loading, setLoading] = useState(false);
-  const { id } = useLocalSearchParams();
   const router = useRouter();
-  const { session, profile } = useAuth();
+  const { session } = useAuth();
 
   useEffect(() => {
     getAccommodation();
@@ -57,15 +32,39 @@ const ManageProperties: React.FC<AccommodationListItemProps> = () => {
     const { data } = await supabase
       .from("accommodation")
       .select("*")
-      .eq("user_id", session?.user.id);
+      .eq("user_id", session?.user.id)
+      .order("created_at", { ascending: false });
+
     if (data) {
-      setAccommodation(data);
+      const accommodationsWithRatings = await Promise.all(
+        data.map(async (item) => {
+          const rating = await getRating(item.accommodation_id);
+          return { ...item, rating };
+        })
+      );
+      setAccommodation(accommodationsWithRatings);
     }
     setLoading(false);
   }
 
+  const getRating = async (accommodation_id) => {
+    const { data: ratings, error } = await supabase
+      .from("reviews_accommodation")
+      .select("rating")
+      .eq("accommodation_id", accommodation_id);
+    if (ratings) {
+      const totalRatings = ratings.reduce(
+        (acc, rating) => acc + rating.rating,
+        0
+      );
+      const averageRating = totalRatings / ratings.length;
+      return averageRating;
+    }
+    return 0;
+  };
+
   return (
-    <SafeAreaView style={{ flex: 1 }}>
+    <SafeAreaView style={styles.safeView}>
       <ScrollView style={{ flex: 1 }}>
         <FlatList
           style={{ width: "100%" }}
@@ -74,61 +73,87 @@ const ManageProperties: React.FC<AccommodationListItemProps> = () => {
             <Text style={styles.noProperty}>You don't have any properties</Text>
           )}
           scrollEnabled={false}
-          renderItem={({ item }) => (
-            <View style={styles.container}>
-              <TouchableOpacity
-                style={styles.placeItem}
-                onPress={() =>
-                  router.push({
-                    pathname: `/add-accommodation/`,
-                    params: {
-                      existingAccommodation_id: item.accommodation_id,
-                      existingTitle: item.title,
-                      existingDescription: item.description,
-                      existingAddress: item.address,
-                      existingPhone: item.phone,
-                      existingPhotos: item.photos,
-                      existingPostcode: item.postcode,
-                      existingBooking_url: item.booking_url,
-                      existingCity: item.city,
-                      existingCountry: item.country,
-                      existingState: item.state,
-                      existingRating: item.rating ?? 0,
-                      edit: true
-                    },
-                  })
-                }
-              >
-                <View style={styles.imageContainer}>
-                  {item.photos && item.photos.length > 0 ? (
-                    <Image
-                      source={{ uri: item.photos[0] }}
-                      style={styles.image}
-                      resizeMode="cover"
-                    />
-                  ) : (
-                    <Text>No Image Available</Text>
-                  )}
-                </View>
-                <View style={styles.textContainer}>
-                  <Text style={styles.title}>{item.title}</Text>
-                  <View style={styles.titleContainer}>
-                    <Text style={styles.city}>
-                      {item.city}, {item.country}{" "}
-                    </Text>
-                    <StarRatingDisplay rating={4} starSize={20} />
+          renderItem={({ item }) => {
+            return (
+              <View style={styles.container}>
+                <TouchableOpacity
+                  onPress={() =>
+                    router.push({
+                      pathname: `/search/${item.accommodation_id}`,
+                      params: {
+                        title: item.title,
+                        description: item.description,
+                        address: item.address,
+                        phone: item.phone,
+                        photos: item.photos,
+                        postcode: item.postcode,
+                        booking_url: item.booking_url,
+                        city: item.city,
+                        // state: item.state,
+                        country: item.country,
+                        rating: item.rating
+                      },
+                    })
+                  }
+                  style={styles.propertyCard}
+                >
+                  <View style={styles.imageContainer}>
+                    {item.photos && item.photos.length > 0 ? (
+                      <Image
+                        source={{ uri: item.photos[0] }}
+                        style={styles.image}
+                        resizeMode="cover"
+                      />
+                    ) : (
+                      <Image
+                        source={require('@/assets/images/photo-placeholder.png')}
+                        style={styles.image}
+                        resizeMode="cover"
+                      />
+                    )}
                   </View>
-                </View>
-              </TouchableOpacity>
-            </View>
-          )}
+                  <View style={styles.textContainer}>
+                    <Text style={styles.title}>{item.title}</Text>
+                    <View style={styles.titleContainer}>
+                      <Text style={styles.city}>
+                        {item.city}, {item.country}{" "}
+                      </Text>
+                    </View>
+                  </View>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={styles.editIconContainer}
+                  onPress={() =>
+                    router.push({
+                      pathname: `/add-accommodation/`,
+                      params: {
+                        existingAccommodation_id: item.accommodation_id,
+                        existingTitle: item.title,
+                        existingDescription: item.description,
+                        existingAddress: item.address,
+                        existingPhone: item.phone,
+                        existingPostcode: item.postcode,
+                        existingBookingUrl: item.booking_url,
+                        existingCity: item.city,
+                        existingCountry: item.country,
+                        existingState: item.state,
+                        existingPhotos: Array.isArray(item.photos) ? item.photos : [],
+                        edit: true,
+                      },
+                    })
+                  }>
+                  <MaterialIcons name="edit-note" size={25} style={styles.editIcon} />
+                </TouchableOpacity>
+              </View>
+            );
+          }}
           keyExtractor={(item) => item.accommodation_id.toString()}
           contentContainerStyle={{ gap: 10, padding: 10 }}
           showsVerticalScrollIndicator={false}
         />
       </ScrollView>
       <TouchableOpacity
-        style={styles.addTripButton}
+        style={styles.addPropertyButton}
         onPress={() => {
           router.push("/add-accommodation");
         }}
@@ -140,11 +165,12 @@ const ManageProperties: React.FC<AccommodationListItemProps> = () => {
 };
 
 const styles = StyleSheet.create({
-  container: {
-    padding: 20,
-    width: "100%",
-    borderRadius: 15,
+  safeView: {
     flex: 1,
+    backgroundColor:"#fff"
+  },
+  container: {
+    padding: 10,
   },
   loadingContainer: {
     flex: 1,
@@ -154,25 +180,12 @@ const styles = StyleSheet.create({
   tripItem: {
     flexDirection: "row",
     justifyContent: "space-between",
-    padding: 16,
     backgroundColor: "#f9f9f9",
     borderRadius: 8,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.3,
     shadowRadius: 1,
-    marginVertical: 10,
-  },
-  tripName: {
-    fontSize: 18,
-    fontWeight: "bold",
-    color: "#3A90CD",
-  },
-  tripDates: {
-    fontSize: 16,
-  },
-  tripCity: {
-    fontSize: 16,
   },
   icon: {
     fontSize: 20,
@@ -197,16 +210,14 @@ const styles = StyleSheet.create({
     gap: 10,
     justifyContent: "center",
   },
-  placeItem: {
-    marginBottom: 5,
+  propertyCard: {
     backgroundColor: "#f9f9f9",
     borderRadius: 10,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.3,
     shadowRadius: 1,
-    minWidth: "100%",
-    marginBottom: -25
+    width: "100%",
   },
   imageContainer: {
     width: "100%",
@@ -222,11 +233,17 @@ const styles = StyleSheet.create({
     width: "100%",
     height: "100%",
   },
-  addTripButton: {
+  addPropertyButton: {
     position: "absolute",
     bottom: 20,
     right: 20,
-    zIndex: 1,
+    zIndex: 3,
+    backgroundColor: "#fff",
+    borderRadius: 99,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.3,
+    shadowRadius: 1,
   },
   textContainer: {
     paddingHorizontal: 10,
@@ -244,6 +261,22 @@ const styles = StyleSheet.create({
   },
   city: {
     fontSize: 16,
+  },
+  editIconContainer: {
+    backgroundColor: '#fff',
+    padding: 5,
+    borderRadius: 10,
+    position: "absolute",
+    top: 30,
+    right: 30,
+    zIndex: 3,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.3,
+    shadowRadius: 1,
+  },
+  editIcon: {
+    color: "#000",
   },
 });
 

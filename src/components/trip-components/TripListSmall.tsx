@@ -1,55 +1,85 @@
 import { useEffect, useState } from "react";
-import { View, Text } from "./Themed";
 import { supabase } from "@/src/lib/supabase";
 import { Database } from "@/src/lib/database.types";
-import { StyleSheet, FlatList, Pressable, Alert } from "react-native";
+import {
+  StyleSheet,
+  FlatList,
+  Pressable,
+  Alert,
+  View,
+  Text,
+  ActivityIndicator,
+} from "react-native";
 import dateFormat from "dateformat";
-import { FontAwesome6} from "@expo/vector-icons";
+import { FontAwesome6 } from "@expo/vector-icons";
 import { Button } from "react-native-elements";
-import { useRouter } from "expo-router";
-import { ActivityIndicator } from "react-native";
-import { useLocalSearchParams,  } from "expo-router";
+import { useRouter, useLocalSearchParams } from "expo-router";
 
-export default function TripListSmall({user_id, toggleModal, table, airline_id, accommodation_id} : {user_id: string, toggleModal: any, table: string, airline_id: Number, accommodation_id: Number}) {
-
-  const [trips, setTrips] = useState<Database['public']['Tables']['trips']['Row'][]>([]);
-  const [loading, setLoading] = useState(false)
+export default function TripListSmall({
+  user_id,
+  toggleModal,
+  table,
+  airline_id,
+  accommodation_id,
+}: {
+  user_id: string;
+  toggleModal: any;
+  table: string;
+  airline_id: number;
+  accommodation_id: number;
+}) {
+  const [trips, setTrips] = useState<
+    Database["public"]["Tables"]["trips"]["Row"][]
+  >([]);
+  const [loading, setLoading] = useState(false);
   const { id } = useLocalSearchParams();
   const router = useRouter();
 
-  useEffect(()=>{
-    getTrips()
-  },[])
+  useEffect(() => {
+    getTrips();
+  }, []);
 
-  async function getTrips () {
-    setLoading(true)
-    const {data} = await supabase.from('trips').select('*').eq("user_id",user_id).order('start_date')
-    if(data){
-      setTrips(data)
+  async function getTrips() {
+    setLoading(true);
+    const { data } = await supabase
+      .from("trips")
+      .select("*")
+      .eq("user_id", user_id)
+      .order("start_date");
+    if (data) {
+      setTrips(data);
     }
-    setLoading(false)
+    setLoading(false);
   }
 
   const handleCreateTrip = () => {
-    toggleModal()
-    router.push(`/add-trip?airline_id=${airline_id}&accommodation_id=${accommodation_id}`)
-  }
+    toggleModal();
+    router.push(
+      `/add-trip?airline_id=${airline_id}&accommodation_id=${accommodation_id}`
+    );
+  };
 
   const addToTrip = async (trip_id, title) => {
-    setLoading(true)
+    setLoading(true);
     const { data, error } = await supabase
-      .from('trips')
-      .update(table === "airlines" ? {airline_id: id} : {accommodation_id: id})
-      .eq('trip_id', trip_id)
-      if (error) {
-        console.log(error);
-      } else {
-        toggleModal()
-        router.replace("trips");
-        Alert.alert(`${table === "airlines" ? "Airline" : "Accommodation"} added to ${title}`)
-      }
-    setLoading(false)
-  }
+      .from("trips")
+      .update(
+        table === "airlines" ? { airline_id: id } : { accommodation_id: id }
+      )
+      .eq("trip_id", trip_id);
+    if (error) {
+      Alert.alert(error.message)
+    } else {
+      toggleModal();
+      router.replace("trips");
+      Alert.alert(
+        `${
+          table === "airlines" ? "Airline" : "Accommodation"
+        } added to ${title}`
+      );
+    }
+    setLoading(false);
+  };
 
   return (
     <View style={styles.container}>
@@ -96,7 +126,7 @@ export default function TripListSmall({user_id, toggleModal, table, airline_id, 
           style={styles.button}
           onPress={() => toggleModal()}
         />
-        </View>
+      </View>
     </View>
   );
 }
@@ -106,6 +136,7 @@ const styles = StyleSheet.create({
     padding: 20,
     width: "100%",
     borderRadius: 15,
+    backgroundColor: '#fff'
   },
   loadingContainer: {
     flex: 1,
@@ -140,11 +171,9 @@ const styles = StyleSheet.create({
     color: "#3A90CD",
   },
   button: {
-    // alignItems:"center",
-    // alignContent:"center",
-    padding:5,
+    padding: 5,
     flexGrow: 1,
-    backgroundColor:"rgb(1,140,220)",
+    backgroundColor: "#3A90CD",
     borderRadius: 10,
   },
   noTrips: {
@@ -152,13 +181,12 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: "#3A90CD",
     textAlign: "center",
-  },  
+  },
   buttonContainer: {
     marginTop: 10,
-    flexDirection:"row",
-    alignItems:"center",
+    flexDirection: "row",
+    alignItems: "center",
     gap: 10,
-    justifyContent: 'center'
+    justifyContent: "center",
   },
-
 });

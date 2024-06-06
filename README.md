@@ -1,69 +1,98 @@
-DogGo is a full-stack project which was built collaboratively for the purposes of developing the team's understanding of Supabase, Typescript and React Native with Expo.
+# DogGo
 
-DogGo is a travel app for mobile catering specifically for dog owners. Provides a ‘one-stop shop' for planning a holiday with man’s best friend. It offers up recommendations for airlines, hotels and places to visit based on user's desired destination and its level of dog-friendliness. This will displayed in an easily digestible single screen format with the ability to save potential trips, share a trip and more.
+DogGo is a collaborative full-stack project designed to enhance our team's skills in Supabase, TypeScript, and React Native with Expo.
 
-DogGo is a C.R.U.D application and as such users can:
+## About
 
-- View dog-friendly airlines and location-specific vets, accommodations and recreational spaces.
-- Create an account
-- Log in and view their saved trip and can add their own property for users to view and consider booking.
-- View, write and rate reviews 
-- Delete their own reviews and accommodations
+DogGo is a mobile travel app tailored for dog owners, providing a comprehensive solution for planning holidays with pets. It offers recommendations for dog-friendly airlines, hotels, and attractions based on the user's chosen destination. The app presents all this information in a user-friendly, single-screen format, allowing users to save, share, and manage potential trips.
 
-The back-end database used for this project was built using Supabase.
+## Features
 
-The front-end was built in React Native with Expo
+DogGo is a C.R.U.D. (Create, Read, Update, Delete) application, allowing users to:
 
-## Create a Clone
+- View dog-friendly airlines, vets, accommodations, and recreational spaces specific to locations.
+- Create an account.
+- Log in to view and manage saved trips.
+- Add properties for other users to view and consider booking.
+- View, write, and rate reviews.
+- Delete their own reviews and accommodations.
 
+## Technologies Used
 
-To make a local clone of the repo for yourself:
+- **Back-end:** Supabase
+- **Front-end:** React Native with Expo
 
-- In your terminal, navigate to the desired directory
-- Run this command: `git clone` [https://github.com/zacharvey88/doggo.git](url)
-- Open the directory in your chosen code editor and refer to further instructions below.
+## Getting Started
 
-## Set-up
+### Clone the Repository
 
-Minimum versions required:
+To clone the repository locally, follow these steps:
 
-`Node.js 21.6.2`
+1. Open your terminal and navigate to your desired directory.
+2. Run the following command:
+    ```sh
+    git clone https://github.com/zacharvey88/doggo.git
+    ```
+3. Open the cloned directory in your preferred code editor.
 
-(If you want to view the app in a phone emulator, first follow the steps below:
+### Setup
 
-To view the app in android install Android Studio:
+#### Prerequisites
 
-- [https://developer.android.com/studio/install](url)
+Ensure you have the following installed:
 
-To view the app in iOS install Xcode:
+- **Node.js:** v21.6.2 or later
 
-- [https://apps.apple.com/us/app/xcode/id497799835?mt=12](url)
+#### Viewing the App in an Emulator
 
+##### Android
 
+1. Install [Android Studio](https://developer.android.com/studio/install).
+2. Follow the steps under "Running the App" below to start the Android emulator.
 
-Install dependencies `npm install`
+##### iOS
 
-To view places other than accommodation, follow these steps:
+1. Install [Xcode](https://apps.apple.com/us/app/xcode/id497799835?mt=12).
+2. Follow the steps under "Running the App" below to start the iOS emulator.
 
-- Obtain a [Google Places API](https://console.cloud.google.com/projectselector2/google/maps-apis/credentials?utm_source=Docs_CreateAPIKey&utm_content=Docs_maps-backend&_gl=1*3uptfz*_ga*MTk2Nzc1MDk4MC4xNzE1NzAyOTUy*_ga_NRWSTWS78N*MTcxNjk4NTA0NS4yNC4xLjE3MTY5ODU4MzkuMC4wLjA.) key.
+#### Installing Dependencies
 
-- Create a .env file in the root of your project folder.
+Navigate to the project directory and run:
+```sh
+npm install
+```
 
-- Add the following line to the .env file: `EXPO_PUBLIC_API_KEY=YOUR_API_KEY`
-- Replace YOUR_API_KEY with your actual API key.
+## Google Places API Key
+
+To view places other than accommodations:
+
+1. Obtain a Google Places API key.
+2. Create a `.env` file in the root of your project folder.
+3. Add the following line to the `.env` file:
+    ```sh
+    EXPO_PUBLIC_API_KEY=YOUR_API_KEY
+    ```
+4. Replace `YOUR_API_KEY` with your actual API key.
 
 ## Running the App
 
-If you would like to run the app in an emulator:
+### Android
 
-Android:
-- Run `npm start` 
-- Open your phone emulator in Android Studios
-- Type `a` in the terminal to install Expo Go to your android emulator and view the app
+1. Start the development server:
+    ```sh
+    npm start
+    ```
+2. Open your Android emulator in Android Studio.
+3. In the terminal, type `a` to install Expo Go on your emulator and view the app.
 
-(Note: opening your phone emulator prior to running Expo Go is recommended as running `npm start --android` can fail due to bugs in Android Studios)
+   **Note:** It is recommended to open the Android emulator before running Expo Go, as running `npm start --android` can sometimes fail due to bugs in Android Studio.
 
-iOS:
-- Run `npm start` 
-- Type `i` in the terminal to install Expo Go to your iOS emulator and view the app
+### iOS
 
+1. Start the development server:
+    ```sh
+    npm start
+    ```
+2. In the terminal, type `i` to install Expo Go on your iOS emulator and view the app.
+
+Enjoy planning your dog-friendly trips with DogGo!

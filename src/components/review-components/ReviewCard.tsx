@@ -1,14 +1,15 @@
-import { StyleSheet, Text, View, Image, Pressable, Alert } from 'react-native';
+import { StyleSheet, Text, View, Image, Alert } from 'react-native';
 import { StarRatingDisplay } from 'react-native-star-rating-widget';
 import dateFormat from 'dateformat';
 import { FontAwesome } from '@expo/vector-icons';
-import { useLocalSearchParams } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { supabase } from '../lib/supabase';
+import { supabase } from '@/src/lib/supabase';
+import { useAuth } from '@/src/providers/AuthProvider';
 export default function ReviewCard({ review, reviews, setFilteredReviews, filteredReviews, toggleModal, setExistingRating, setExistingReviewText, table, setReviewId }: { review: { review_id: number, rating: number, review_text: string, avatar_url: string, created_at: string, username: string, table: string, setReviewId: any } }) {
+  
   const { review_id, rating, review_text, created_at} = review;
   const { avatar_url, username } = review.profiles  
-  const session = useLocalSearchParams().session as string;
+  const { session } = useAuth()
   const [currentUser, setCurrentUser] = useState(null)
 
   useEffect(() => { 

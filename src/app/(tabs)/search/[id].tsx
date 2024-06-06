@@ -1,4 +1,4 @@
-import { Link, Stack, useLocalSearchParams, useRouter } from "expo-router";
+import { Stack, useLocalSearchParams, useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import {
   View,
@@ -8,26 +8,28 @@ import {
   Linking,
   ScrollView,
   TouchableOpacity,
-  Alert
+  Alert,
+  SafeAreaView
 } from "react-native";
 import { Button } from "react-native-elements";
 import { StarRatingDisplay } from "react-native-star-rating-widget";
 import { supabase } from "@/src/lib/supabase";
 import Modal from "react-native-modal";
-import TripListSmall from "@/src/components/TripListSmall";
+import TripListSmall from "@/src/components/trip-components/TripListSmall";
 import { useAuth } from "@/src/providers/AuthProvider";
-import ReviewForm from "@/src/components/ReviewForm";
+import ReviewForm from "@/src/components/review-components/ReviewForm";
 import { FontAwesome } from "@expo/vector-icons";
 import Colors from "@/src/constants/Colors";
-import ReviewsList from "@/src/components/ReviewsList";
+import ReviewsList from "@/src/components/review-components/ReviewsList";
 
 export default function Accommodation() {
-  const [loading, setLoading] = useState(false);
   const router = useRouter();
   const [isTripModalVisible, setTripModalVisible] = useState(false);
   const [isReviewModalVisible, setReviewModalVisible] = useState(false);
-  const { session, profile } = useAuth();
-  const [rating, setRating] = useState(0)
+  const { session } = useAuth();
+  const [rating, setRating] = useState(0);
+  const [refreshAdd, setRefreshAdd] = useState(false)
+
   const {
     id,
     title,
@@ -38,8 +40,11 @@ export default function Accommodation() {
     postcode,
     booking_url,
     city,
+    state,
     country,
   } = useLocalSearchParams();
+
+  const formattedAddress = `${address},+${city},+${state},+${postcode},+${country}`
 
   const toggleTripModal = () => {
     setTripModalVisible(!isTripModalVisible);
@@ -49,9 +54,13 @@ export default function Accommodation() {
     setReviewModalVisible(!isReviewModalVisible);
   };
 
-  useEffect(()=>{
-    getRating()
-  },[])
+  const toggleRefreshAdd = () => {
+    setRefreshAdd(!refreshAdd);
+  };
+
+  useEffect(() => {
+    getRating();
+  }, []);
 
   const getRating = async () => {
     const { data: ratings, error } = await supabase
@@ -68,17 +77,17 @@ export default function Accommodation() {
     }
   };
 
-  const images = photos.split(",");
+  const images = photos ? photos.split(",") : [];
 
-  const handleAddButton = (button) => { 
-    
-    if (session && session.user) {  
-      button === 'review' ? toggleReviewModal() : toggleTripModal()
+  const handleAddButton = (button: string) => {
+    if (session && session.user) {
+      button === "review" ? toggleReviewModal() : toggleTripModal();
     } else {
-    
       Alert.alert(
         "Not Logged In",
-        `You must be logged in to ${button === 'review' ? "add a review" : "add to a trip"}`,
+        `You must be logged in to ${
+          button === "review" ? "add a review" : "add to a trip"
+        }`,
         [
           {
             text: "Okay",
@@ -86,17 +95,17 @@ export default function Accommodation() {
           },
           {
             text: "Login",
-            onPress: ()=>router.push('/sign-in'),
+            onPress: () => router.push("/sign-in"),
             style: "cancel",
           },
         ],
         { cancelable: false }
       );
     }
-  }
+  };
 
   return (
-    <>
+    <SafeAreaView style={styles.safeArea}>
       <Modal
         isVisible={isTripModalVisible}
         animationIn="slideInUp"
@@ -128,6 +137,7 @@ export default function Accommodation() {
             toggleModal={toggleReviewModal}
             session={session}
             table={"accommodation"}
+            toggleRefreshAdd={toggleRefreshAdd}
           />
         </View>
       </Modal>
@@ -164,16 +174,19 @@ export default function Accommodation() {
             )}
 
             <View style={styles.infoContainer}>
+
               <View style={styles.infoRow}>
                 <FontAwesome name="map-marker" style={styles.icon} />
-                <Text style={styles.address}>
-                  {address}, {postcode}, {city}, {country}
-                </Text>
+                <TouchableOpacity onPress={() => Linking.openURL(`https://www.google.co.uk/maps/search/${formattedAddress}`)}>
+                  <Text style={styles.address}>
+                    {address}, {city}, {postcode}, {country}
+                  </Text>
+                </TouchableOpacity>
               </View>
 
               <View style={styles.infoRow}>
                 <FontAwesome name="phone" style={styles.icon} />
-                <TouchableOpacity>
+                <TouchableOpacity onPress={() => Linking.openURL(`tel:${phone}`)}>
                   <Text style={styles.phone}>{phone}</Text>
                 </TouchableOpacity>
               </View>
@@ -193,29 +206,32 @@ export default function Accommodation() {
                 title="Add Review"
                 titleStyle={{ fontSize: 14 }}
                 style={styles.button}
-                onPress={()=>{handleAddButton('review')}}
+                onPress={() => {
+                  handleAddButton("review");
+                }}
               />
 
               <Button
                 title="Add to trip"
                 titleStyle={{ fontSize: 14 }}
                 style={styles.button}
-                onPress={()=>{handleAddButton('trip')}}
+                onPress={() => {
+                  handleAddButton("trip");
+                }}
               />
             </View>
-            <Text style={styles.reviewTitle}>Customer Reviews</Text>
-            <ReviewsList id={id} table="reviews_accommodation" />
+            <ReviewsList id={id} table="reviews_accommodation" refreshAdd={refreshAdd}/>
           </View>
         </ScrollView>
       </View>
-    </>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  scrollContainer: {
-    alignItems: "center",
-    padding: 20,
+  safeArea: {
+    flex: 1,
+    backgroundColor: '#fff'
   },
   rating: {
     alignItems: "center",
@@ -283,19 +299,12 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    // padding: 10,
-    backgroundColor: "#f5f5f5",
-    color: "gray",
+    backgroundColor: '#fff'
   },
   card: {
-    backgroundColor: "white",
-    borderRadius: 12,
+    backgroundColor: "#fff",
     padding: 14,
     marginVertical: 8,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
     elevation: 2,
   },
   title: {
@@ -305,12 +314,12 @@ const styles = StyleSheet.create({
     textAlign: "center",
     color: "#3A90CD",
   },
-  reviewTitle:{
-  fontSize: 20,
-  textAlign: 'center',
-  marginBottom: 5,
-  marginTop: 10,
-  color: "#3A90CD",
+  reviewTitle: {
+    fontSize: 20,
+    textAlign: "center",
+    marginBottom: 5,
+    marginTop: 10,
+    color: "#3A90CD",
   },
   noImagesText: {
     fontSize: 14,
@@ -383,4 +392,9 @@ const styles = StyleSheet.create({
     marginBottom: 8,
     color: "gray",
   },
+  divider: {
+      borderBottomColor: 'gray',
+      borderBottomWidth: StyleSheet.hairlineWidth,
+      marginVertical: 10
+  }
 });

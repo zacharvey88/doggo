@@ -1,18 +1,16 @@
 import {
   View,
   Text,
-  Pressable,
   StyleSheet,
   TouchableOpacity,
-  SafeAreaView
+  SafeAreaView,
 } from "react-native";
-import { useEffect, useState } from "react";
 import Account from "@/src/components/Account";
 import { useAuth } from "@/src/providers/AuthProvider";
 import { useRouter } from "expo-router";
 import { FontAwesome } from "@expo/vector-icons";
 
-const ProfileScreen: React.FC = () => {
+const ProfileScreen = () => {
   const { session } = useAuth();
   const router = useRouter();
 
@@ -81,5 +79,4 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: "white",
   },
-
 });

@@ -1,60 +1,38 @@
 import { View, Text, StyleSheet, TextInput, Alert } from 'react-native'
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import StarRating from 'react-native-star-rating-widget'
 import { Button } from 'react-native-elements'
-import { supabase } from '../lib/supabase'
-import { useLocalSearchParams } from 'expo-router'
+import { supabase } from '@/src/lib/supabase'
+import { useAuth } from '@/src/providers/AuthProvider'
 
 export default function ReviewForm({
   id,
   toggleModal,
-  session,
   edit,
   existingRating,
   existingReviewText,
   table,
   review_id,
-  setEdited,
+  toggleRefreshAdd,
+  toggleRefreshEdit,
 }: {
   id: number;
   toggleModal: any;
-  session: Session | null;
   edit?: { review_id: number; rating: number; review_text: string };
   existingRating?: number;
   existingReviewText?: string;
   table: string;
-  review_id: Number;
-  onEditComplete: any
-  setEdited: any
+  review_id: number;
+  toggleRefreshAdd?: any;
+  toggleRefreshEdit?: any;
 }) {
   const [rating, setRating] = useState(existingRating ? existingRating : 0);
-  const [reviewText, setReviewText] = useState(
-    existingReviewText ? existingReviewText : ""
-  );
+  const [reviewText, setReviewText] = useState(existingReviewText ? existingReviewText : "");
   const [errorMessage, setErrorMessage] = useState("");
-
-  // useEffect(() => {    
-    // if(edit) {
-    //   getExistingReview()
-    // }
-  // }, [])
-
-  // const  getExistingReview = async () => {
-  //   const { data, error } = await supabase
-  //     .from(`reviews_${table}`)
-  //     .select('review_text, rating')
-  //     .eq('review_id', edit.review_id)
-  //   if (error) {
-  //     console.log(error);
-  //   }
-  //   if (data) {
-  //     setExistingReviewText(data[0].review_text)
-  //     setExistingRating(data[0].rating)
-  //   }
-  // }
-
+  const { session } = useAuth();
 
   const handleAddReview = async () => {
+
     if (reviewText.trim() === "") {
       setErrorMessage("Please enter your review");
       return;
@@ -71,11 +49,13 @@ export default function ReviewForm({
       Alert.alert("Error", "You must be logged in to submit a review");
     } else {
       toggleModal();
+      toggleRefreshAdd ? toggleRefreshAdd() : null
       Alert.alert("Thanks, your review was submitted.");
     }
   };
 
   const handleEditReview = async () => {
+
     if (reviewText.trim() === "") {
       setErrorMessage("Please enter your review");
       return;
@@ -93,7 +73,7 @@ export default function ReviewForm({
       Alert.alert("Something went wrong. Please try again.");
     } else {
       toggleModal();
-      setEdited(true)
+      toggleRefreshEdit();
       Alert.alert("Thanks, your review was updated.");
     }
   };
@@ -134,7 +114,7 @@ export default function ReviewForm({
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: 'white',
+    backgroundColor: '#fff',
     borderRadius: 20,
     alignItems: 'center',
     padding: 20,
@@ -156,9 +136,8 @@ const styles = StyleSheet.create({
     margin: 10
   },
   btn: {
-    margin: 10,
-    width:  80,
-    height: 40,
+    width:  90,
+    height: 50,
   },
   buttonTitle: {
     fontSize: 14
@@ -166,7 +145,8 @@ const styles = StyleSheet.create({
   buttonContainer: {
     flex:1,
     flexDirection:"row",
-    marginTop: 10
+    marginTop: 20,
+    gap: 10,
   },
   errorText: {
     color: 'red',

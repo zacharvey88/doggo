@@ -1,18 +1,10 @@
 import FontAwesome from "@expo/vector-icons/FontAwesome";
-import {
-  DarkTheme,
-  DefaultTheme,
-  ThemeProvider,
-} from "@react-navigation/native";
 import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
 import "react-native-reanimated";
 import AuthProvider from "@/src/providers/AuthProvider";
-
-import { useColorScheme } from "@/src/components/useColorScheme";
-
 export {
   // Catch any errors thrown by the Layout component.
   ErrorBoundary,
@@ -51,10 +43,8 @@ export default function RootLayout() {
 }
 
 function RootLayoutNav() {
-  const colorScheme = useColorScheme();
 
   return (
-    <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
       <AuthProvider>
         <Stack>
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
@@ -91,6 +81,8 @@ function RootLayoutNav() {
             name="add-accommodation"
             options={{
               headerTitle: "",
+              headerShown: false,
+              headerBackTitleVisible: false,
               headerBackTitle: "Back",
             }}
           />
@@ -104,6 +96,5 @@ function RootLayoutNav() {
           />
         </Stack>
       </AuthProvider>
-    </ThemeProvider>
   );
 }

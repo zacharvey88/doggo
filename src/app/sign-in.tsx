@@ -36,7 +36,7 @@ const SignInScreen = () => {
       password,
     });
     if (error) {
-      Alert.alert(error.message);
+      Alert.alert(error.message)
     } else {
       if (from === "landing") {
         navigation.navigate("search");
@@ -46,20 +46,6 @@ const SignInScreen = () => {
     }
     setLoading(false);
   }
-
-  // async function resetPassword() {
-  //   if (!email) {
-  //     Alert.alert("Please enter your email address to reset password");
-  //     return;
-  //   }
-
-  //   const { error } = await supabase.auth.resetPasswordForEmail(email);
-  //   if (error) {
-  //     Alert.alert(error.message);
-  //   } else {
-  //     Alert.alert("Password reset email sent!");
-  //   }
-  // }
 
   return (
     <KeyboardAwareScrollView
@@ -73,55 +59,60 @@ const SignInScreen = () => {
         style={styles.background}
       />
       <View style={styles.foreground}>
-        <Image
-          source={require("@/assets/images/paw.png")}
-          style={styles.pawImage}
-          resizeMode="contain"
-        />
-        <Text style={styles.titleText}>Welcome! </Text>
-        <View style={styles.form}>
-          <TextInput
-            value={email}
-            onChangeText={setEmail}
-            onFocus={() => setEmailFocused(true)}
-            onBlur={() => setEmailFocused(false)}
-            placeholder="Email"
-            placeholderTextColor="#7c7c7c"
-            autoCapitalize="none"
-            style={[styles.input, emailFocused && styles.focused]}
+        <View style={{paddingBottom: 45}}>
+          <Image
+            source={require("@/assets/images/dog-colour.png")}
+            style={styles.logo}
+            resizeMode="contain"
           />
-          <TextInput
-            value={password}
-            onChangeText={setPassword}
-            onFocus={() => setPasswordFocused(true)}
-            onBlur={() => setPasswordFocused(false)}
-            placeholder="Password"
-            placeholderTextColor="#7c7c7c"
-            style={[styles.input, passwordFocused && styles.focused]}
-            secureTextEntry
-            autoCapitalize="none"
-          />
-          <TouchableOpacity
-            style={[styles.button, loading && styles.buttonDisabled]}
-            onPress={signInWithEmail}
-            disabled={loading}
-          >
-            <Text style={styles.buttonText}>
-              {loading ? "Signing in..." : "Sign In"}
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.forgotPasswordButton}
-            onPress={() =>router.replace("/reset-password")}
-          >
-            <Text style={styles.forgotPasswordText}>Forgot Password?</Text>
-          </TouchableOpacity>
+          <Text style={styles.titleText}>Woof! Woof!</Text>
+          <Text style={styles.subtitle}>(Welcome back!)</Text>
         </View>
-        <View style={styles.signupContainer}>
-          <Text style={styles.text}>Don't have an account? </Text>
-          <Link replace href="/sign-up" style={styles.textButton}>
-            Sign up
-          </Link>
+        <View>
+          <View style={styles.form}>
+            <TextInput
+              value={email}
+              onChangeText={setEmail}
+              onFocus={() => setEmailFocused(true)}
+              onBlur={() => setEmailFocused(false)}
+              placeholder="Email"
+              placeholderTextColor="#7c7c7c"
+              autoCapitalize="none"
+              style={[styles.input, emailFocused && styles.focused]}
+            />
+            <TextInput
+              value={password}
+              onChangeText={setPassword}
+              onFocus={() => setPasswordFocused(true)}
+              onBlur={() => setPasswordFocused(false)}
+              placeholder="Password"
+              placeholderTextColor="#7c7c7c"
+              style={[styles.input, passwordFocused && styles.focused]}
+              secureTextEntry
+              autoCapitalize="none"
+            />
+            <TouchableOpacity
+              style={[styles.button, loading && styles.buttonDisabled]}
+              onPress={signInWithEmail}
+              disabled={loading}
+            >
+              <Text style={styles.buttonText}>
+                {loading ? "Signing in..." : "Sign In"}
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.forgotPasswordButton}
+              onPress={() => router.replace("/reset-password")}
+            >
+              <Text style={styles.forgotPasswordText}>Forgot Password?</Text>
+            </TouchableOpacity>
+          </View>
+          <View style={styles.signupContainer}>
+            <Text style={styles.text}>Don't have an account? </Text>
+            <Link replace href="/sign-up" style={styles.textButton}>
+              Sign up
+            </Link>
+          </View>
         </View>
       </View>
     </KeyboardAwareScrollView>
@@ -131,7 +122,7 @@ const SignInScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "white",
+    backgroundColor: "#fff",
   },
   scrollViewContent: {
     flexGrow: 1,
@@ -144,26 +135,25 @@ const styles = StyleSheet.create({
     position: "absolute",
     opacity: 0.9,
   },
-  pawImage: {
-    width: 150,
-    height: 150,
-    marginTop: 10,
-    opacity: 0.8,
+  logo: {
+    width: 200,
+    height: 200,
     alignSelf: "center",
   },
   foreground: {
     padding: 30,
+    justifyContent: 'center',
+    gap: 120,
   },
   titleText: {
-    fontSize: 50,
-    fontWeight: "700",
+    fontSize: 40,
+    fontWeight: "bold",
     color: "white",
-    marginTop: 30,
+    marginTop: 10,
     textAlign: "center",
-    fontFamily:"Futura"
+    fontFamily: "Futura",
   },
   form: {
-    marginTop: 160,
   },
   input: {
     padding: 10,
@@ -173,6 +163,11 @@ const styles = StyleSheet.create({
     height: 50,
     fontSize: 16,
     borderWidth: 1,
+  },
+  subtitle: {
+    fontSize: 20,
+    color: '#fff',
+    textAlign: 'center',
   },
   button: {
     backgroundColor: Colors.light.tint,

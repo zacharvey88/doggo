@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { StyleSheet, Image, Text, View, TouchableOpacity } from "react-native";
 import { useRouter } from "expo-router";
-import { supabase } from "../lib/supabase";
+import { supabase } from "@/src/lib/supabase";
 import { StarRatingDisplay } from "react-native-star-rating-widget";
 
 type AccommodationListItemProps = {
@@ -15,6 +15,7 @@ type AccommodationListItemProps = {
     postcode: number | string;
     booking_url: string;
     city: string;
+    state: string;
     country: string;
   };
 };
@@ -60,6 +61,7 @@ const AccommodationListItem: React.FC<AccommodationListItemProps> = ({
               postcode: accommodation.postcode,
               booking_url: accommodation.booking_url,
               city: accommodation.city,
+              state: accommodation.state,
               country: accommodation.country,
               rating: rating,
             },
@@ -67,14 +69,18 @@ const AccommodationListItem: React.FC<AccommodationListItemProps> = ({
         }
       >
         <View style={styles.imageContainer}>
-          {accommodation.photos ? (
+          {accommodation.photos && accommodation.photos.length > 0 ? (
             <Image
               source={{ uri: accommodation.photos[0] }}
               style={styles.image}
               resizeMode="cover"
             />
           ) : (
-            <Text>No Image Available</Text>
+            <Image
+              source={require('@/assets/images/photo-placeholder.png')}
+              style={styles.image}
+              resizeMode="cover"
+            />
           )}
         </View>
         <View style={styles.textContainer}>
@@ -110,7 +116,7 @@ const styles = StyleSheet.create({
   },
   imageContainer: {
     width: "100%",
-    height: 150,
+    height: 170,
     overflow: "hidden",
     alignItems: "center",
     justifyContent: "center",

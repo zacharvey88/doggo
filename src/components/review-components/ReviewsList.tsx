@@ -4,67 +4,74 @@ import {
   Text,
   View,
   ActivityIndicator,
-  Pressable,
+  Alert,
 } from "react-native";
 import { supabase } from "@/src/lib/supabase";
-import { useEffect, useState } from "react";
-import { Database } from "@/src/lib/database.types";
+import React, { useState } from "react";
+import { Database } from "@src/lib/database.types"
+import ReviewCard from "./ReviewCard";
 import Modal from "react-native-modal";
-import ReviewForm from "@/src/components/ReviewForm";
+import ReviewForm from "@/src/components/review-components/ReviewForm";
 import { useAuth } from "@/src/providers/AuthProvider";
-import UserReviewCard from "./UserReviewCard";
-
-export default function UserReviewsList({
+import { useFocusEffect } from '@react-navigation/native';
+export default function ReviewsList({
   id,
   table,
+  refreshAdd
 }: {
   id: number;
-  table: string;
+  table: keyof Database["public"]["Tables"];
+  refreshAdd: boolean;
 }) {
-  const [reviews, setReviews] = useState([]);
+  const [reviews, setReviews] = useState<
+    Database["public"]["Tables"][typeof table]["Row"][]
+  >([]);
   const [filteredReviews, setFilteredReviews] = useState(reviews);
   const [loading, setLoading] = useState(false);
   const [isModalVisible, setModalVisible] = useState(false);
   const [existingReviewText, setExistingReviewText] = useState("");
   const [existingRating, setExistingRating] = useState(0);
-  const { session, profile } = useAuth();
   const [review_id, setReviewId] = useState(null);
-
-  useEffect(() => {
-    getReviews();
-  }, [id, table]);
+  const { session } = useAuth()
+  const [refreshEdit, setRefreshEdit] = useState(false)
 
   const toggleModal = () => {
     setModalVisible(!isModalVisible);
   };
 
+  const toggleRefreshEdit = () => {
+    setRefreshEdit(!refreshEdit);
+  };
+
+  useFocusEffect(
+    React.useCallback(() => {
+      getReviews();
+    }, [refreshAdd, refreshEdit])
+  );
+
   async function getReviews() {
     setLoading(true);
     const { data, error } = await supabase
       .from(table)
-      .select(
-        `*, ${
-          table === "reviews_airlines"
-            ? "airlines(airline_name)"
-            : "accommodation(title)"
-        }`
-      )
-      .eq("user_id", id)
-      .order("created_at", { ascending: false });
-    if (data) {
+      .select("*, profiles(username, avatar_url)")
+      .eq(
+        table === "reviews_accommodation" ? "accommodation_id" : "airline_id", id)
+      .order("created_at", { ascending: false })
+    if (error) {
+      Alert.alert(error.message)
+    } 
+    else {
       setReviews(data);
       setFilteredReviews(data);
     }
-    if (error) {
-      console.log(error);
-    }
     setLoading(false);
   }
-
+  
   return (
     <View style={styles.container}>
       {loading ? (
         <View style={styles.loadingContainer}>
+          <Text style={styles.loading}>Loading...</Text>
           <ActivityIndicator size="large" color="gray" />
         </View>
       ) : reviews.length > 0 ? (
@@ -83,30 +90,34 @@ export default function UserReviewsList({
                 edit={true}
                 toggleModal={toggleModal}
                 session={session}
-                existingReviewText={existingReviewText}
                 existingRating={existingRating}
+                existingReviewText={existingReviewText}
                 table={table}
                 review_id={review_id}
+                toggleRefreshEdit={toggleRefreshEdit}
               />
             </View>
           </Modal>
+
           <FlatList
             data={filteredReviews}
-            // scrollEnabled={false}
+            contentContainerStyle={{ padding: 10 }}
+            showsVerticalScrollIndicator={false}
+            scrollEnabled={false}
             renderItem={({ item }) => (
-              <UserReviewCard
+              <ReviewCard
                 review={item}
-                table={table}
+                session={session}
                 reviews={reviews}
                 filteredReviews={filteredReviews}
                 setFilteredReviews={setFilteredReviews}
                 toggleModal={toggleModal}
                 setExistingRating={setExistingRating}
                 setExistingReviewText={setExistingReviewText}
+                table={table}
                 setReviewId={setReviewId}
               />
             )}
-            showsVerticalScrollIndicator={false}
           />
         </>
       ) : (
@@ -119,11 +130,10 @@ export default function UserReviewsList({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "white",
+    backgroundColor: "#fff",
     alignItems: "center",
     justifyContent: "center",
     width: "100%",
-    borderRadius: 20,
   },
   title: {
     fontSize: 20,
@@ -132,9 +142,10 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+    marginTop: 50,
   },
   loading: {
-    marginBottom: 30,
+    marginBottom: 15,
   },
   modal: {
     flex: 1,

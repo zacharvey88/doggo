@@ -7,56 +7,63 @@ import {
 } from "react-native";
 import { supabase } from "@/src/lib/supabase";
 import { useEffect, useState } from "react";
-import { Database } from "@/src/lib/database.types";
-import ReviewCard from "./ReviewCard";
-import { useLocalSearchParams } from "expo-router";
 import Modal from "react-native-modal";
-import ReviewForm from "@/src/components/ReviewForm";
-export default function ReviewsList({
-  id,
+import ReviewForm from "@/src/components/review-components/ReviewForm";
+import { useAuth } from "@/src/providers/AuthProvider";
+import UserReviewCard from "./UserReviewCard";
+
+export default function UserReviewsList({
+  user_id,
   table,
 }: {
-  id: number;
-  table: keyof Database["public"]["Tables"];
+  user_id: number;
+  table: string;
 }) {
-  const [reviews, setReviews] = useState<
-    Database["public"]["Tables"][typeof table]["Row"][]
-  >([]);
+  const [reviews, setReviews] = useState([]);
   const [filteredReviews, setFilteredReviews] = useState(reviews);
   const [loading, setLoading] = useState(false);
-  const session = useLocalSearchParams();
   const [isModalVisible, setModalVisible] = useState(false);
   const [existingReviewText, setExistingReviewText] = useState("");
   const [existingRating, setExistingRating] = useState(0);
+  const { session } = useAuth();
   const [review_id, setReviewId] = useState(null);
-  const [edited, setEdited] = useState(false)
+  const [refreshEdit, setRefreshEdit] = useState(false)
+
+  useEffect(() => {
+    getReviews();
+  }, [user_id, table, refreshEdit]);
 
   const toggleModal = () => {
     setModalVisible(!isModalVisible);
   };
 
-  useEffect(() => {
-    console.log(edited);
-    getReviews();
-  }, [edited]);
+  const toggleRefreshEdit = () => {
+    setRefreshEdit(!refreshEdit)
+  }
 
   async function getReviews() {
     setLoading(true);
     const { data, error } = await supabase
       .from(table)
-      .select("*, profiles(username, avatar_url)")
-      .eq(
-        table === "reviews_accommodation" ? "accommodation_id" : "airline_id",
-        id
+      .select(
+        `*, ${
+          table === "reviews_airlines"
+            ? "airlines(airline_name)"
+            : "accommodation(title)"
+        }`
       )
+      .eq("user_id", user_id)
       .order("created_at", { ascending: false });
     if (data) {
       setReviews(data);
       setFilteredReviews(data);
     }
+    if (error) {
+      Alert.alert(error.message)
+    }
     setLoading(false);
-    setEdited(false)
   }
+
   return (
     <View style={styles.container}>
       {loading ? (
@@ -75,37 +82,35 @@ export default function ReviewsList({
           >
             <View style={styles.modal}>
               <ReviewForm
-                id={id}
+                user_id={user_id}
                 edit={true}
                 toggleModal={toggleModal}
                 session={session}
-                existingRating={existingRating}
                 existingReviewText={existingReviewText}
+                existingRating={existingRating}
                 table={table}
                 review_id={review_id}
+                toggleRefreshEdit={toggleRefreshEdit}
               />
             </View>
           </Modal>
-
           <FlatList
             data={filteredReviews}
-            contentContainerStyle={{ padding: 10 }}
-            showsVerticalScrollIndicator={false}
-            scrollEnabled={false}
+            // scrollEnabled={false}
             renderItem={({ item }) => (
-              <ReviewCard
+              <UserReviewCard
                 review={item}
-                session={session}
+                table={table}
                 reviews={reviews}
                 filteredReviews={filteredReviews}
                 setFilteredReviews={setFilteredReviews}
                 toggleModal={toggleModal}
                 setExistingRating={setExistingRating}
                 setExistingReviewText={setExistingReviewText}
-                table={table}
-                setEdited={setEdited}
+                setReviewId={setReviewId}
               />
             )}
+            showsVerticalScrollIndicator={false}
           />
         </>
       ) : (
@@ -118,10 +123,11 @@ export default function ReviewsList({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: "white",
     alignItems: "center",
     justifyContent: "center",
     width: "100%",
+    borderRadius: 20,
   },
   title: {
     fontSize: 20,
