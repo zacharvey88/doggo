@@ -13,7 +13,8 @@ export default function ReviewForm({
   existingReviewText,
   table,
   review_id,
-  toggleRefresh,
+  toggleRefreshAdd,
+  toggleRefreshEdit,
 }: {
   id: number;
   toggleModal: any;
@@ -22,7 +23,8 @@ export default function ReviewForm({
   existingReviewText?: string;
   table: string;
   review_id: number;
-  toggleRefresh: any;
+  toggleRefreshAdd?: any;
+  toggleRefreshEdit?: any;
 }) {
   const [rating, setRating] = useState(existingRating ? existingRating : 0);
   const [reviewText, setReviewText] = useState(existingReviewText ? existingReviewText : "");
@@ -30,6 +32,7 @@ export default function ReviewForm({
   const { session } = useAuth();
 
   const handleAddReview = async () => {
+
     if (reviewText.trim() === "") {
       setErrorMessage("Please enter your review");
       return;
@@ -46,12 +49,13 @@ export default function ReviewForm({
       Alert.alert("Error", "You must be logged in to submit a review");
     } else {
       toggleModal();
-      toggleRefresh();
+      toggleRefreshAdd ? toggleRefreshAdd() : null
       Alert.alert("Thanks, your review was submitted.");
     }
   };
 
   const handleEditReview = async () => {
+
     if (reviewText.trim() === "") {
       setErrorMessage("Please enter your review");
       return;
@@ -69,7 +73,7 @@ export default function ReviewForm({
       Alert.alert("Something went wrong. Please try again.");
     } else {
       toggleModal();
-      toggleRefresh();
+      toggleRefreshEdit();
       Alert.alert("Thanks, your review was updated.");
     }
   };
@@ -132,9 +136,8 @@ const styles = StyleSheet.create({
     margin: 10
   },
   btn: {
-    margin: 10,
-    width:  80,
-    height: 40,
+    width:  90,
+    height: 50,
   },
   buttonTitle: {
     fontSize: 14
@@ -142,7 +145,8 @@ const styles = StyleSheet.create({
   buttonContainer: {
     flex:1,
     flexDirection:"row",
-    marginTop: 10
+    marginTop: 20,
+    gap: 10,
   },
   errorText: {
     color: 'red',

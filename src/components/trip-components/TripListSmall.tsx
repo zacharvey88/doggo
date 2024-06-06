@@ -173,7 +173,7 @@ const styles = StyleSheet.create({
   button: {
     padding: 5,
     flexGrow: 1,
-    backgroundColor: "rgb(1,140,220)",
+    backgroundColor: "#3A90CD",
     borderRadius: 10,
   },
   noTrips: {

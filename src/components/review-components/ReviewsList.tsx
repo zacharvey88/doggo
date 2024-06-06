@@ -7,18 +7,21 @@ import {
   Alert,
 } from "react-native";
 import { supabase } from "@/src/lib/supabase";
-import { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Database } from "@src/lib/database.types"
 import ReviewCard from "./ReviewCard";
 import Modal from "react-native-modal";
 import ReviewForm from "@/src/components/review-components/ReviewForm";
 import { useAuth } from "@/src/providers/AuthProvider";
+import { useFocusEffect } from '@react-navigation/native';
 export default function ReviewsList({
   id,
   table,
+  refreshAdd
 }: {
   id: number;
   table: keyof Database["public"]["Tables"];
+  refreshAdd: boolean;
 }) {
   const [reviews, setReviews] = useState<
     Database["public"]["Tables"][typeof table]["Row"][]
@@ -30,19 +33,21 @@ export default function ReviewsList({
   const [existingRating, setExistingRating] = useState(0);
   const [review_id, setReviewId] = useState(null);
   const { session } = useAuth()
-  const [refresh, setRefresh] = useState(false)
+  const [refreshEdit, setRefreshEdit] = useState(false)
 
   const toggleModal = () => {
     setModalVisible(!isModalVisible);
   };
 
-  const toggleRefresh = () => {
-    setRefresh(!refresh);
+  const toggleRefreshEdit = () => {
+    setRefreshEdit(!refreshEdit);
   };
 
-  useEffect(() => {
-    getReviews();
-  }, [refresh]);
+  useFocusEffect(
+    React.useCallback(() => {
+      getReviews();
+    }, [refreshAdd, refreshEdit])
+  );
 
   async function getReviews() {
     setLoading(true);
@@ -66,6 +71,7 @@ export default function ReviewsList({
     <View style={styles.container}>
       {loading ? (
         <View style={styles.loadingContainer}>
+          <Text style={styles.loading}>Loading...</Text>
           <ActivityIndicator size="large" color="gray" />
         </View>
       ) : reviews.length > 0 ? (
@@ -88,7 +94,7 @@ export default function ReviewsList({
                 existingReviewText={existingReviewText}
                 table={table}
                 review_id={review_id}
-                toggleRefresh={toggleRefresh}
+                toggleRefreshEdit={toggleRefreshEdit}
               />
             </View>
           </Modal>
@@ -136,9 +142,10 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+    marginTop: 50,
   },
   loading: {
-    marginBottom: 30,
+    marginBottom: 15,
   },
   modal: {
     flex: 1,

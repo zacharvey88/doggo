@@ -28,7 +28,8 @@ export default function Accommodation() {
   const [isReviewModalVisible, setReviewModalVisible] = useState(false);
   const { session } = useAuth();
   const [rating, setRating] = useState(0);
-  
+  const [refreshAdd, setRefreshAdd] = useState(false)
+
   const {
     id,
     title,
@@ -51,6 +52,10 @@ export default function Accommodation() {
 
   const toggleReviewModal = () => {
     setReviewModalVisible(!isReviewModalVisible);
+  };
+
+  const toggleRefreshAdd = () => {
+    setRefreshAdd(!refreshAdd);
   };
 
   useEffect(() => {
@@ -132,6 +137,7 @@ export default function Accommodation() {
             toggleModal={toggleReviewModal}
             session={session}
             table={"accommodation"}
+            toggleRefreshAdd={toggleRefreshAdd}
           />
         </View>
       </Modal>
@@ -214,7 +220,7 @@ export default function Accommodation() {
                 }}
               />
             </View>
-            <ReviewsList id={id} table="reviews_accommodation" />
+            <ReviewsList id={id} table="reviews_accommodation" refreshAdd={refreshAdd}/>
           </View>
         </ScrollView>
       </View>

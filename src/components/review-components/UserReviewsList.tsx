@@ -27,18 +27,18 @@ export default function UserReviewsList({
   const [existingRating, setExistingRating] = useState(0);
   const { session } = useAuth();
   const [review_id, setReviewId] = useState(null);
-  const [refresh, setRefresh] = useState(false)
+  const [refreshEdit, setRefreshEdit] = useState(false)
 
   useEffect(() => {
     getReviews();
-  }, [user_id, table, refresh]);
+  }, [user_id, table, refreshEdit]);
 
   const toggleModal = () => {
     setModalVisible(!isModalVisible);
   };
 
-  const toggleRefresh = () => {
-    setRefresh(!refresh)
+  const toggleRefreshEdit = () => {
+    setRefreshEdit(!refreshEdit)
   }
 
   async function getReviews() {
@@ -90,7 +90,7 @@ export default function UserReviewsList({
                 existingRating={existingRating}
                 table={table}
                 review_id={review_id}
-                toggleRefresh={toggleRefresh}
+                toggleRefreshEdit={toggleRefreshEdit}
               />
             </View>
           </Modal>
