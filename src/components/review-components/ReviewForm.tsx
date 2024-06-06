@@ -13,6 +13,7 @@ export default function ReviewForm({
   existingReviewText,
   table,
   review_id,
+  toggleRefresh,
 }: {
   id: number;
   toggleModal: any;
@@ -21,7 +22,7 @@ export default function ReviewForm({
   existingReviewText?: string;
   table: string;
   review_id: number;
-  onEditComplete: any
+  toggleRefresh: any;
 }) {
   const [rating, setRating] = useState(existingRating ? existingRating : 0);
   const [reviewText, setReviewText] = useState(existingReviewText ? existingReviewText : "");
@@ -45,6 +46,7 @@ export default function ReviewForm({
       Alert.alert("Error", "You must be logged in to submit a review");
     } else {
       toggleModal();
+      toggleRefresh();
       Alert.alert("Thanks, your review was submitted.");
     }
   };
@@ -67,6 +69,7 @@ export default function ReviewForm({
       Alert.alert("Something went wrong. Please try again.");
     } else {
       toggleModal();
+      toggleRefresh();
       Alert.alert("Thanks, your review was updated.");
     }
   };

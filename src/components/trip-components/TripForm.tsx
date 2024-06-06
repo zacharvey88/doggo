@@ -49,7 +49,6 @@ export default function TripForm({ airline_id, accommodation_id, existingTripNam
   useEffect(()=>{
     getAirline()
     getAccommodation()
-    console.log(trips);
   },[])
 
   const getAirline = async () => {

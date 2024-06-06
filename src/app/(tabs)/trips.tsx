@@ -6,13 +6,14 @@ import {
   Text,
   View,
 } from "react-native";
-import { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { supabase } from "@/src/lib/supabase";
-import { useLocalSearchParams, useRouter } from "expo-router";
+import { useRouter } from "expo-router";
 import TripList from "@/src/components/trip-components/TripList";
 import { AntDesign, FontAwesome } from "@expo/vector-icons";
 import { Database } from "@/src/lib/database.types";
 import { useAuth } from "@/src/providers/AuthProvider";
+import { useFocusEffect } from '@react-navigation/native';
 
 export default function TabTrips() {
   const [loading, setLoading] = useState(false);
@@ -24,9 +25,11 @@ export default function TabTrips() {
   const { session } = useAuth();
   const router = useRouter();
 
-  useEffect(() => {
+  useFocusEffect(
+    React.useCallback(() => {
       getTrips();
-  }, []);
+    }, [session])
+  );
 
   async function getTrips() {
     if (!session?.user?.id) {

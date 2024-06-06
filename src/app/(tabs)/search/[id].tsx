@@ -28,6 +28,7 @@ export default function Accommodation() {
   const [isReviewModalVisible, setReviewModalVisible] = useState(false);
   const { session } = useAuth();
   const [rating, setRating] = useState(0);
+  
   const {
     id,
     title,
