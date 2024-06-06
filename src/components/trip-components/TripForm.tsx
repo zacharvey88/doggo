@@ -22,16 +22,30 @@ LogBox.ignoreLogs([
   "Warning: DatePicker: Support for defaultProps will be removed from function components in a future major release. Use JavaScript default parameters instead.",
   "Warning: Header: Support for defaultProps will be removed from function components in a future major release. Use JavaScript default parameters instead.",
 ]);
+  
+export default function TripForm() {
+  const params = useLocalSearchParams();
+  const {
+    airline_id,
+    accommodation_id,
+    existingTripName,
+    existingDestination,
+    existingStartDate,
+    existingEndDate,
+    existingAirline,
+    existingAccommodation,
+    edit,
+    trip_id,
+    existingNotes
+  } = params;
 
-export default function TripForm({ airline_id, accommodation_id, existingTripName, existingDestination, existingStartDate, existingEndDate, existingAirline, existingAccommodation, edit, trip_id }: { airline_id?: number; accommodation_id?: number, existingTripName: string, existingDestination: string, existingStartDate: string, existingEndDate: string, existingAirline: string, existingAccommodation: string, edit : boolean, trip_id : number}) {
-
-
-  const [title, setTitle] = useState(existingTripName ? existingTripName : "");
-  const [startDate, setStartDate] = useState(existingStartDate ? existingStartDate : "");
-  const [endDate, setEndDate] = useState(existingEndDate ? existingEndDate : "");
-  const [destination, setDestination] = useState(existingDestination ? existingDestination : "");
-  const [airline, setAirline] = useState(existingAirline ? existingAirline : "Not selected")
-  const [accommodation, setAccommodation] = useState(existingAccommodation ? existingAccommodation : "Not selected")
+  const [title, setTitle] = useState(existingTripName ?? "");
+  const [startDate, setStartDate] = useState(existingStartDate ?? "");
+  const [endDate, setEndDate] = useState(existingEndDate ?? "");
+  const [destination, setDestination] = useState(existingDestination ?? "");
+  const [airline, setAirline] = useState(existingAirline ?? "Not selected");
+  const [accommodation, setAccommodation] = useState(existingAccommodation ?? "Not selected");
+  const [notes, setNotes] = useState(existingNotes ?? "");
 
   const [tempStartDate, setTempStartDate] = useState("");
   const [tempEndDate, setTempEndDate] = useState(""); 
@@ -44,7 +58,6 @@ export default function TripForm({ airline_id, accommodation_id, existingTripNam
   const router = useRouter();
 
   const {trips} = useLocalSearchParams()
-
 
   useEffect(()=>{
     getAirline()
@@ -145,6 +158,7 @@ export default function TripForm({ airline_id, accommodation_id, existingTripNam
       end_date: endDate,
       title: title,
       location: destination,
+      notes: notes,
       ...(airline_id ? { airline_id: parseInt(airline_id) } : {}),
       ...(accommodation_id ? { accommodation_id: parseInt(accommodation_id) } : {})
     };  
@@ -195,6 +209,7 @@ export default function TripForm({ airline_id, accommodation_id, existingTripNam
       end_date: endDate,
       title: title,
       location: destination,
+      notes: notes,
     }
     
     const { data, error } = await supabase
@@ -342,7 +357,7 @@ export default function TripForm({ airline_id, accommodation_id, existingTripNam
         </View>
 
         <View>
-          <Text style={[styles.label]}>Accommodation</Text>
+          <Text style={styles.label}>Accommodation</Text>
           <View style={styles.disabled}>
             <TextInput
               style={[styles.input, styles.readonlyInput, { flex: 1 }]}
@@ -355,6 +370,19 @@ export default function TripForm({ airline_id, accommodation_id, existingTripNam
               </View>
             </Pressable>
           </View>
+        </View>
+
+        <View>
+          <Text style={styles.label}>Notes</Text>
+          <TextInput
+            style={[styles.input, styles.notesInput]}
+            placeholderTextColor={'#999'}
+            value={notes}
+            onChangeText={setNotes}
+            autoCorrect={false}
+            autoCapitalize="sentences"
+            multiline={true}
+          />
         </View>
 
 
@@ -409,7 +437,8 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     justifyContent: "center",
     alignItems: "center",
-    flexGrow: 1
+    flexGrow: 1,
+    width: 300,
   },
   centeredView: {
     flex: 1,
@@ -480,11 +509,9 @@ const styles = StyleSheet.create({
     borderRadius: 5,
   },
   buttonContainer: {
-    alignSelf: 'left',
     flexDirection: 'row',
     gap: 8,
     marginTop: 30,
-    marginLeft: 6,
   },
   button: {
     borderRadius: 8,
@@ -528,5 +555,8 @@ const styles = StyleSheet.create({
   },
   searchIcon: {
     color: "#fff",
+  },
+  notesInput: {
+    height: 120,
   },
 });

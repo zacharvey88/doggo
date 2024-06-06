@@ -1,6 +1,6 @@
-import { StyleSheet, Image, Pressable, View, Text, Dimensions} from "react-native";
+import { StyleSheet, Image, Pressable, View, Text } from "react-native";
 import dateFormat from "dateformat";
-import { FontAwesome, Entypo, MaterialIcons } from "@expo/vector-icons";
+import { FontAwesome, Entypo, MaterialIcons, Foundation } from "@expo/vector-icons";
 import { router } from "expo-router";
 import { useState } from "react";
 
@@ -18,18 +18,11 @@ export default function TripCard({
   setFilteredTrips: any;
 }) {
   const { airline_name = "" } = trip.airlines ?? {};
-  const {
-    title = "",
-    photos = [],
-  } = trip.accommodation ?? {};
-
-  const start_date = trip.start_date
-    ? dateFormat(trip.start_date, "dd mmm yyyy")
-    : "";
-  const end_date = trip.end_date
-    ? `to ${dateFormat(trip.end_date, "dd mmm yyyy")}`
-    : "";
+  const {title = "", photos = []} = trip.accommodation ?? {};
+  const start_date = trip.start_date ? dateFormat(trip.start_date, "dd mmm yyyy") : "";
+  const end_date = trip.end_date ? `to ${dateFormat(trip.end_date, "dd mmm yyyy")}` : "";
   const location = trip.location ? `in ${trip.location}` : "";
+  const notes = trip.notes ? trip.notes : "";
 
   const [existingTripName, setExistingTripName] = useState("");
   const [existingDestination, setExistingDestination] = useState("");
@@ -37,15 +30,17 @@ export default function TripCard({
   const [existingEndDate, setExistingEndDate] = useState("");
   const [existingAirline, setExistingAirline] = useState("");
   const [existingAccommodation, setExistingAccommodation] = useState("");
+  const [existingNotes, setExistingNotes] = useState("");
 
   const handleEditTrip = (
-    trip_id: any,
-    title: any,
-    location: any,
+    trip_id: number,
+    title: string,
+    location: string,
     start_date: any,
     end_date: any,
-    airline_name: any,
-    accommodation_title: any,
+    airline_name: string,
+    accommodation_title: string,
+    notes: string
   ) => {
     setTripId(trip_id);
     setExistingTripName(title ?? "");
@@ -54,11 +49,13 @@ export default function TripCard({
     setExistingEndDate(end_date ?? "");
     setExistingAccommodation(accommodation_title ?? "");
     setExistingAirline(airline_name ?? "");
-
+    setExistingNotes(notes ?? "");
+  
     router.push(
-      `/add-trip?trip_id=${trip_id}&existingTripName=${title}&existingDestination=${location}&existingStartDate=${start_date}&existingEndDate=${end_date}&existingAirline=${airline_name}&existingAccommodation=${accommodation_title}&edit='true'`
+      `/add-trip?trip_id=${trip_id}&existingTripName=${title}&existingDestination=${location}&existingStartDate=${start_date}&existingEndDate=${end_date}&existingAirline=${airline_name}&existingAccommodation=${accommodation_title}&existingNotes=${notes ?? ""}&edit=true`
     );
   };
+  
 
   return (
     <View>
@@ -89,6 +86,10 @@ export default function TripCard({
             <Text style={styles.featureText}>{start_date} {end_date}</Text>
           </View>
         </View>
+        <View style={styles.notesContainer}>
+          <MaterialIcons name="notes" style={styles.featureIcon} />
+          <Text style={styles.featureText}>{notes ? notes : "No notes for this trip"}</Text>
+        </View>
         <View style={styles.editIconContainer}>
           <Pressable
             onPress={() => {
@@ -100,6 +101,7 @@ export default function TripCard({
                 trip.end_date,
                 trip.airlines?.airline_name,
                 trip.accommodation?.title,
+                trip.notes,
               );
             }}
           >
@@ -180,5 +182,18 @@ const styles = StyleSheet.create({
   },
   editIcon: {
     fontSize: 25,
-    },
+  },
+  notesContainer: {
+    flexDirection: 'row',
+    gap: 10,
+    width: 340,
+  },
+  notesHeader: {
+    fontSize: 16,
+    marginBottom: 5,
+  },
+  notesText: {
+    fontSize: 14,
+    color: '#333',
+  },
 });
