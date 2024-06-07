@@ -65,7 +65,7 @@ export default function PlaceDetailsScreen() {
             ))}
           </ScrollView>
         ) : (
-          <Text style={styles.noImagesText}>No Images Available</Text>
+          <Image source={require("@/assets/images/photo-placeholder.png")} style={{width: '100%', height: 200, borderRadius: 10}} resizeMode="cover" />
         )}
         <View style={styles.titleContainer}>
           <Text style={styles.title}>{displayName.text}</Text>

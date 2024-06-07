@@ -37,7 +37,11 @@ export default function TripForm() {
     edit,
     trip_id,
     existingNotes,
+    existingPlaces,
+    place,
   } = params;
+
+  const parsedPlace = place ? JSON.parse(decodeURIComponent(place)) : {};
 
   const [title, setTitle] = useState(existingTripName ?? "");
   const [startDate, setStartDate] = useState(existingStartDate ?? "");
@@ -45,24 +49,26 @@ export default function TripForm() {
   const [destination, setDestination] = useState(existingDestination ?? "");
   const [airline, setAirline] = useState(existingAirline ?? "Not selected");
   const [accommodation, setAccommodation] = useState(existingAccommodation ?? "Not selected");
-  const [notes, setNotes] = useState(existingNotes ?? "");
-
+  const [notes, setNotes] = useState(existingNotes !== "null" || null ? existingNotes : "");
+  const [places, setPlaces] = useState(() => {
+    const initialPlaces = existingPlaces ? JSON.parse(decodeURIComponent(existingPlaces)) : [];
+    return parsedPlace.name ? [...initialPlaces, parsedPlace] : initialPlaces;
+  });
+  
   const [tempStartDate, setTempStartDate] = useState("");
   const [tempEndDate, setTempEndDate] = useState(""); 
   const navigation = useNavigation();
-
+  
   const [startOpen, setStartOpen] = useState(false); 
   const [endOpen, setEndOpen] = useState(false);
   const [errors, setErrors] = useState({});
   const { session } = useAuth();
   const router = useRouter();
 
-  const {trips} = useLocalSearchParams()
-
-  useEffect(()=>{
-    getAirline()
-    getAccommodation()
-  },[])
+  useEffect(() => {
+    getAirline();
+    getAccommodation();    
+  }, []);
 
   const getAirline = async () => {
     const { data, error } = await supabase
@@ -160,8 +166,9 @@ export default function TripForm() {
       location: destination,
       notes: notes,
       ...(airline_id ? { airline_id: parseInt(airline_id) } : {}),
-      ...(accommodation_id ? { accommodation_id: parseInt(accommodation_id) } : {})
-    };  
+      ...(accommodation_id ? { accommodation_id: parseInt(accommodation_id) } : {}),
+      places: places,
+    };
   
     const { data, error } = await supabase
       .from("trips")
@@ -174,6 +181,7 @@ export default function TripForm() {
       router.replace("trips");
     }
   };
+  
   
 
   const handleSearchPress = (page) => {
@@ -227,6 +235,40 @@ export default function TripForm() {
       }
     }
   };
+
+  const removePlace = async (index) => {
+    const updatedPlaces = places.filter((_, i) => i !== index);
+  
+    const { error } = await supabase
+      .from('trips')
+      .update({ places: updatedPlaces })
+      .eq('trip_id', trip_id);
+
+    if (error) {
+      console.error('Error updating places:', error);
+    } else {
+      setPlaces(updatedPlaces);
+    }
+  };
+
+  const confirmRemovePlace = (index) => {
+    Alert.alert(
+      "Confirm Removal",
+      "Are you sure you want to remove this place from your trip?",
+      [
+        {
+          text: "Cancel",
+          style: "cancel",
+        },
+        {
+          text: "Remove",
+          onPress: () => removePlace(index),
+          style: "destructive",
+        },
+      ],
+      { cancelable: false }
+    );
+  }
   
 
   const handleClose = () => {
@@ -372,6 +414,21 @@ export default function TripForm() {
           </View>
         </View>
 
+        {places && places.length > 0 ? (
+          <View>
+            <Text style={styles.label}>Saved Places</Text>
+            <View style={styles.placesList}>
+              {places.map((place, index) => (
+                <TouchableOpacity key={index} onPress={() => confirmRemovePlace(index)}>
+                  <View style={styles.placeCard}>
+                    <Text style={styles.place}>{place.name}</Text>
+                  </View>
+                </TouchableOpacity>
+              ))}
+            </View>
+          </View>
+        ) : null}
+        
         <View>
           <Text style={styles.label}>Notes</Text>
           <TextInput
@@ -558,5 +615,29 @@ const styles = StyleSheet.create({
   },
   notesInput: {
     height: 120,
+  },
+  placesList: {
+    flexDirection: 'row',
+    flexWrap: 'wrap', 
+    justifyContent: 'flex-start',
+    maxWidth: '100%',
+    gap: 5,
+    marginLeft: 5,
+    marginBottom: -15,
+  },
+  placeCard: {
+    backgroundColor: '#fff',
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.3,
+    shadowRadius: 1,
+    borderRadius: 5,
+    paddingVertical: 5,
+    paddingHorizontal: 10,
+    alignSelf: 'flex-start',
+  },
+  place:{
+    fontSize: 16,
+    textAlign: 'left',  
   },
 });
