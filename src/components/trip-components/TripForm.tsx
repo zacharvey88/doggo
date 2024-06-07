@@ -36,7 +36,7 @@ export default function TripForm() {
     existingAccommodation,
     edit,
     trip_id,
-    existingNotes
+    existingNotes,
   } = params;
 
   const [title, setTitle] = useState(existingTripName ?? "");

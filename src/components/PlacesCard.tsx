@@ -102,7 +102,7 @@ export default function PlacesCard({
                 {item.displayName?.text || "N/A"}
               </Text>
               <Text style={styles.address}>
-                {item.shortFormattedAddress.replace(/\b\w/g, (char) => char.toUpperCase()) || "N/A"}
+                {item.shortFormattedAddress?.replace(/\b\w/g, (char) => char.toUpperCase()) || "N/A"}
               </Text>
               <Text
                 style={[

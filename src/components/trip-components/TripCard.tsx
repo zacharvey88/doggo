@@ -1,4 +1,4 @@
-import { StyleSheet, Image, Pressable, View, Text } from "react-native";
+import { StyleSheet, Image, Pressable, View, Text, Share } from "react-native";
 import dateFormat from "dateformat";
 import { FontAwesome, Entypo, MaterialIcons, Foundation } from "@expo/vector-icons";
 import { router } from "expo-router";
@@ -55,6 +55,31 @@ export default function TripCard({
       `/add-trip?trip_id=${trip_id}&existingTripName=${title}&existingDestination=${location}&existingStartDate=${start_date}&existingEndDate=${end_date}&existingAirline=${airline_name}&existingAccommodation=${accommodation_title}&existingNotes=${notes ?? ""}&edit=true`
     );
   };
+
+  const handleShare = async () => {
+    const message = `
+      Trip: ${trip.title}
+      Location: ${trip.location}
+      Dates: ${start_date} ${end_date}
+      Airline: ${airline_name}
+      Accommodation: ${title}
+      Notes: ${notes}
+    `;
+    try {
+      const result = await Share.share({
+        message: message,
+      });
+      if (result.action === Share.sharedAction) {
+        if (result.activityType) {
+          console.log(`Shared with activity type: ${result.activityType}`);
+        } else {
+          console.log("Shared successfully");
+        }
+      } 
+    } catch (error) {
+      alert(error.message);
+    }
+  };
   
 
   return (
@@ -90,24 +115,34 @@ export default function TripCard({
           <MaterialIcons name="notes" style={styles.featureIcon} />
           <Text style={styles.featureText}>{notes ? notes : "No notes for this trip"}</Text>
         </View>
-        <View style={styles.editIconContainer}>
-          <Pressable
-            onPress={() => {
-              handleEditTrip(
-                trip.trip_id,
-                trip.title,
-                trip.location,
-                trip.start_date,
-                trip.end_date,
-                trip.airlines?.airline_name,
-                trip.accommodation?.title,
-                trip.notes,
-              );
-            }}
-          >
-            <MaterialIcons name="edit-note" style={styles.editIcon} />
-          </Pressable>
+
+        <View style={styles.iconsContainer}>
+          <View style={styles.editIconContainer}>
+            <Pressable
+              onPress={() => {
+                handleEditTrip(
+                  trip.trip_id,
+                  trip.title,
+                  trip.location,
+                  trip.start_date,
+                  trip.end_date,
+                  trip.airlines?.airline_name,
+                  trip.accommodation?.title,
+                  trip.notes,
+                );
+              }}
+            >
+              <MaterialIcons name="edit-note" style={styles.editIcon} />
+            </Pressable>
+          </View>
+
+          <View style={styles.editIconContainer}>
+            <Pressable onPress={handleShare}>
+              <MaterialIcons name="share" style={styles.shareIcon} />
+            </Pressable>
+          </View>
         </View>
+
       </View>
     </View>
   );
@@ -168,13 +203,16 @@ const styles = StyleSheet.create({
     color: "#3A90CD",
     marginBottom: 8,
   },
+  iconsContainer: {
+    position: "absolute",
+    top: 10,
+    right: 10,
+    gap: 5
+  },
   editIconContainer: {
     backgroundColor: '#fff',
     borderRadius: 10,
     padding: 5,
-    position: "absolute",
-    top: 10,
-    right: 10,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.3,
@@ -183,17 +221,12 @@ const styles = StyleSheet.create({
   editIcon: {
     fontSize: 25,
   },
+  shareIcon:{
+    fontSize: 22
+  },
   notesContainer: {
     flexDirection: 'row',
     gap: 10,
     width: 340,
-  },
-  notesHeader: {
-    fontSize: 16,
-    marginBottom: 5,
-  },
-  notesText: {
-    fontSize: 14,
-    color: '#333',
   },
 });

@@ -21,12 +21,14 @@ export default function TripListSmall({
   table,
   airline_id,
   accommodation_id,
+  place,
 }: {
   user_id: string;
   toggleModal: any;
   table: string;
   airline_id: number;
   accommodation_id: number;
+  place: object;
 }) {
   const [trips, setTrips] = useState<
     Database["public"]["Tables"]["trips"]["Row"][]
