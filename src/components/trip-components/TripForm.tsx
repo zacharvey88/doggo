@@ -22,34 +22,53 @@ LogBox.ignoreLogs([
   "Warning: DatePicker: Support for defaultProps will be removed from function components in a future major release. Use JavaScript default parameters instead.",
   "Warning: Header: Support for defaultProps will be removed from function components in a future major release. Use JavaScript default parameters instead.",
 ]);
+  
+export default function TripForm() {
+  const params = useLocalSearchParams();
+  const {
+    airline_id,
+    accommodation_id,
+    existingTripName,
+    existingDestination,
+    existingStartDate,
+    existingEndDate,
+    existingAirline,
+    existingAccommodation,
+    edit,
+    trip_id,
+    existingNotes,
+    existingPlaces,
+    place,
+  } = params;
 
-export default function TripForm({ airline_id, accommodation_id, existingTripName, existingDestination, existingStartDate, existingEndDate, existingAirline, existingAccommodation, edit, trip_id }: { airline_id?: number; accommodation_id?: number, existingTripName: string, existingDestination: string, existingStartDate: string, existingEndDate: string, existingAirline: string, existingAccommodation: string, edit : boolean, trip_id : number}) {
+  const parsedPlace = place ? JSON.parse(decodeURIComponent(place)) : {};
 
-
-  const [title, setTitle] = useState(existingTripName ? existingTripName : "");
-  const [startDate, setStartDate] = useState(existingStartDate ? existingStartDate : "");
-  const [endDate, setEndDate] = useState(existingEndDate ? existingEndDate : "");
-  const [destination, setDestination] = useState(existingDestination ? existingDestination : "");
-  const [airline, setAirline] = useState(existingAirline ? existingAirline : "Not selected")
-  const [accommodation, setAccommodation] = useState(existingAccommodation ? existingAccommodation : "Not selected")
-
+  const [title, setTitle] = useState(existingTripName ?? "");
+  const [startDate, setStartDate] = useState(existingStartDate ?? "");
+  const [endDate, setEndDate] = useState(existingEndDate ?? "");
+  const [destination, setDestination] = useState(existingDestination ?? "");
+  const [airline, setAirline] = useState(existingAirline ?? "Not selected");
+  const [accommodation, setAccommodation] = useState(existingAccommodation ?? "Not selected");
+  const [notes, setNotes] = useState(existingNotes !== "null" || null ? existingNotes : "");
+  const [places, setPlaces] = useState(() => {
+    const initialPlaces = existingPlaces ? JSON.parse(decodeURIComponent(existingPlaces)) : [];
+    return parsedPlace.name ? [...initialPlaces, parsedPlace] : initialPlaces;
+  });
+  
   const [tempStartDate, setTempStartDate] = useState("");
   const [tempEndDate, setTempEndDate] = useState(""); 
   const navigation = useNavigation();
-
+  
   const [startOpen, setStartOpen] = useState(false); 
   const [endOpen, setEndOpen] = useState(false);
   const [errors, setErrors] = useState({});
   const { session } = useAuth();
   const router = useRouter();
 
-  const {trips} = useLocalSearchParams()
-
-
-  useEffect(()=>{
-    getAirline()
-    getAccommodation()
-  },[])
+  useEffect(() => {
+    getAirline();
+    getAccommodation();    
+  }, []);
 
   const getAirline = async () => {
     const { data, error } = await supabase
@@ -145,9 +164,11 @@ export default function TripForm({ airline_id, accommodation_id, existingTripNam
       end_date: endDate,
       title: title,
       location: destination,
+      notes: notes,
       ...(airline_id ? { airline_id: parseInt(airline_id) } : {}),
-      ...(accommodation_id ? { accommodation_id: parseInt(accommodation_id) } : {})
-    };  
+      ...(accommodation_id ? { accommodation_id: parseInt(accommodation_id) } : {}),
+      places: places,
+    };
   
     const { data, error } = await supabase
       .from("trips")
@@ -160,6 +181,7 @@ export default function TripForm({ airline_id, accommodation_id, existingTripNam
       router.replace("trips");
     }
   };
+  
   
 
   const handleSearchPress = (page) => {
@@ -195,6 +217,7 @@ export default function TripForm({ airline_id, accommodation_id, existingTripNam
       end_date: endDate,
       title: title,
       location: destination,
+      notes: notes,
     }
     
     const { data, error } = await supabase
@@ -212,6 +235,40 @@ export default function TripForm({ airline_id, accommodation_id, existingTripNam
       }
     }
   };
+
+  const removePlace = async (index) => {
+    const updatedPlaces = places.filter((_, i) => i !== index);
+  
+    const { error } = await supabase
+      .from('trips')
+      .update({ places: updatedPlaces })
+      .eq('trip_id', trip_id);
+
+    if (error) {
+      console.error('Error updating places:', error);
+    } else {
+      setPlaces(updatedPlaces);
+    }
+  };
+
+  const confirmRemovePlace = (index) => {
+    Alert.alert(
+      "Confirm Removal",
+      "Are you sure you want to remove this place from your trip?",
+      [
+        {
+          text: "Cancel",
+          style: "cancel",
+        },
+        {
+          text: "Remove",
+          onPress: () => removePlace(index),
+          style: "destructive",
+        },
+      ],
+      { cancelable: false }
+    );
+  }
   
 
   const handleClose = () => {
@@ -342,7 +399,7 @@ export default function TripForm({ airline_id, accommodation_id, existingTripNam
         </View>
 
         <View>
-          <Text style={[styles.label]}>Accommodation</Text>
+          <Text style={styles.label}>Accommodation</Text>
           <View style={styles.disabled}>
             <TextInput
               style={[styles.input, styles.readonlyInput, { flex: 1 }]}
@@ -355,6 +412,34 @@ export default function TripForm({ airline_id, accommodation_id, existingTripNam
               </View>
             </Pressable>
           </View>
+        </View>
+
+        {places && places.length > 0 ? (
+          <View>
+            <Text style={styles.label}>Saved Places</Text>
+            <View style={styles.placesList}>
+              {places.map((place, index) => (
+                <TouchableOpacity key={index} onPress={() => confirmRemovePlace(index)}>
+                  <View style={styles.placeCard}>
+                    <Text style={styles.place}>{place.name}</Text>
+                  </View>
+                </TouchableOpacity>
+              ))}
+            </View>
+          </View>
+        ) : null}
+        
+        <View>
+          <Text style={styles.label}>Notes</Text>
+          <TextInput
+            style={[styles.input, styles.notesInput]}
+            placeholderTextColor={'#999'}
+            value={notes}
+            onChangeText={setNotes}
+            autoCorrect={false}
+            autoCapitalize="sentences"
+            multiline={true}
+          />
         </View>
 
 
@@ -409,7 +494,8 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     justifyContent: "center",
     alignItems: "center",
-    flexGrow: 1
+    flexGrow: 1,
+    width: 300,
   },
   centeredView: {
     flex: 1,
@@ -480,11 +566,9 @@ const styles = StyleSheet.create({
     borderRadius: 5,
   },
   buttonContainer: {
-    alignSelf: 'left',
     flexDirection: 'row',
     gap: 8,
     marginTop: 30,
-    marginLeft: 6,
   },
   button: {
     borderRadius: 8,
@@ -528,5 +612,32 @@ const styles = StyleSheet.create({
   },
   searchIcon: {
     color: "#fff",
+  },
+  notesInput: {
+    height: 120,
+  },
+  placesList: {
+    flexDirection: 'row',
+    flexWrap: 'wrap', 
+    justifyContent: 'flex-start',
+    maxWidth: '100%',
+    gap: 5,
+    marginLeft: 5,
+    marginBottom: -15,
+  },
+  placeCard: {
+    backgroundColor: '#fff',
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.3,
+    shadowRadius: 1,
+    borderRadius: 5,
+    paddingVertical: 5,
+    paddingHorizontal: 10,
+    alignSelf: 'flex-start',
+  },
+  place:{
+    fontSize: 16,
+    textAlign: 'left',  
   },
 });

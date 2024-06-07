@@ -83,26 +83,26 @@ export default function PlacesCard({
               })
             }
           >
-            <View style={styles.imageContainer}>
-              {item.photos ? (
-                <Image
-                  source={{
-                    uri: `https://places.googleapis.com/v1/${item.photos[0].name}/media?key=${process.env.EXPO_PUBLIC_API_KEY}&maxWidthPx=300`,
-                  }}
-                  style={styles.image}
-                  resizeMode="cover"
-                />
-              ) : (
-                <Text>No Image Available</Text>
-              )}
-            </View>
+          <View style={styles.imageContainer}>
+            {item.photos ? (
+              <Image
+                source={{
+                  uri: `https://places.googleapis.com/v1/${item.photos[0].name}/media?key=${process.env.EXPO_PUBLIC_API_KEY}&maxWidthPx=300`,
+                }}
+                style={styles.image}
+                resizeMode="cover"
+              />
+            ) : (
+              <Image source={require("@/assets/images/photo-placeholder.png")} style={styles.image} resizeMode="cover" />
+            )}
+          </View>
 
             <View style={styles.textContainer}>
               <Text style={styles.placeName}>
                 {item.displayName?.text || "N/A"}
               </Text>
               <Text style={styles.address}>
-                {item.shortFormattedAddress.replace(/\b\w/g, (char) => char.toUpperCase()) || "N/A"}
+                {item.shortFormattedAddress?.replace(/\b\w/g, (char) => char.toUpperCase()) || "N/A"}
               </Text>
               <Text
                 style={[

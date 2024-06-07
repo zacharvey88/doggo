@@ -233,6 +233,8 @@ export type Database = {
           created_at: string
           end_date: string | null
           location: string | null
+          notes: string | null
+          places: Json | null
           start_date: string | null
           title: string
           trip_id: number
@@ -244,6 +246,8 @@ export type Database = {
           created_at?: string
           end_date?: string | null
           location?: string | null
+          notes?: string | null
+          places?: Json | null
           start_date?: string | null
           title: string
           trip_id?: number
@@ -255,6 +259,8 @@ export type Database = {
           created_at?: string
           end_date?: string | null
           location?: string | null
+          notes?: string | null
+          places?: Json | null
           start_date?: string | null
           title?: string
           trip_id?: number

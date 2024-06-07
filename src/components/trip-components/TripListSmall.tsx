@@ -21,12 +21,14 @@ export default function TripListSmall({
   table,
   airline_id,
   accommodation_id,
+  place,
 }: {
   user_id: string;
   toggleModal: any;
   table: string;
   airline_id: number;
   accommodation_id: number;
+  place: object;
 }) {
   const [trips, setTrips] = useState<
     Database["public"]["Tables"]["trips"]["Row"][]
@@ -54,32 +56,62 @@ export default function TripListSmall({
 
   const handleCreateTrip = () => {
     toggleModal();
-    router.push(
-      `/add-trip?airline_id=${airline_id}&accommodation_id=${accommodation_id}`
-    );
+    let url = `/add-trip?`;
+    if (airline_id) {
+      url += `airline_id=${airline_id}&`;
+    }
+    if (accommodation_id) {
+      url += `accommodation_id=${accommodation_id}&`;
+    }
+    if (place) {
+      url += `place=${encodeURIComponent(JSON.stringify(place))}`;
+    }
+    router.push(url);
   };
+  
+  
 
   const addToTrip = async (trip_id, title) => {
     setLoading(true);
+    toggleModal();
+    let existingTrip = await supabase
+      .from("trips")
+      .select("places")
+      .eq("trip_id", trip_id)
+      .single();
+  
+    let updatedFields = {};
+  
+    if (table === "airlines") {
+      updatedFields = { airline_id: id };
+    } else if (table === "accommodation") {
+      updatedFields = { accommodation_id: id };
+    } else {
+      let currentPlaces = existingTrip.data.places || []; 
+      let updatedPlaces = [...currentPlaces, place]; 
+      updatedFields = { places: updatedPlaces }; 
+    }
+  
     const { data, error } = await supabase
       .from("trips")
-      .update(
-        table === "airlines" ? { airline_id: id } : { accommodation_id: id }
-      )
+      .update(updatedFields)
       .eq("trip_id", trip_id);
+  
     if (error) {
       Alert.alert(error.message)
     } else {
-      toggleModal();
       router.replace("trips");
       Alert.alert(
         `${
-          table === "airlines" ? "Airline" : "Accommodation"
+          table === "airlines" ? "Airline" :
+          table === "accommodation" ? "Accommodation" : "Location"
         } added to ${title}`
       );
     }
     setLoading(false);
   };
+  
+  
 
   return (
     <View style={styles.container}>
@@ -103,7 +135,7 @@ export default function TripListSmall({
                 <View style={{ backgroundColor: "#f9f9f9" }}>
                   <Text style={styles.tripName}>{item.title}</Text>
                   <Text style={styles.tripDates}>
-                    {item.location} | {dateFormat(item.start_date, "mmm yyyy")}
+                    {item.location ? `${item.location} in `: ""}{dateFormat(item.start_date, "mmm yyyy")}
                   </Text>
                 </View>
                 <FontAwesome6
@@ -167,7 +199,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   icon: {
-    fontSize: 20,
+    fontSize: 30,
     color: "#3A90CD",
   },
   button: {

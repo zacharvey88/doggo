@@ -11,12 +11,16 @@ import {
 } from "react-native";
 import { useLocalSearchParams } from "expo-router";
 import Colors from "@/src/constants/Colors";
-import { FontAwesome } from "@expo/vector-icons";
-
+import { Entypo, FontAwesome } from "@expo/vector-icons";
+import Modal from "react-native-modal";
+import TripListSmall from "@/src/components/trip-components/TripListSmall";
+import { useAuth } from "@/src/providers/AuthProvider";
 export default function PlaceDetailsScreen() {
 
   const params = useLocalSearchParams();
+  const { session } = useAuth();
   const place = JSON.parse(params.place);
+  const [isTripModalVisible, setTripModalVisible] = useState(false);
   const [isAccordionExpanded, setIsAccordionExpanded] = useState(false);
   const {
     displayName,
@@ -38,6 +42,10 @@ export default function PlaceDetailsScreen() {
       Linking.openURL(`tel:${phoneNumber}`);
     }
   };
+
+  const toggleTripModal = () => {
+    setTripModalVisible(!isTripModalVisible);
+  };
   
   return (
     <ScrollView style={styles.container}>
@@ -57,7 +65,7 @@ export default function PlaceDetailsScreen() {
             ))}
           </ScrollView>
         ) : (
-          <Text style={styles.noImagesText}>No Images Available</Text>
+          <Image source={require("@/assets/images/photo-placeholder.png")} style={{width: '100%', height: 200, borderRadius: 10}} resizeMode="cover" />
         )}
         <View style={styles.titleContainer}>
           <Text style={styles.title}>{displayName.text}</Text>
@@ -124,6 +132,34 @@ export default function PlaceDetailsScreen() {
               </Text>
             </View>
           )}
+
+          <View style={styles.infoRow}>
+            <Entypo name="add-to-list" style={styles.icon} />
+            <Text
+              style={styles.website}
+              onPress={toggleTripModal}
+              numberOfLines={1}
+            >
+              Add to a trip
+            </Text>
+          </View>
+
+          <Modal
+            isVisible={isTripModalVisible}
+            animationIn="slideInUp"
+            onBackdropPress={toggleTripModal}
+            backdropOpacity={0.8}
+            backdropColor="black"
+          >
+            <View style={styles.modalContent}>
+              <TripListSmall
+                user_id={session?.user.id}
+                toggleModal={toggleTripModal}
+                place={{name: displayName.text, address: formattedAddress, link: googleMapsUri}}
+              />
+            </View>
+          </Modal>
+
           <View>
             {reviews}
           </View>
@@ -235,5 +271,13 @@ const styles = StyleSheet.create({
     marginTop: 8,
     marginBottom: 8,
     color: "gray"
+  },
+  modalContent: {
+    justifyContent: "center",
+    alignItems: "center",
+    color: "#000",
+    margin: 0,
+    borderRadius: 20,
+    backgroundColor: "#fff",
   },
 });

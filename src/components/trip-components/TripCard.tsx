@@ -1,8 +1,10 @@
-import { StyleSheet, Image, Pressable, View, Text, Dimensions} from "react-native";
+import { StyleSheet, Image, Pressable, View, Text, Share, TouchableOpacity, Linking } from "react-native";
 import dateFormat from "dateformat";
-import { FontAwesome, Entypo, MaterialIcons } from "@expo/vector-icons";
+import { FontAwesome, Entypo, MaterialIcons, FontAwesome6 } from "@expo/vector-icons";
 import { router } from "expo-router";
 import { useState } from "react";
+
+
 
 export default function TripCard({
   trip,
@@ -18,18 +20,12 @@ export default function TripCard({
   setFilteredTrips: any;
 }) {
   const { airline_name = "" } = trip.airlines ?? {};
-  const {
-    title = "",
-    photos = [],
-  } = trip.accommodation ?? {};
-
-  const start_date = trip.start_date
-    ? dateFormat(trip.start_date, "dd mmm yyyy")
-    : "";
-  const end_date = trip.end_date
-    ? `to ${dateFormat(trip.end_date, "dd mmm yyyy")}`
-    : "";
+  const {title = "", photos = []} = trip.accommodation ?? {};
+  const start_date = trip.start_date ? dateFormat(trip.start_date, "dd mmm yyyy") : "";
+  const end_date = trip.end_date ? `to ${dateFormat(trip.end_date, "dd mmm yyyy")}` : "";
   const location = trip.location ? `in ${trip.location}` : "";
+  const notes = trip.notes ? trip.notes : "";
+  const initialPlaces = trip.places ? trip.places : "";
 
   const [existingTripName, setExistingTripName] = useState("");
   const [existingDestination, setExistingDestination] = useState("");
@@ -37,15 +33,19 @@ export default function TripCard({
   const [existingEndDate, setExistingEndDate] = useState("");
   const [existingAirline, setExistingAirline] = useState("");
   const [existingAccommodation, setExistingAccommodation] = useState("");
+  const [existingNotes, setExistingNotes] = useState("");
+  const [existingPlaces, setExistingPlaces] = useState(initialPlaces);
 
   const handleEditTrip = (
-    trip_id: any,
-    title: any,
-    location: any,
+    trip_id: number,
+    title: string,
+    location: string,
     start_date: any,
     end_date: any,
-    airline_name: any,
-    accommodation_title: any,
+    airline_name: string,
+    accommodation_title: string,
+    notes: string,
+    places: any,
   ) => {
     setTripId(trip_id);
     setExistingTripName(title ?? "");
@@ -54,11 +54,41 @@ export default function TripCard({
     setExistingEndDate(end_date ?? "");
     setExistingAccommodation(accommodation_title ?? "");
     setExistingAirline(airline_name ?? "");
-
+    setExistingNotes(notes ?? "");
+    setExistingPlaces(places ?? [])
+  
+    const encodedTitle = encodeURIComponent(title);
+    const encodedLocation = encodeURIComponent(location);
+    const encodedStartDate = encodeURIComponent(start_date);
+    const encodedEndDate = encodeURIComponent(end_date);
+    const encodedAirline = encodeURIComponent(airline_name);
+    const encodedAccommodation = encodeURIComponent(accommodation_title);
+    const encodedNotes = encodeURIComponent(notes);
+    const encodedPlaces = encodeURIComponent(JSON.stringify(places));
+  
     router.push(
-      `/add-trip?trip_id=${trip_id}&existingTripName=${title}&existingDestination=${location}&existingStartDate=${start_date}&existingEndDate=${end_date}&existingAirline=${airline_name}&existingAccommodation=${accommodation_title}&edit='true'`
+      `/add-trip?trip_id=${trip_id}&existingTripName=${encodedTitle}&existingDestination=${encodedLocation}&existingStartDate=${encodedStartDate}&existingEndDate=${encodedEndDate}&existingAirline=${encodedAirline}&existingAccommodation=${encodedAccommodation}&existingNotes=${encodedNotes}&existingPlaces=${encodedPlaces}&edit=true`
     );
   };
+
+  const handleShare = async () => {
+    const message = `
+      Trip: ${trip.title}
+      Location: ${trip.location}
+      Dates: ${start_date} ${end_date}
+      Airline: ${airline_name}
+      Accommodation: ${title}
+      Notes: ${notes}
+    `;
+    try {
+      const result = await Share.share({
+        message: message,
+      });
+    } catch (error) {
+      alert(error.message);
+    }
+  };
+
 
   return (
     <View>
@@ -75,42 +105,84 @@ export default function TripCard({
           resizeMode="cover"
         />
       )}
-      <View style={styles.tripCard}>
-        <Text style={styles.tripName}>{trip.title}</Text>
-        <View style={styles.features}>
-          <View style={styles.featureIconColumn}>
-            <Entypo name="location" style={styles.featureIcon} />
-            <FontAwesome name="plane" style={styles.featureIcon} />
-            <Entypo name="calendar" style={styles.featureIcon} />
-          </View>
-          <View style={styles.featureTextColumn}>
-            <Text style={styles.featureText}>{title} {location}</Text>
-            <Text style={styles.featureText}>{airline_name}</Text>
-            <Text style={styles.featureText}>{start_date} {end_date}</Text>
-          </View>
+    <View style={styles.tripCard}>
+    <Text style={styles.tripName}>{trip.title}</Text>
+
+    <View style={styles.features}>
+
+      <View style={styles.feature}>
+       <Entypo name="location" style={styles.featureIcon} />
+        <View>
+         <Text style={[styles.featureText, {width: 285}]}>{title} {location}</Text>
+       </View>
+      </View>
+    
+      <View style={styles.feature}>
+        <FontAwesome name="plane" style={[styles.featureIcon, {fontSize: 22}]} />
+        <View>
+          <Text style={styles.featureText}>{` ${airline_name}`}</Text>
         </View>
+      </View>
+
+      <View style={styles.feature}>
+        <Entypo name="calendar" style={styles.featureIcon} />
+        <View>
+          <Text style={styles.featureText}>{start_date} {end_date}</Text>
+        </View>
+      </View>
+
+      <View style={existingPlaces.length > 0 ? styles.placesContainer : styles.placesContainerEmpty}>
+        <FontAwesome6 name="location-crosshairs" style={styles.featureIcon} />
+        <View style={styles.placesList}>
+          {existingPlaces.length > 0 ? existingPlaces.map((place, index) => (
+            <TouchableOpacity key={index} onPress={() => Linking.openURL(place.link)}>
+              <View style={styles.placeCard}>
+                <Text style={styles.place}>{place.name}</Text>
+              </View>
+            </TouchableOpacity>
+          )) : <Text style={styles.featureText}>No places saved</Text>}
+        </View>
+      </View>
+
+      <View style={styles.notesContainer}>
+        <MaterialIcons name="notes" style={styles.featureIcon} />
+        <Text style={styles.featureText}>{notes ? notes : "No notes for this trip"}</Text>
+      </View>
+
+    </View>
+
+    <View style={styles.iconsContainer}>
+      <View style={styles.editIconContainer}>
+        <Pressable
+          onPress={() => {
+            handleEditTrip(
+              trip.trip_id,
+              trip.title,
+              trip.location,
+              trip.start_date,
+              trip.end_date,
+              trip.airlines?.airline_name,
+              trip.accommodation?.title,
+              trip.notes,
+              trip.places,
+            );
+          }}
+        >
+          <MaterialIcons name="edit-note" style={styles.editIcon} />
+        </Pressable>
+      </View>
+
         <View style={styles.editIconContainer}>
-          <Pressable
-            onPress={() => {
-              handleEditTrip(
-                trip.trip_id,
-                trip.title,
-                trip.location,
-                trip.start_date,
-                trip.end_date,
-                trip.airlines?.airline_name,
-                trip.accommodation?.title,
-              );
-            }}
-          >
-            <MaterialIcons name="edit-note" style={styles.editIcon} />
+          <Pressable onPress={handleShare}>
+            <MaterialIcons name="share" style={styles.shareIcon} />
           </Pressable>
         </View>
       </View>
     </View>
+
+    </View>
   );
 }
-
 const styles = StyleSheet.create({
   container: {
     padding: 20,
@@ -136,11 +208,6 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     fontFamily: "Futura",
   },
-  featureText: {
-    fontSize: 16,
-    marginBottom: 8,
-    textAlign: 'left',  
-  },
   photo: {
     width: "100%",
     height: 180,
@@ -148,31 +215,16 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 10,
     margin: 0,
   },
-  features: {
-    flexDirection: "row",
-    gap: 10,
-  },
-  featureIconColumn: {
-    flexDirection: "column",
-    alignItems: 'center',
-    justifyContent: 'space-between'
-  },
-  featureTextColumn: {
-    flexDirection: "column",
-    justifyContent: 'space-between'
-  },
-  featureIcon: {
-    fontSize: 20,
-    color: "#3A90CD",
-    marginBottom: 8,
+  iconsContainer: {
+    position: "absolute",
+    top: 10,
+    right: 10,
+    gap: 5
   },
   editIconContainer: {
     backgroundColor: '#fff',
     borderRadius: 10,
     padding: 5,
-    position: "absolute",
-    top: 10,
-    right: 10,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.3,
@@ -180,5 +232,69 @@ const styles = StyleSheet.create({
   },
   editIcon: {
     fontSize: 25,
-    },
+  },
+  shareIcon:{
+    fontSize: 22
+  },
+  notesContainer: {
+    flexDirection: 'row',
+    gap: 10,
+    width: 340,
+  },
+  placesContainerEmpty: {
+    flexDirection: 'row',
+    gap: 10,
+  },
+  placesContainer: {
+    flexDirection: 'row',
+    gap: 10,
+    marginBottom: 3,
+  },
+  placesList: {
+    flexDirection: 'row',
+    flexWrap: 'wrap', 
+    justifyContent: 'flex-start',
+    maxWidth: '100%',
+    gap: 5,
+  },
+  placeCard: {
+    backgroundColor: '#fff',
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.3,
+    shadowRadius: 1,
+    borderRadius: 5,
+    paddingVertical: 5,
+    paddingHorizontal: 10,
+    alignSelf: 'flex-start',
+  },
+  place:{
+    fontSize: 16,
+    textAlign: 'left',  
+  },
+  features: {
+    flexDirection: "column",
+    alignItems: 'flex-start', 
+    gap: 8,
+  },
+  featureContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  featureIcon: {
+    fontSize: 20,
+    color: "#3A90CD",
+    alignSelf: 'center',
+  },
+  feature: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+    width: '100%',
+  },
+  featureText: {
+    fontSize: 16,
+    textAlign: 'left',
+    flexShrink: 1,
+  },
 });
