@@ -11,14 +11,19 @@ import {
 import { useRouter } from "expo-router";
 import { fetchPlaces } from "@/src/api/googlePlacesApi";
 
-export default function PlacesCard({
+
+export default function PlacesList({
   location,
   category,
+  places,
+  setPlaces
 }: {
   location: string;
   category: string;
+  places: any;
+  setPlaces: any,
 }) {
-  const [places, setPlaces] = useState([]);
+
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 
@@ -53,6 +58,7 @@ export default function PlacesCard({
         setLoading(false);
       }
     };
+    
 
     fetchPlacesData();
   }, [location, category]);

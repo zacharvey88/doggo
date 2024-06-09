@@ -623,7 +623,7 @@ const styles = StyleSheet.create({
     maxWidth: '100%',
     gap: 5,
     marginLeft: 5,
-    marginBottom: -15,
+    marginBottom: 0,
   },
   placeCard: {
     backgroundColor: '#fff',

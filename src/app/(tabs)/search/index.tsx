@@ -12,12 +12,16 @@ import {
 import { FontAwesome6, Ionicons } from "@expo/vector-icons";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 import AccommodationTab from "@/src/components/accommodation-components/Accommodation";
-import PlacesCard from "@/src/components/PlacesCard";
+import { useNavigation } from "expo-router";
+import PlacesList from "@/src/components/PlacesList";
+import { Entypo } from "@expo/vector-icons";
 
 export default function TabSearch() {
   const [loading, setLoading] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("Stays");
+  const [places, setPlaces] = useState([])
+  const navigation = useNavigation()
   const categories = [
     { name: "Stays", icon: "bed" },
     { name: "Restaurants", icon: "utensils" },
@@ -26,6 +30,11 @@ export default function TabSearch() {
     { name: "Beaches", icon: "umbrella-beach" },
     { name: "Shops", icon: "shop" },
   ];
+
+  const goToMap = () => {
+    navigation.navigate('map-screen', {places});
+  };
+
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -99,13 +108,23 @@ export default function TabSearch() {
             {selectedCategory === "Stays" ? (
               <AccommodationTab searchTerm={searchTerm} />
             ) : (
-              <PlacesCard
+              <PlacesList
                 location={searchTerm}
                 category={selectedCategory}
+                places={places}
+                setPlaces={setPlaces}
               />
             )}
           </>
         )}
+
+        {selectedCategory !== "Stays" ? 
+          <TouchableOpacity onPress={goToMap} style={styles.mapIconContainer}>
+            <Text style={styles.mapView}>Map View</Text>
+            <Entypo name="location" style={styles.mapIcon} />
+          </TouchableOpacity>
+        : null}
+
       </View>
     </SafeAreaView>
  )
@@ -233,5 +252,34 @@ const styles = StyleSheet.create({
     flex: 1,
     width: "100%",
     alignItems: "center",
+  },
+  mapIconContainer:{
+    height: 40,
+    width: 110,
+    zIndex: 2,
+    position: 'absolute',
+    right: 20,
+    bottom: 20,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 5,
+    backgroundColor: '#2A99D0',
+    borderRadius: 20,
+    padding: 7,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: .5,
+    shadowRadius: 2,
+  },
+  mapIcon: {
+    fontSize: 22,
+    color: '#fff'
+  },
+  mapView: {
+    fontSize: 12,
+    color: '#fff',
+    fontWeight: '600',
+    textAlign: 'center',
   },
 })

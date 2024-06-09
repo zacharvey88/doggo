@@ -8,6 +8,7 @@ import {
   Image,
   Linking,
   TouchableOpacity,
+  Alert,
 } from "react-native";
 import { useLocalSearchParams } from "expo-router";
 import Colors from "@/src/constants/Colors";
@@ -15,6 +16,7 @@ import { Entypo, FontAwesome } from "@expo/vector-icons";
 import Modal from "react-native-modal";
 import TripListSmall from "@/src/components/trip-components/TripListSmall";
 import { useAuth } from "@/src/providers/AuthProvider";
+import { router } from "expo-router";
 export default function PlaceDetailsScreen() {
 
   const params = useLocalSearchParams();
@@ -45,6 +47,22 @@ export default function PlaceDetailsScreen() {
 
   const toggleTripModal = () => {
     setTripModalVisible(!isTripModalVisible);
+  };
+
+  const handleAddToTrip = () => {
+    if (session && session.user) {
+      toggleTripModal();
+    } else {
+      Alert.alert(
+        "Not Logged In",
+        "You must be logged in to see your trips",
+        [
+          { text: "Okay", style: "default" },
+          { text: "Login", onPress: () => router.push("/sign-in"), style: "cancel" },
+        ],
+        { cancelable: false }
+      );
+    }
   };
   
   return (
@@ -137,7 +155,7 @@ export default function PlaceDetailsScreen() {
             <Entypo name="add-to-list" style={styles.icon} />
             <Text
               style={styles.website}
-              onPress={toggleTripModal}
+              onPress={handleAddToTrip}
               numberOfLines={1}
             >
               Add to a trip
