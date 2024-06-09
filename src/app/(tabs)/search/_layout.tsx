@@ -6,6 +6,7 @@ export default function SearchStack() {
       <Stack.Screen name="index" options={{ headerShown: false, title: "Search" }} />
       <Stack.Screen name="[id]" options={{ title: "Accommodation", headerBackTitleVisible: true, headerBackTitle: "Back" }} />
       <Stack.Screen name="[id]/reviews" options={{ title: "", headerBackTitleVisible: true, headerBackTitle: "Back" }} />
+      <Stack.Screen name="map-screen" options={{ title: "", headerShown: false, headerBackTitleVisible: true, headerBackTitle: "Back" }} />
       <Stack.Screen
         name="place-details"
         options={{
