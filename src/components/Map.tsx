@@ -37,7 +37,15 @@ const Map = ({ placesData }) => {
             resizeMode="contain" 
           />
           <Callout tooltip>
-            <TouchableOpacity style={styles.calloutContainer} onPress={place.websiteUri ? ()=>Linking.openURL(place.websiteUri) : null}>
+            <TouchableOpacity style={styles.calloutContainer} 
+                onPress={() =>
+                  router.push({
+                    pathname: "search/place-details",
+                    params: {
+                      place: JSON.stringify(place),
+                    },
+                  })
+                }>
               <View style={styles.calloutCard}>
                 <Text style={styles.calloutTitle}>{place.displayName.text}</Text>
                 <View style={styles.calloutRow}>
