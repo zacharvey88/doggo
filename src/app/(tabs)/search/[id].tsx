@@ -29,7 +29,6 @@ export default function Accommodation() {
   const { session } = useAuth();
   const [rating, setRating] = useState(0);
   const [refreshAdd, setRefreshAdd] = useState(false)
-
   const {
     id,
     title,

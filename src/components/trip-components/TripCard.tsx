@@ -3,6 +3,7 @@ import dateFormat from "dateformat";
 import { FontAwesome, Entypo, MaterialIcons, FontAwesome6 } from "@expo/vector-icons";
 import { router } from "expo-router";
 import { useState } from "react";
+import { supabase } from "@/src/lib/supabase";
 
 
 
@@ -88,16 +89,48 @@ export default function TripCard({
       alert(error.message);
     }
   };
-
+  const goToAccommodation = async () => {
+    if (trip.accommodation_id) {
+      const { data, error } = await supabase
+        .from("accommodation")
+        .select("*")
+        .eq('accommodation_id', trip.accommodation_id);
+  
+      if (data && data[0]) {
+        const accommodationData = data[0];
+  
+        router.push({
+          pathname: `/search/${trip.accommodation_id}`,
+          params: {
+            title: accommodationData.title,
+            description: accommodationData.description,
+            address: accommodationData.address,
+            phone: accommodationData.phone,
+            photos: accommodationData.photos,
+            postcode: accommodationData.postcode,
+            booking_url: accommodationData.booking_url,
+            city: accommodationData.city,
+            country: accommodationData.country,
+            rating: accommodationData.rating,
+          }
+        });
+      } else return
+    }
+  };
+  
 
   return (
     <View>
       {photos && photos.length > 0 ? (
-        <Image
-          source={{ uri: photos[0] }}
-          style={styles.photo}
-          resizeMode="cover"
-        />
+        <TouchableOpacity
+          onPress={goToAccommodation}
+        >
+          <Image
+            source={{ uri: photos[0] }}
+            style={styles.photo}
+            resizeMode="cover"
+          />
+        </TouchableOpacity>
       ) : (
         <Image
           source={require('@/assets/images/photo-placeholder.png')}
@@ -254,7 +287,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap', 
     justifyContent: 'flex-start',
-    maxWidth: '100%',
+    maxWidth: '95%',
     gap: 5,
   },
   placeCard: {

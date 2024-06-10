@@ -16,6 +16,7 @@ import Colors from "../constants/Colors";
 import UserReviewsList from "@components/review-components/UserReviewsList";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { FontAwesome } from "@expo/vector-icons";
+import { router } from "expo-router";
 
 export default function Account({ session }: { session: Session }) {
   const [loading, setLoading] = useState(true);
@@ -86,6 +87,7 @@ export default function Account({ session }: { session: Session }) {
           onPress: async () => {
             const { error } = await supabase.auth.signOut();
             if (error) Alert.alert(error.message)
+            router.replace('/')
           },
           style: "destructive",
         },

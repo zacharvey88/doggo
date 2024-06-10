@@ -100,7 +100,7 @@ export default function TripListSmall({
     if (error) {
       Alert.alert(error.message)
     } else {
-      router.replace("trips");
+
       Alert.alert(
         `${
           table === "airlines" ? "Airline" :
