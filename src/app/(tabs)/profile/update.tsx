@@ -1,11 +1,10 @@
 import { useState } from "react";
 import { supabase } from "@/src/lib/supabase";
-import { StyleSheet, View, Alert, ScrollView } from "react-native";
+import { StyleSheet, View, Alert, ScrollView, TouchableOpacity, Text } from "react-native";
 import { Input } from "@rneui/themed";
 import { useRouter, useLocalSearchParams } from "expo-router";
 import Avatar from "@/src/components/Avatar";
 import { useAuth } from "@/src/providers/AuthProvider";
-import { Button } from "react-native-elements";
 
 export default function UpdateAccount() {
   const {
@@ -102,16 +101,14 @@ export default function UpdateAccount() {
           inputStyle={styles.input}
         />
       </View>
-
-      <View style={[styles.verticallySpaced, styles.mt20]}>
-        <Button
-          text={loading ? "Loading ..." : "Update"}
+        <TouchableOpacity 
+          style={styles.button} 
+          disabled={loading}
           onPress={() =>
             updateProfile({ username, avatar_url: avatarUrl, fullName })
-          }
-          disabled={loading}
-        />
-      </View>
+          }>
+          <Text style={styles.buttonText}> {loading ? "Loading ..." : "Update Profile"} </Text>
+        </TouchableOpacity>
     </ScrollView>
   );
 }
@@ -136,7 +133,19 @@ const styles = StyleSheet.create({
   inputDisabled: {
     color: "#999",
   },
-  mt20: {
-    marginTop: 20,
+  button: {
+    height: 45,
+    padding: 10,
+    backgroundColor: '#2A99D0',
+    marginTop: 10,
+    borderRadius: 10,
+    justifyContent: 'center',
+
+  },
+  buttonText: {
+    color: '#fff',
+    fontSize: 18,
+    textAlign: 'center',
+    fontFamily: 'futura'
   },
 });

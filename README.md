@@ -1,10 +1,14 @@
 # DogGo
 
-DogGo is a collaborative full-stack project designed to enhance our team's skills in Supabase, TypeScript, and React Native with Expo.
+A collaborative full-stack project designed to enhance our team's skills in Supabase, TypeScript, and React Native with Expo. 
+
+[<img src="./assets/images/previews/doggo-home-page.png" width="200" >](https://www.zacharvey.com/doggo)
 
 ## About
 
 DogGo is a mobile travel app tailored for dog owners, providing a comprehensive solution for planning holidays with pets. It offers recommendations for dog-friendly airlines, hotels, and attractions based on the user's chosen destination. The app presents all this information in a user-friendly, single-screen format, allowing users to save, share, and manage potential trips.
+
+[View a demo video](https://www.zacharvey.com/doggo)
 
 ## Features
 
